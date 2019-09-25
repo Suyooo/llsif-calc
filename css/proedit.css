@@ -1,0 +1,32 @@
+.llsif-font {
+    line-height: 1.1;
+    font-family: 'MotoyaLCedar W3 mono', 'MotoyaLMaru W3 mono', 'モトヤLシーダ 3等幅', 'モトヤLマルベリ3等幅', 'MS Gothic', 'Osaka-mono', 'Osaka－等幅', 'monospace';
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+    height: auto;
+}
+
+#preview_one_line {
+    background-color: #fa5d94;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    font-size: 16px;
+    padding: 4px 20px;
+    height: 24px;
+    color: white;
+}
+
+tr td:first-child {
+    font-weight: bold;
+}
+
+td, th {
+    padding: 5px 5px;
+}
+
+tbody tr:last-child {
+    border-top: 1px solid #d0d0d0;
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LLSIF Otasuke Sorter</title>
+    <meta name="description" content="Optimize your team for Friendly / Companion Matches.">
+
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/style.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/otasuke.css" media="screen,projection"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="icon" type="image/png" sizes="96x96" href="image/launcher-icon-96.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f48fb1">
+    <meta name="theme-color" content="#f48fb1">
+</head>
+<body>
+    <script>
+        if (document.cookie.indexOf("dark-mode=yes") !== -1) {
+            document.body.className += 'dark-mode';
+        }
+    </script>
+    <div class="font-preload">
+        <span style="font-weight: 100">Thin</span>
+        <span style="font-weight: 300">Light</span>
+        <span style="font-weight: 400">Regular</span>
+        <span style="font-weight: 500">Medium</span>
+        <span style="font-weight: 700">Bold</span>
+    </div>
+    <nav>
+        <div class="nav-wrapper pink lighten-5">
+            <a class="brand-logo center">OtaSort</a>
+            <ul id="nav-mobile" class="left">
+                <li class="pink lighten-3"><a href="index.html"><i
+                        class="material-icons left">keyboard_arrow_left</i>BACK</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <p>Sort your team by their Otasuke power to optimize your teams for Friendly Matches.<br>Want to calculate power
+            for
+            an existing team? <a href="http://kachagain.com/llsif/miccalc.php">Try Kach's Otasuke calculator</a></p>
+
+        <div class="row">
+            <div class="col s12 xl6">
+                <h5>Input</h5>
+                Choose a tool to load your team from:<br>
+                <label>
+                    <input type="radio" name="source" id="source-meatbun" value="meatbun">
+                    <span>Minaraishi's Team Builder (Meat Bun)</span>
+                </label><br>
+                <label>
+                    <input type="radio" name="source" id="source-schoolidolu" value="schoolidolu">
+                    <span>School Idol Tomodachi (schoolido.lu)</span>
+                </label>
+                <div class="inputcontainer">
+                    <div class="inputdiv" id="input-meatbun">Go to <a href="https://designedfor.sakura.ne.jp/nikuma-n/">
+                        Minaraishi's Team Builder</a>, use "Export Data" and copy your team's data here.
+                        <textarea id="meatbun_input" cols="40" rows="7"></textarea>
+                    </div>
+                    <div class="inputdiv" id="input-schoolidolu">
+                        <div class="row">
+                            <div class="col s12 l8">
+                                <input type="text" id="schoolidolu-username"
+                                       placeholder="School Idol Tomodachi User Name"><br>
+                            </div>
+                            <div class="col s12 l4">
+                                <a class="btn black-text" style="background-color: #f48fb1" id="schoolidolu-load-accounts">
+                                    Load Accounts</a>
+                            </div>
+                        </div>
+                        <div id="schoolidolu-accounts">
+                            <small>Please note that your input will be shared with a third party
+                                (<a href="https://schoolido.lu">School Idol Tomodachi</a>). That input will probably be your
+                                username, which counts as "personal data" under the European Union's GDPR. By using the Load
+                                Accounts function, you agree to this input being sent to their service. Please refer to
+                                School Idol Tomodachi's site for more information on how they use your data.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <span class="form-label">Filter by Attribute</span>
+                <div class="radio-row">
+                    <input type="radio" name="attribute" id="a1" value="Smile"><label for="a1"> Smile</label>
+                    <input type="radio" name="attribute" id="a2" value="Pure"><label for="a2"> Pure</label>
+                    <input type="radio" name="attribute" id="a3" value="Cool"><label for="a3"> Cool</label>
+                    <input type="radio" name="attribute" id="a0" value="All" checked><label for="a0"> All</label></div>
+                <a class="btn black-text" style="background-color: #f48fb1" id="sort">Sort Team</a>
+            </div>
+            <div class="col s12 xl6">
+                <div id="error">
+                    <h5 style="color: red">Error</h5>
+                    <div style="color: red" id="error-messages"></div>
+                </div>
+                <div id="result-loader"></div>
+                <div id="result"><b>Best possible team:</b><br>
+                    Otasuke: <span id="otasum"></span><br>
+                    Mics: <span id="otamics"></span> <i>(<span id="otaover"></span> over)</i><br>
+                    Next mic in: <span id="otaleft"></span><br><br>
+                    <table class="striped">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Attribute</th>
+                            <th>Rare</th>
+                            <th>Skill</th>
+                            <th>Lv</th>
+                            <th>Otasuke</th>
+                        </tr>
+                        </thead>
+                        <tbody id="resulttable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/register-sw.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.js"></script>
+    <script type="text/javascript" src="js/otasuke.js"></script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+September 25, 2019 - The Future Is Here Edition
+----------------------------
+- Removed AppCache, added Service Worker. What a garbage spec, but I'm glad it's done
+- Right now it works just like the old AppCache, but might add more stuff in the future
+- Anyways it's time for me to prepare the SIFAS calc, see you on the other side
+
+September 23, 2019 - I Have To Cleanup Before Guests Arrive Edition
+----------------------------
+- Optional current LP/EXP inputs
+- Fix: Dialogs and Popups don't blink on and off anymore if you click the close button multiple times
+- Fix: Dialogs and Popups are now scrollable in case your screen is not tall enough, so you can reach the close buttons
+- Javadoc'd UI code
+- Only migrating from AppCache to Service Workers left before SIFAS event calc is started... oof
+
+September 22, 2019 - SIFAS Is Coming Edition
+----------------------------
+- Wew it's been a while
+- Added a whole bunch of promo exception to Otasuke Sorter because I missed a few in the last year
+- Please give me a heads up if you find any incorrectly categorized cards
+- SIT apparently stopped labeling Login Bonus Promos with their source, so I workarounded the workaround
+- Additionally: some preparation to make a SIFAS event calc once that time comes. Colors might be messed up? pls report
+- Also have you seen Kanan's initial SIFAS UR??? WHAT A QUEEN
+
+September 24, 2018 - Dark Mode Still Exists Edition
+----------------------------
+- Fixed the Alternative LP Recovery Items dropdown being white in Dark Mode
+- I'm usually the type of person to always use Dark Mode but not on my own site lmao
+- Took the chance to add - you know it - more OtaSort exceptions: Saki and Yuuka
+
+September 15, 2018 - No More Negativity Edition
+----------------------------
+- Fixed the Alternative LP Recovery Items dropdown showing negative values if no loveca were required to meet the target
+
+September 12, 2018 - Wow, An Actual New Feature Edition
+----------------------------
+- Results now include the number of Sugar Pots and Cubes required if used instead of Loveca
+- Clicking the Alternative Recovery Items dropdown scrolls to the the bottom if you're already there
+- Updated Materialize library from v0.100.2 to v1.0.0
+- Fixed small typo in Cookie Policy
+- Fixed "More Tools" "tab" being "selected" when opening the tool sidebar
+
+September 10, 2018 - More Multipliers Edition
+----------------------------
+- Multiplier added to Score Match calculator
+- Fixed some small inaccuracies in Nakayoshi calculator multipliers (multipliers are applied last, after rounding)
+- With the massive amount of OtaSort exceptions, I decided it is time to retire to if-else cascade and use sets
+- More OtaSort exceptions: Chiduko, Rebecca, SEGA collab
+
+September 1, 2018 - Old Promos Edition
+----------------------------
+- 5th Anniversary Promo SSRs (Yohane, Nico and Setsuna) are now properly counted as such
+
+August 26, 2018 - The Promos, They Are A-Coming Edition
+----------------------------
+- More OtaSort exceptions: Yumi, Jennifer, Coco, Saeki, FujiQ Highland collab
+
+July 20, 2018 - Monthly Normal SSR Update Edition
+----------------------------
+- More OtaSort exceptions: Yuri, Nagi, Hitomi, Koyuki
+
+June 21, 2018 - This Is A Biweekly Thing Now I Guess Edition
+----------------------------
+- More OtaSort exceptions: Sachiko, Isabella and 3rd Live SSRs
+
+June 6, 2018 - Multiplied Edition
+----------------------------
+- Added multipliers to ChaFes and Rally
+- Added types of multiplier use to ChaFes
+- Slightly improved event point and EXP accuracy on ChaFes
+  (this changes EP/EXP per challenge by a maximum of two points, but can make a difference of two loveca. whoa)
+- Added Fumi and Mikoto SSRs as exceptions to OtaSort
+
+May 31, 2018 - Aaaaand It's Done Edition
+----------------------------
+- New Calc has finally become the default Calc!
+- Added a small FAQ
+- Added Shizuku and Christina SSRs as exceptions to OtaSort
+
+May 23, 2018 - I Forgot About Phones Edition
+----------------------------
+- Some changes to OtaSort and ProEdit to look better on small screen devices
+- Also added Real Escape Game promo SSRs as exceptions to OtaSort
+
+May 22, 2018 - Privacy Edition
+----------------------------
+- GDPR is coming and here's some changes
+- Added link to site notice
+- Before storing a cookie for the first time, you'll have to consent to data storage
+- Added third party notice on the SIT importer in the Otasuke Sorter
+- Also added bullet points to error popups! So that's something nice.
+
+May 2, 2018 - And It's Back Edition
+----------------------------
+- LP reduction is back because it seems both WW and JP are now fans of it
+
+February 23, 2018 - Waiting for KLab EN's Next Mess Edition
+----------------------------
+- Automatic Timers are now available when offline, but might be incorrect (especially on WW)
+
+February 10, 2018 - HAPPY BIRTHDAY KANAN Edition
+----------------------------
+- We celebrate this day by removing the Let's Play Campaign from our memories and our calculators
+
+January 30, 2018 - And Yet It Bugs Edition
+----------------------------
+- Fixed a problem where selecting neither LP reduction option would not throw an error message
+- Manual Rest Time field now accepts floats
+
+January 25, 2018 - AH FUCK Edition
+----------------------------
+- Problem found in LP reduction. It's not as ridiculous as before.
+
+January 25, 2018 - WHAT THE FUCK KLAB WW Edition
+----------------------------
+- Temporarily added an option reduce Normal Live LP Cost for Token by 80% because what the fuck
+- Everyone who is attempting to tier this event: TAKE MY ENERGY
+
+January 19, 2018 - Forgot The Images Edition
+----------------------------
+- Event info is loaded from the server so you don't need to download an update every week - but I forgot the banners...
+
+January 13, 2018 - Service Workers Aren't Done Yet So Here's An Appcache Edition
+----------------------------
+- Calculator now uses cache manifests to reduce load times by up to 90% and offer some functionality offline
+- This is not final for now, I'll have to see whether it works well
+
+January 6, 2018 - Communication Edition
+----------------------------
+- Added a simple notification system allowing you to dismiss notifs so you don't see them on future visits
+- Preparations for a cache manifest
+- Some very slight changes to colors to avoid pure white
+- Dark mode now doesn't flashbang you by loading the light theme first and then switching later, but instantly goes dark
+- Removed "dark mode colors not final" message because that's been up long enough and nobody complained
+
+January 5, 2018 - I Love Friendly Match Edition
+----------------------------
+- School Idol Tomodachi classifies limited URs as promos for some reason. Fix that mess
+- Manually mark Izu Mito promo SSRs as promos
+- Changed Otasuke calculation to another one which is also used by Minaraishi
+
+January 3, 2018 - Okay There It Is Edition
+----------------------------
+- Otasuke Sorter is now Material as well
+- Otasuke Sorter can now get teams from School Idol Tomodachi
+- Also fixed writing 2017 instead of 2018 on the previous two entries. It begins
+
+January 2, 2018 - Finish The Design Already Edition
+----------------------------
+- Profile Editor got a makeover
+
+January 1, 2018 - Happy New Party Train Edition
+----------------------------
+- Happy new year friends
+- Cache revalidating actually works now, so not everything is reloaded every time
+
+December 29, 2017 - Crush Me Edition
+----------------------------
+- HTML, JS, CSS and PNGs are now minified for 30% data savings
+- (would be more if I was willing to deal with the Material design shit but nah)
+
+December 22, 2017 - Hello I'm Back Edition
+----------------------------
+- Hello my bachelors thesis is finished and I CAN DO THINGS AGAIN
+- Osampo Rally is back to new story points
+
+September 23, 2017 - Smoll Editon
+----------------------------
+- Can now drag open the side nav on mobile
+- Tab bar now scrolls smoothly
+- Tab bar now scrolls to the selected tab
+- The More Tools link does not overlap the scroll buttons anymore
+
+September 22, 2017 - Open Test Edition
+----------------------------
+- Hello everyone! It's time to party!
+- A big thank you to suikunkun and GrygrFlzr for their feedback during closed testing <3
+- Arrangement Bonuses on MedFes and ChaFes pages moved into a collapisble
+- Dark Mode switch now has correct colors
+- Reverted Rally calculator to old story point rewards
+- Changed input field colors, and slightly realigned them
+- Removed "Remove All Cookies" and "Force Update" buttons from the sidebar because those are useless
+
+September 21, 2017 - SHUT DOWN, SHUT DOWN, GUILTY FEVER Edition
+----------------------------
+- Hello Dark Mode has arrived in your local side bar
+- Changed the result numbers into a higher contrast color
+- Added additional verification of inputs and made some error messages more understandable
+- Fixed a bug where saving configurations would not recall multipliers to the UI
+- Fixed a dumb mistake in the Rally/Friendly Match calcs which would have eventually blown up but I didn't notice
+  before because JavaScript does not have such a thing as type errors uuugghh
+- Fixed a bug where result explaination tooltips would pop up while no results were showing
+- Fixed a bug where automatic calculation would start without any input in the number inputs
+
+September 18, 2017 - Finishing Edition
+----------------------------
+- Osampo Rally rewrite done! Friendly Match rewrite done!
+- That means THE GREAT REWRITE HAS FINSIHED!
+- Fixed a bug where the Toast label would not show up the first time you see one
+- Moved additional tools into a new "More Tools" sidebar
+- Fixed a bug where the tab indicator was misaligned after a hard reload
+
+September 13, 2017 - I Was Contacted By Material Guideline Lawyers Edition
+----------------------------
+- Alert dialogs changed to fit Material design guidelines
+- Also broke the Material design guidelines on the input fields to remove the animation, don't tell the design police
+
+September 12, 2017 - Hey Testers Are You Reading This Edition
+----------------------------
+- Added automatic calculation starting - whenever an option is changed or you press enter in a number input
+- Fixed a problem with converting minutes to a string
+- Fixed a problem when rapidly slamming the calculate button (or, with automatic calc start, any button)
+
+September 11, 2017 - Getting There Edition
+----------------------------
+- Challenge Festival rewrite done!
+- Can now link directly to a certain page without ugly workarounds
+- Saving/loading actually works now
+
+September 8, 2017 - Documentary Edition
+----------------------------
+- JSDoc'd all the code that has been rewritten so far oof
+- Medley Festival rewrite done!
+
+September 7, 2017 - Alpha Test? Edition
+----------------------------
+- Score Match rewrite done!
+- Might be able to get some people to test it for the upcoming EN event?
+- Added some neat JSDoc comments to the Common functions
+
+September 5, 2017 - Dia Screams Again Edition
+----------------------------
+- WHAT IN THE NAME OF DIA IS "ADVENTURING STROLL"
+- Added English name to the Rally label but I will call it Rally forever and you can fight me about that
+- Changed Story Point calculation on Osampo Rally calculator
+- Thanks to Cara and Lion for story requirements/rewards!
+- Rewrite finished for the Token Calculator!
+
+September 4, 2017 - Results Edition
+----------------------------
+- There is a results table on the new calculator now
+
+September 1, 2017 - Material Edition
+----------------------------
+- More work on the UI, wired up some of the buttons
+
+August 31, 2017 - Facelift Edition
+----------------------------
+- Oops I got sidetracked and remade the UI from scratch
+
+August 30, 2017 - It Begins Edition
+----------------------------
+- The great rewrite has begun
+- Fixed some dumb things which might have broken in the future but of course JS doesn't tell me those
+- Because JS is the literal worst
+- Started giving sane identifiers / method names to everything
+
+========================================================================================================================
+
+August 8, 2017 - It's The Same Thing Edition
+----------------------------
+- Same as last time except for Promo SRs
+- (The thank you for the report is also the same)
+
+August 4, 2017 - No You're Not That Good Go Back Down Edition
+----------------------------
+- Fixed a bug where some Promo URs would be recognized as normal URs in the Otasuke sorter
+- (Thanks to Krylepton for the report!)
+
+August 1, 2017 - Hello I'm Procrastinating Instead Of Learning For An Exam Edition
+----------------------------
+- Made a nice icon for the site (finally)
+- Added a manifest so adding to home screen is nicer
+
+July 23, 2017 - Re-styling Edition
+----------------------------
+- Made Otasuke Sorter not look like poop
+
+July 22, 2017 - And Now For Something Completly Different Edition
+----------------------------
+- Added Otasuke Sorter
+- Fixed a bug where manual time wouldn't work on the FM calc
+
+July 20, 2017 - The Day Everyone Was Friends Edition
+----------------------------
+- FRIENDLY MATCH CALC
+- Removed EXP multiplier as it is pretty much useless, rip in peace
+- Fixed some rounding errors for older events
+- Some general cleanup because I still find new garbage in this hot mess. Rewrite when
+- If you read this you're probably the only person who does so. Hello!
+
+June 17, 2017 - Preparations Edition
+----------------------------
+- Added page and some logic in preparation for Friendly Match
+- Osampo Rally now adds story event points on top depending on time since event start
+- Added "No Rank" to some dropdowns where it was missing
+
+April 7, 2017 - I Have Been Doing Nothing But Looping HPT For Three Days Edition
+----------------------------
+- Remade LP Multiplier algorithm for more accurate calculations
+- Added LP Multiplier to Osampo Rally
+
+April 5, 2017 - HAPPY PARTY TRAIN IS BEATUIFUL AND KANAN IS BEAUTIFUL AND I AM SCREAMING Edition
+----------------------------
+- Hello do you have a second to talk about our lord and savior Kanan Matsuura
+- No? Okay, then have a changelog instead
+- ADDDED OSAMPO RALLY CALCULATOR
+- Added new Arrange boost to MedFes
+- Removed EXP input for now until I can find a better algorithm that doesn't break in edge cases
+
+February 15, 2017 - Germany Aqours Live Viewing Is Canceled And I Am Sad Edition
+----------------------------
+- Relabeled 4x options in Token Event as (Old)
+- Added LP Multiplier to Token Event
+- Over the last few months I changed a few default options when EN got new point tables which didn't deserve a seperate entry
+- Does anyone even read this
+
+July 10, 2016 - Can't Think Of A Name Edition
+----------------------------
+- Added an option to change between the old and new point tables on the Score Match calculator
+- Renamed EX difficulty to EX/Technical for Score Matches
+
+July 1, 2016 - Unexpected Edition
+----------------------------
+- Added an option to change between the old and new point tables for event lives on the Token Event calculator
+- The default option for EXP Requirements is now always Normal
+- Fixed result table magically growing if you keep smashing the Calculate button
+- Fixed data objects not having a default EXP requirement set which might have messed up on some browsers but I never heard of a problem there so nobody ever noticed it was broken
+
+March 9, 2016 - Tinier Edition
+----------------------------
+- Fixed ChaFes calculator not calculating Rank Ups with the increasing EXP gain in later rounds
+
+March 8, 2016 - Tiny Edition
+----------------------------
+- Fixed title and button labels not being shortened past the first page visited
+
+March 5 to 7, 2016 - LARGE UPDATE Edition
+----------------------------
+- Hello, changelog reader friends. It's been a while.
+- CHALLENGE FESTIVAL CALCULATOR ADDED. HYPE!
+- Added EX 4x to Token Event
+- Added "Explain Results" function
+- Rearranged results to have more important things on top and highlighted
+- Automatically shorten title and button labels to work with really narrow devices
+- Fixed title margin so it doesn't cut off on devices where there would be enough space
+- Fixed a bug where only the Token Event page would correctly restore the automatic timer region
+- Fixed the MedFes page hiding Score Match result divs instead of its own
+- Fixed using only the proprietary Apple meta tag, adding the more general theme-color to color your address bar on some browsers
+- Removed a bunch of unused scripts and stylesheets to improve loading time
+Big thank you to the people who helped with collecting Challenge Festival data: /u/shotgunsinlace, /u/-NINCOMPOOP-, @HarryPulley, /u/chibuki, @llconfess, /u/TheOfficialTluds, /u/manjumochi, @heyitsniky
+
+November 6, 2015 - Time Goes By So Slowly Edition
+----------------------------
+- Fixed calculator restoring timer/EXP regions from saved data if JP was selected
+- ...so, uh, how's your day? Are you ready to play one week of Nozomi Token Event without EX rotation?
+- Remember the temporary fix I made in "September 3 - #FuckKLabHard edition"? Still here, because what even is a event schedule. Thanks KLab EN
+
+October 21, 2015 - Steampunk Eli, Holy Shit Edition
+----------------------------
+- Fixed MedFes calculator not correctly reading EXP multiplier
+- Fixed SM and MedFes pages not correctly restoring EXP multiplier from saved data
+- Also, update on the previous prononciation thing: it seems KLab were going for the "club" (kurabbu) pun. That's how it's correctly pronounced.
+- No idea how this should work in EN though. Maybe just stay at clap? Go for crap? #burn
+
+October 5, 2015 - This Will Never End Edition
+----------------------------
+- Two months later, and EXP limits are still not halved on EN server. #FuckKLabEN
+- Added EXP requirements choice below EXP input, because KLab EN will probably not reduce them in the next century
+- Fixed bug on iOS devices where saving configuration would not save region correctly
+- By the way, did you know KLab is pronounced more like "clap" instead of "kaylab"? what even is this
+
+September/October, 2015 - What Even Is An Event Schedule Edition
+----------------------------
+- Didn't make seperate entries for every time a new event started with shit-tier dates and moving the double EXP
+
+September 7, 2015 - The Day KLab Was A Fucking Shit (Again) Edition
+----------------------------
+- what what what what what what what what what what what what what what what what
+- ".@suzuyasrei holy shit is KLab fucking serious right now should be fixed now but holy fucking shit KLab I'm only at the teacher #FuckKLab"
+- WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT WHAT
+- #FuckKLab
+
+September 3, 2015 - #FuckKLabHard edition
+----------------------------
+- WHAT EVEN IS THIS? 8 DAY EVENT? This broke literally everything this code does for Automatic Calculation. Very temporary fix. Urgh.
+- Moved 2x Rank Ups from Token to Score because still not halved. Fuck KLab America
+- Don't fuck KLab Japan though because DID YOU SEE THAT LLSIF BOOTH?? Pls I want to play it someone give me money
+
+August 18, 2015 - DARLING! HYPE edition
+----------------------------
+- Set EN end date override to the correct day
+- KLab still didn't halve EXP requirements. Moved 2x Rank Ups to Token Event instead of Score Match. #FuckKLab
+
+August 5, 2015 - #FuckKLab edition
+----------------------------
+- Double Rank Up requirements are back for Score Match, because KLab didn't cut down the EXP limits! Yaaay. As before, double Rank Up requirements are only in effect on the Score Match page, not the others... let's hope KLab does this after the current event, or else I'll just add a more permanent solution (as in, more radio buttons)
+- You can now select your region on Automatic Calculation, so the time limit is more accurate
+- Saved configuration data now expires 48 hours after the end of the event (so data is blank for the next one!)
+
+~ PART 2 an hour later
+- Fixed being able to select both Timer methods on Medley Festival
+- EN timer region is (visibly) selected by default
+
+July 31, 2015 - Give COUPONS edition
+-----------------------------------------
+- Undid double Rank Up requirements
+- Fixed a bug on Score Match and Medley Festival where 1234 + 100 resulted in 1234100 (thanks weak typing!)
+
+July 28, 2015 - Experience edition
+----------------------------
+- Added EXP input for more exact calculations when close to level up
+- Doubled all Rank Up requirements below Rank 100 for Token Event. JP has been halving all EXP limits below Rank 100 since the Couupon/Voucher update, and that's what this calculator has been using ever since, even though the EN translated calculator has probably been used for more EN than JP events. I fixed that, however, since this Kotori Token Event is the last one for us before we get the Coupon Update too, I didn't create a switch or something, but just hardcoded it into the page. Will be undone after the event is over, since we'll all have the same requirements then
+
+July 27, 2015 - Rehosting edition
+---------------------------
+- wget'd the page from yefta while ignoring certificates and put it on my site. Rehosting made easy
+- Removed Google Analytics from the site

@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LLSIF Event Calculator</title>
+    <meta name="description"
+          content="Calculate play time and loveca use for tiering LLSIF events, plus other useful tools.">
+
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="css/style.css" media="screen,projection"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="icon" type="image/png" sizes="96x96" href="image/launcher-icon-96.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f48fb1">
+    <meta name="theme-color" content="#f48fb1">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <script>
+        if (document.cookie.indexOf("dark-mode=yes") !== -1) {
+            document.body.className += 'dark-mode';
+        }
+    </script>
+    <div class="font-preload">
+        <span style="font-weight: 100">Thin</span>
+        <span style="font-weight: 300">Light</span>
+        <span style="font-weight: 400">Regular</span>
+        <span style="font-weight: 500">Medium</span>
+        <span style="font-weight: 700">Bold</span>
+    </div>
+    <nav class="nav-extended pink lighten-5">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a class="brand-logo center">LLSIF CALC
+                </a>
+                <a data-target="sidebar" class="sidenav-trigger show-on-large no-select"><i
+                        class="material-icons left">menu</i><span class="hide-on-small-and-down"> MENU</span></a>
+            </div>
+            <div class="nav-content">
+                <ul class="tabs tabs-transparent">
+                    <li class="tab"><a href="#token">Token Event</a></li>
+                    <li class="tab"><a href="#scorem">Score Match</a></li>
+                    <li class="tab"><a href="#medfes">Medley Festival</a></li>
+                    <li class="tab"><a href="#chafes">Challenge Festival</a></li>
+                    <li class="tab two-line"><a href="#rally">Osanpo Rally<br>
+                        <small>Adventure Stroll</small>
+                    </a></li>
+                    <li class="tab two-line"><a href="#friendm">Nakayoshi Match<br>
+                        <small>Companion Match</small>
+                    </a></li>
+                    <li class="tab"><a target="_self" class="sidenav-trigger tab-sidebar-button" data-target="toolsbar">
+                        More Tools&nbsp;&nbsp;&nbsp;&#x25B6;</a></li>
+                </ul>
+                <a class="btn tab-button-left pink lighten-5"><i class="material-icons">keyboard_arrow_left</i></a>
+                <a class="btn tab-button-right pink lighten-5"><i class="material-icons">keyboard_arrow_right</i></a>
+            </div>
+            <ul class="sidenav" id="sidebar">
+                <li>
+                    <div class="user-view">
+                        <div class="background">
+                            <img src="image/sidenav.jpg">
+                        </div>
+                        <span class="name">LLSIF Event Calculator</span>
+                    </div>
+                </li>
+                <li class="sidebar-small sidebar-text no-link">Original Script by @llsifcal<br>EN Translation by
+                    @yefta458<br>Expanded
+                    by
+                    Suyooo
+                </li>
+                <!--<li><a target="_blank" href="https://twitter.com/Suyooo_">Contact Me on Twitter</a></li>-->
+                <li><a id="sideNavDiscord">Contact Me on Discord</a></li>
+                <li id="sideNavDiscordName" class="card purple z-depth-0 side-nav-info-box">
+                    <div class="card-content">
+                        Suyooo#7026
+                    </div>
+                </li>
+                <li>
+                    <div class="divider"></div>
+                </li>
+                <li><a class="dark-mode-switch">Dark Mode
+                    <div class="switch">
+                        <label>
+                            <input id="darkModeSwitch" type="checkbox">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </a></li>
+                <li><a target="_blank" href="changelog">What's New?</a></li>
+                <li><a class="sidebar-small" id="sideNavClose">Close Drawer</a></li>
+                <li><a class="sidebar-small sneaky" target="_blank" href="https://suyo.be/legal.html">Legal Notice</a></li>
+            </ul>
+            <ul class="sidenav" id="toolsbar">
+                <li>
+                    <div class="user-view">
+                        <div class="background">
+                            <img src="image/sidenav.jpg">
+                        </div>
+                        <span class="name">More Tools</span>
+                    </div>
+                </li>
+                <li><a target="_self" href="proedit.html" class="tooltipped" data-position="right" data-delay="0"
+                       data-tooltip="Helps format your profile text with multiple lines.">Profile Editor</a></li>
+                <li><a target="_self" href="otasuke.html" class="tooltipped" data-position="right" data-delay="0"
+                       data-tooltip="Optimize your team for Friendly / Companion Matches.">Otasuke / Boost Power Sorter</a>
+                </li>
+                <li>
+                    <div class="divider"></div>
+                </li>
+                <li><a class="sidebar-small" id="toolNavClose">Close Drawer</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="notification">
+            <div class="card pink lighten-5">
+                <div class="card-content">
+                    <p id="notificationMessage"></p>
+                    <a id="notificationButton" class="btn-floating halfway-fab waves-effect waves-light tooltipped
+                        pink lighten-3" data-position="left" data-delay="0" data-tooltip="Dismiss">
+                        <i class="material-icons">close</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="token" class="col s12">
+            <div class="row">
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Timer Method</span>
+                                <div class="radio-row">
+                                    <input name="tokenTimerMethod" type="radio" id="tokenTimerMethodAuto" value="auto"
+                                           checked/>
+                                    <label for="tokenTimerMethodAuto">Automatic</label>
+                                    <input name="tokenTimerMethod" type="radio" id="tokenTimerMethodManual" value="manual"/>
+                                    <label for="tokenTimerMethodManual">Manual Input</label>
+                                </div>
+                                <div id="tokenTimerMethodAutoSection">
+                                    <span class="form-label">Region</span>
+                                    <div class="radio-row">
+                                        <input name="tokenTimerRegion" type="radio" id="tokenTimerRegionEn" value="en"/>
+                                        <label for="tokenTimerRegionEn">Worldwide</label>
+                                        <input name="tokenTimerRegion" type="radio" id="tokenTimerRegionJp" value="jp"/>
+                                        <label for="tokenTimerRegionJp">Japan</label>
+                                    </div>
+                                    <div id="tokenTimerEventInfo" class="event-info">
+                                        <span class="form-label" id="tokenTimerLeft"></span>
+                                        <div class="event-progress-bar">
+                                            <div class="event-progress-done" id="tokenTimerProgress"></div>
+                                        </div>
+                                        <div class="event-banner-container">
+                                            <img src="" id="tokenEventBanner" class="event-banner">
+                                        </div>
+                                        <small class="event-info-note">Something wrong? <a data-target="sidebar"
+                                                                                           class="sidenav-trigger">Contact
+                                            me!</a></small>
+                                    </div>
+                                </div>
+                                <div id="tokenTimerMethodManualSection" class="manual-timer-input">
+                                    <div class="input-field">
+                                        <input id="tokenManualRestTime" type="number" min="0" step="any" class="validate"
+                                               placeholder="">
+                                        <label for="tokenManualRestTime">
+                                            Time Left In Hours</label>
+                                        <span class="helper-text" data-error="Must be a positive number!"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Event Live Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="tokenEventLiveDifficulty" type="radio" id="tokenEventLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="tokenEventLiveDifficultyEasy">Easy</label>
+                                    <input name="tokenEventLiveDifficulty" type="radio" id="tokenEventLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="tokenEventLiveDifficultyNorm">Normal</label>
+                                    <input name="tokenEventLiveDifficulty" type="radio" id="tokenEventLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="tokenEventLiveDifficultyHard">Hard</label>
+                                    <input name="tokenEventLiveDifficulty" type="radio" id="tokenEventLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="tokenEventLiveDifficultyEx">EX</label>
+                                </div>
+                                <span class="form-label">Event Live Score Rank</span>
+                                <div class="radio-row">
+                                    <input name="tokenEventLiveScore" type="radio" id="tokenEventLiveScoreN" value="N"/>
+                                    <label for="tokenEventLiveScoreN">None</label>
+                                    <input name="tokenEventLiveScore" type="radio" id="tokenEventLiveScoreC" value="C"/>
+                                    <label for="tokenEventLiveScoreC">C</label>
+                                    <input name="tokenEventLiveScore" type="radio" id="tokenEventLiveScoreB" value="B"/>
+                                    <label for="tokenEventLiveScoreB">B</label>
+                                    <input name="tokenEventLiveScore" type="radio" id="tokenEventLiveScoreA" value="A"/>
+                                    <label for="tokenEventLiveScoreA">A</label>
+                                    <input name="tokenEventLiveScore" type="radio" id="tokenEventLiveScoreS" value="S"/>
+                                    <label for="tokenEventLiveScoreS">S</label>
+                                </div>
+                                <span class="form-label">Event Live Combo Rank</span>
+                                <div class="radio-row">
+                                    <input name="tokenEventLiveCombo" type="radio" id="tokenEventLiveComboN" value="N"/>
+                                    <label for="tokenEventLiveComboN">None</label>
+                                    <input name="tokenEventLiveCombo" type="radio" id="tokenEventLiveComboC" value="C"/>
+                                    <label for="tokenEventLiveComboC">C</label>
+                                    <input name="tokenEventLiveCombo" type="radio" id="tokenEventLiveComboB" value="B"/>
+                                    <label for="tokenEventLiveComboB">B</label>
+                                    <input name="tokenEventLiveCombo" type="radio" id="tokenEventLiveComboA" value="A"/>
+                                    <label for="tokenEventLiveComboA">A</label>
+                                    <input name="tokenEventLiveCombo" type="radio" id="tokenEventLiveComboS" value="S"/>
+                                    <label for="tokenEventLiveComboS">S</label>
+                                </div>
+                                <span class="form-label">Event Live Multiplier</span>
+                                <div class="radio-row">
+                                    <input name="tokenEventLiveMultiplier" type="radio" id="tokenEventLiveMultiplier1"
+                                           value="1"/>
+                                    <label for="tokenEventLiveMultiplier1">x1</label>
+                                    <input name="tokenEventLiveMultiplier" type="radio" id="tokenEventLiveMultiplier2"
+                                           value="2"/>
+                                    <label for="tokenEventLiveMultiplier2">x2</label>
+                                    <input name="tokenEventLiveMultiplier" type="radio" id="tokenEventLiveMultiplier3"
+                                           value="3"/>
+                                    <label for="tokenEventLiveMultiplier3">x3</label>
+                                    <input name="tokenEventLiveMultiplier" type="radio" id="tokenEventLiveMultiplier4"
+                                           value="4"/>
+                                    <label for="tokenEventLiveMultiplier4">x4</label>
+                                </div>
+                                <span class="form-label">Normal Live Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="tokenNormalLiveDifficulty" type="radio" id="tokenNormalLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="tokenNormalLiveDifficultyEasy">Easy</label>
+                                    <input name="tokenNormalLiveDifficulty" type="radio" id="tokenNormalLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="tokenNormalLiveDifficultyNorm">Normal</label>
+                                    <input name="tokenNormalLiveDifficulty" type="radio" id="tokenNormalLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="tokenNormalLiveDifficultyHard">Hard</label>
+                                    <input name="tokenNormalLiveDifficulty" type="radio" id="tokenNormalLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="tokenNormalLiveDifficultyEx">EX / M</label>
+                                </div>
+                                <span class="form-label">Normal Live Multiplier</span>
+                                <div class="radio-row">
+                                    <input name="tokenNormalLiveMultiplier" type="radio" id="tokenNormalLiveMultiplier1"
+                                           value="1"/>
+                                    <label for="tokenNormalLiveMultiplier1">x1</label>
+                                    <input name="tokenNormalLiveMultiplier" type="radio" id="tokenNormalLiveMultiplier2"
+                                           value="2"/>
+                                    <label for="tokenNormalLiveMultiplier2">x2</label>
+                                    <input name="tokenNormalLiveMultiplier" type="radio" id="tokenNormalLiveMultiplier3"
+                                           value="3"/>
+                                    <label for="tokenNormalLiveMultiplier3">x3</label>
+                                    <input name="tokenNormalLiveMultiplier" type="radio" id="tokenNormalLiveMultiplier4"
+                                           value="4"/>
+                                    <label for="tokenNormalLiveMultiplier4">x4</label>
+                                </div>
+                                <span class="form-label">Normal Live LP Reduction</span>
+                                <div class="radio-row">
+                                    <input name="tokenNormalLiveLPReduction" type="radio" id="tokenNormalLiveLPReduction100"
+                                           value="1"/>
+                                    <label for="tokenNormalLiveLPReduction100">None</label>
+                                    <input name="tokenNormalLiveLPReduction" type="radio" id="tokenNormalLiveLPReduction80"
+                                           value="0.8"/>
+                                    <label for="tokenNormalLiveLPReduction80">80% LP</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">flag</i>Stats and
+                                Target
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input id="tokenTargetEventPoints" type="number" min="1" class="validate"
+                                           placeholder="">
+                                    <label for="tokenTargetEventPoints">
+                                        Target Event Points</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="tokenCurrentEventPoints" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="tokenCurrentEventPoints">
+                                        Current Event Points</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="tokenCurrentEventToken" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="tokenCurrentEventToken">
+                                        Current Tokens</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="tokenCurrentRank" type="number" min="1" class="validate" placeholder="">
+                                    <label for="tokenCurrentRank">
+                                        Current Rank</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <ul id="tokenCurrentExtra" class="collapsible small-collapsible z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">
+                                            Optional Fields
+                                            <div class="explain-button bigger">
+                                                <a class="tooltipped" data-position="top" data-delay="0"
+                                                   data-tooltip="These values usually make no difference, but might be
+                                                   useful for calculations in the last few hours of an event.">
+                                                    <i class="material-icons">help</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <input id="tokenCurrentLP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="tokenCurrentLP">
+                                                    Current LP</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                            <div class="input-field">
+                                                <input id="tokenCurrentEXP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="tokenCurrentEXP">
+                                                    Current EXP in Rank</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="buttons col s12 xl4 offset-xl4">
+                    <a id="tokenCalculate" class="waves-effect pink lighten-3 waves-light btn">Calculate</a>
+                    <a id="tokenSaveConfig" class="waves-effect pink lighten-5 waves-light btn">
+                        Save current configuration</a>
+                    <div class="result-box no-link" id="tokenResult">
+                        <div class="row result-row">
+                            <div class="col s4 result-large">
+                                <div class="result-large-number" id="tokenResultLoveca"></div>
+                                <div class="result-large-label">Loveca Needed</div>
+                            </div>
+                            <div class="col s4 result-large">
+                                <div class="result-large-number" id="tokenResultEventLiveCount"></div>
+                                <div class="result-large-label">Event Live Plays</div>
+                            </div>
+                            <div class="col s4 result-large">
+                                <div class="result-large-number" id="tokenResultNormalLiveCount"></div>
+                                <div class="result-large-label">Normal Live Plays</div>
+                            </div>
+                        </div>
+                        <ul class="collapsible small-collapsible z-depth-0" style="opacity: 0;"
+                            data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header grey lighten-5">Alternative LP Recovery Items</div>
+                                <div class="collapsible-body grey lighten-5">
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [100% LP] Needed</div>
+                                        <div class="result-small-number" id="tokenResultSugarPots100"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [50% LP] Needed</div>
+                                        <div class="result-small-number" id="tokenResultSugarPots50"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Cubes [50 LP] Needed</div>
+                                        <div class="result-small-number" id="tokenResultSugarCubes"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="result-small">
+                            <div class="result-small-label">Final Rank</div>
+                            <div class="result-small-number" id="tokenResultFinalRank"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total Play Time
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Assuming 3 minutes for one song, how much play time you need to reach the Point Target.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="tokenResultPlayTime"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Play Time Rate
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Play Time divided by Remaining Time. The higher this value is, the more efficiently you will need to play.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="tokenResultPlayTimeRate"></div>
+                        </div>
+                    </div>
+                    <span id="tokenError"></span>
+                </div>
+            </div>
+        </div>
+        <div id="scorem" class="col s12">
+            <div class="row">
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Timer Method</span>
+                                <div class="radio-row">
+                                    <input name="scoremTimerMethod" type="radio" id="scoremTimerMethodAuto" value="auto"
+                                           checked/>
+                                    <label for="scoremTimerMethodAuto">Automatic</label>
+                                    <input name="scoremTimerMethod" type="radio" id="scoremTimerMethodManual"
+                                           value="manual"/>
+                                    <label for="scoremTimerMethodManual">Manual Input</label>
+                                </div>
+                                <div id="scoremTimerMethodAutoSection">
+                                    <span class="form-label">Region</span>
+                                    <div class="radio-row">
+                                        <input name="scoremTimerRegion" type="radio" id="scoremTimerRegionEn" value="en"/>
+                                        <label for="scoremTimerRegionEn">Worldwide</label>
+                                        <input name="scoremTimerRegion" type="radio" id="scoremTimerRegionJp" value="jp"/>
+                                        <label for="scoremTimerRegionJp">Japan</label>
+                                    </div>
+                                    <div id="scoremTimerEventInfo" class="event-info">
+                                        <span class="form-label" id="scoremTimerLeft"></span>
+                                        <div class="event-progress-bar">
+                                            <div class="event-progress-done" id="scoremTimerProgress"></div>
+                                        </div>
+                                        <div class="event-banner-container">
+                                            <img src="" id="scoremEventBanner" class="event-banner">
+                                        </div>
+                                        <small class="event-info-note">Something wrong? <a data-target="sidebar"
+                                                                                           class="sidenav-trigger">Contact
+                                            me!</a></small>
+                                    </div>
+                                </div>
+                                <div id="scoremTimerMethodManualSection" class="manual-timer-input">
+                                    <div class="input-field">
+                                        <input id="scoremManualRestTime" type="number" min="0" step="any" class="validate"
+                                               placeholder="">
+                                        <label for="scoremManualRestTime">
+                                            Time Left In Hours</label>
+                                        <span class="helper-text" data-error="Must be a positive number!"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Live Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="scoremLiveDifficulty" type="radio" id="scoremLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="scoremLiveDifficultyEasy">Easy</label>
+                                    <input name="scoremLiveDifficulty" type="radio" id="scoremLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="scoremLiveDifficultyNorm">Normal</label>
+                                    <input name="scoremLiveDifficulty" type="radio" id="scoremLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="scoremLiveDifficultyHard">Hard</label>
+                                    <input name="scoremLiveDifficulty" type="radio" id="scoremLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="scoremLiveDifficultyEx">EX / Tech</label>
+                                </div>
+                                <span class="form-label">Live Score Rank</span>
+                                <div class="radio-row">
+                                    <input name="scoremLiveScore" type="radio" id="scoremLiveScoreN" value="N"/>
+                                    <label for="scoremLiveScoreN">None</label>
+                                    <input name="scoremLiveScore" type="radio" id="scoremLiveScoreC" value="C"/>
+                                    <label for="scoremLiveScoreC">C</label>
+                                    <input name="scoremLiveScore" type="radio" id="scoremLiveScoreB" value="B"/>
+                                    <label for="scoremLiveScoreB">B</label>
+                                    <input name="scoremLiveScore" type="radio" id="scoremLiveScoreA" value="A"/>
+                                    <label for="scoremLiveScoreA">A</label>
+                                    <input name="scoremLiveScore" type="radio" id="scoremLiveScoreS" value="S"/>
+                                    <label for="scoremLiveScoreS">S</label>
+                                </div>
+                                <span class="form-label">Live Position</span>
+                                <div class="radio-row">
+                                    <input name="scoremLivePosition" type="radio" id="scoremLivePositionP1" value="P1"/>
+                                    <label for="scoremLivePositionP1">1st</label>
+                                    <input name="scoremLivePosition" type="radio" id="scoremLivePositionP2" value="P2"/>
+                                    <label for="scoremLivePositionP2">2nd</label>
+                                    <input name="scoremLivePosition" type="radio" id="scoremLivePositionP3" value="P3"/>
+                                    <label for="scoremLivePositionP3">3rd</label>
+                                    <input name="scoremLivePosition" type="radio" id="scoremLivePositionP4" value="P4"/>
+                                    <label for="scoremLivePositionP4">4th</label>
+                                    <input name="scoremLivePosition" type="radio" id="scoremLivePositionAverage"
+                                           value="AVERAGE"/>
+                                    <label for="scoremLivePositionAverage">Average</label>
+                                </div>
+                                <span class="form-label">Live Multiplier</span>
+                                <div class="radio-row">
+                                    <input name="scoremLiveMultiplier" type="radio" id="scoremLiveMultiplier1"
+                                           value="1"/>
+                                    <label for="scoremLiveMultiplier1">x1</label>
+                                    <input name="scoremLiveMultiplier" type="radio" id="scoremLiveMultiplier2"
+                                           value="2"/>
+                                    <label for="scoremLiveMultiplier2">x2</label>
+                                    <input name="scoremLiveMultiplier" type="radio" id="scoremLiveMultiplier3"
+                                           value="3"/>
+                                    <label for="scoremLiveMultiplier3">x3</label>
+                                    <input name="scoremLiveMultiplier" type="radio" id="scoremLiveMultiplier4"
+                                           value="4"/>
+                                    <label for="scoremLiveMultiplier4">x4</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">flag</i>Stats and Target
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input id="scoremTargetEventPoints" type="number" min="1" class="validate"
+                                           placeholder="">
+                                    <label for="scoremTargetEventPoints">
+                                        Target Event Points</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="scoremCurrentEventPoints" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="scoremCurrentEventPoints">
+                                        Current Event Points</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="scoremCurrentRank" type="number" min="1" class="validate" placeholder="">
+                                    <label for="scoremCurrentRank">
+                                        Current Rank</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <ul id="scoremCurrentExtra" class="collapsible small-collapsible z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">
+                                            Optional Fields
+                                            <div class="explain-button bigger">
+                                                <a class="tooltipped" data-position="top" data-delay="0"
+                                                   data-tooltip="These values usually make no difference, but might be
+                                                   useful for calculations in the last few hours of an event.">
+                                                    <i class="material-icons">help</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <input id="scoremCurrentLP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="scoremCurrentLP">
+                                                    Current LP</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                            <div class="input-field">
+                                                <input id="scoremCurrentEXP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="scoremCurrentEXP">
+                                                    Current EXP in Rank</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="buttons col s12 xl4 offset-xl4">
+                    <a id="scoremCalculate" class="waves-effect pink lighten-3 waves-light btn">Calculate</a>
+                    <a id="scoremSaveConfig" class="waves-effect pink lighten-5 waves-light btn">
+                        Save current configuration</a>
+                    <div class="result-box no-link" id="scoremResult">
+                        <div class="row result-row">
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="scoremResultLoveca"></div>
+                                <div class="result-large-label">Loveca Needed</div>
+                            </div>
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="scoremResultLiveCount"></div>
+                                <div class="result-large-label">Match Plays</div>
+                            </div>
+                        </div>
+                        <ul class="collapsible small-collapsible z-depth-0" style="opacity: 0;"
+                            data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header grey lighten-5">Alternative LP Recovery Items</div>
+                                <div class="collapsible-body grey lighten-5">
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [100% LP] Needed</div>
+                                        <div class="result-small-number" id="scoremResultSugarPots100"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [50% LP] Needed</div>
+                                        <div class="result-small-number" id="scoremResultSugarPots50"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Cubes [50 LP] Needed</div>
+                                        <div class="result-small-number" id="scoremResultSugarCubes"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="result-small">
+                            <div class="result-small-label">Final Rank</div>
+                            <div class="result-small-number" id="scoremResultFinalRank"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total Play Time
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Assuming 3 minutes for one song, how much play time you need to reach the Point Target.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="scoremResultPlayTime"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Play Time Rate
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Play Time divided by Remaining Time. The higher this value is, the more efficiently you will need to play.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="scoremResultPlayTimeRate"></div>
+                        </div>
+                    </div>
+                    <span id="scoremError"></span>
+                </div>
+            </div>
+        </div>
+        <div id="medfes" class="col s12">
+            <div class="row">
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Timer Method</span>
+                                <div class="radio-row">
+                                    <input name="medfesTimerMethod" type="radio" id="medfesTimerMethodAuto" value="auto"
+                                           checked/>
+                                    <label for="medfesTimerMethodAuto">Automatic</label>
+                                    <input name="medfesTimerMethod" type="radio" id="medfesTimerMethodManual"
+                                           value="manual"/>
+                                    <label for="medfesTimerMethodManual">Manual Input</label>
+                                </div>
+                                <div id="medfesTimerMethodAutoSection">
+                                    <span class="form-label">Region</span>
+                                    <div class="radio-row">
+                                        <input name="medfesTimerRegion" type="radio" id="medfesTimerRegionEn" value="en"/>
+                                        <label for="medfesTimerRegionEn">Worldwide</label>
+                                        <input name="medfesTimerRegion" type="radio" id="medfesTimerRegionJp" value="jp"/>
+                                        <label for="medfesTimerRegionJp">Japan</label>
+                                    </div>
+                                    <div id="medfesTimerEventInfo" class="event-info">
+                                        <span class="form-label" id="medfesTimerLeft"></span>
+                                        <div class="event-progress-bar">
+                                            <div class="event-progress-done" id="medfesTimerProgress"></div>
+                                        </div>
+                                        <div class="event-banner-container">
+                                            <img src="" id="medfesEventBanner" class="event-banner">
+                                        </div>
+                                        <small class="event-info-note">Something wrong? <a data-target="sidebar"
+                                                                                           class="sidenav-trigger">Contact
+                                            me!</a></small>
+                                    </div>
+                                </div>
+                                <div id="medfesTimerMethodManualSection" class="manual-timer-input">
+                                    <div class="input-field">
+                                        <input id="medfesManualRestTime" type="number" min="0" step="any" class="validate"
+                                               placeholder="">
+                                        <label for="medfesManualRestTime">
+                                            Time Left In Hours</label>
+                                        <span class="helper-text" data-error="Must be a positive number!"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Medley Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="medfesLiveDifficulty" type="radio" id="medfesLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="medfesLiveDifficultyEasy">Easy</label>
+                                    <input name="medfesLiveDifficulty" type="radio" id="medfesLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="medfesLiveDifficultyNorm">Normal</label>
+                                    <input name="medfesLiveDifficulty" type="radio" id="medfesLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="medfesLiveDifficultyHard">Hard</label>
+                                    <input name="medfesLiveDifficulty" type="radio" id="medfesLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="medfesLiveDifficultyEx">EX</label>
+                                </div>
+                                <span class="form-label">Songs per Medley</span>
+                                <div class="radio-row">
+                                    <input name="medfesLiveSongs" type="radio" id="medfesLiveSongs1" value="1"/>
+                                    <label for="medfesLiveSongs1">1</label>
+                                    <input name="medfesLiveSongs" type="radio" id="medfesLiveSongs2" value="2"/>
+                                    <label for="medfesLiveSongs2">2</label>
+                                    <input name="medfesLiveSongs" type="radio" id="medfesLiveSongs3" value="3"/>
+                                    <label for="medfesLiveSongs3">3</label>
+                                </div>
+                                <span class="form-label">Medley Score Rank</span>
+                                <div class="radio-row">
+                                    <input name="medfesLiveScore" type="radio" id="medfesLiveScoreN" value="N"/>
+                                    <label for="medfesLiveScoreN">None</label>
+                                    <input name="medfesLiveScore" type="radio" id="medfesLiveScoreC" value="C"/>
+                                    <label for="medfesLiveScoreC">C</label>
+                                    <input name="medfesLiveScore" type="radio" id="medfesLiveScoreB" value="B"/>
+                                    <label for="medfesLiveScoreB">B</label>
+                                    <input name="medfesLiveScore" type="radio" id="medfesLiveScoreA" value="A"/>
+                                    <label for="medfesLiveScoreA">A</label>
+                                    <input name="medfesLiveScore" type="radio" id="medfesLiveScoreS" value="S"/>
+                                    <label for="medfesLiveScoreS">S</label>
+                                </div>
+                                <span class="form-label">Medley Combo Rank</span>
+                                <div class="radio-row">
+                                    <input name="medfesLiveCombo" type="radio" id="medfesLiveComboN" value="N"/>
+                                    <label for="medfesLiveComboN">None</label>
+                                    <input name="medfesLiveCombo" type="radio" id="medfesLiveComboC" value="C"/>
+                                    <label for="medfesLiveComboC">C</label>
+                                    <input name="medfesLiveCombo" type="radio" id="medfesLiveComboB" value="B"/>
+                                    <label for="medfesLiveComboB">B</label>
+                                    <input name="medfesLiveCombo" type="radio" id="medfesLiveComboA" value="A"/>
+                                    <label for="medfesLiveComboA">A</label>
+                                    <input name="medfesLiveCombo" type="radio" id="medfesLiveComboS" value="S"/>
+                                    <label for="medfesLiveComboS">S</label>
+                                </div>
+                                <ul id="medfesArrange" class="collapsible small-collapsible with-margin z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">Arrangement Bonuses (<span
+                                                id="medfesArrangeCount">0</span>&nbsp;selected)
+                                        </div>
+                                        <div class="collapsible-body checkbox-list">
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeRewardsUp"/>
+                                                <span>G/S Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangePerfectSupport"/>
+                                                <span>Perfect Support</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeExpUp"/>
+                                                <span>EXP Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeScoreUp"/>
+                                                <span>Score Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeSkillRateUp"/>
+                                                <span>Skill Rate Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeEventPointUp"/>
+                                                <span>Event Point Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeRecovery"/>
+                                                <span>Recovery</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="medfesArrangeAlwaysCheer"/>
+                                                <span>Always Cheer</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">flag</i>Stats and Target
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input id="medfesTargetEventPoints" type="number" min="1" class="validate"
+                                           placeholder="">
+                                    <label for="medfesTargetEventPoints">
+                                        Target Event Points</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="medfesCurrentEventPoints" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="medfesCurrentEventPoints">
+                                        Current Event Points</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="medfesCurrentRank" type="number" min="1" class="validate" placeholder="">
+                                    <label for="medfesCurrentRank">
+                                        Current Rank</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <ul id="medfesCurrentExtra" class="collapsible small-collapsible z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">
+                                            Optional Fields
+                                            <div class="explain-button bigger">
+                                                <a class="tooltipped" data-position="top" data-delay="0"
+                                                   data-tooltip="These values usually make no difference, but might be
+                                                   useful for calculations in the last few hours of an event.">
+                                                    <i class="material-icons">help</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <input id="medfesCurrentLP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="medfesCurrentLP">
+                                                    Current LP</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                            <div class="input-field">
+                                                <input id="medfesCurrentEXP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="medfesCurrentEXP">
+                                                    Current EXP in Rank</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="buttons col s12 xl4 offset-xl4">
+                    <a id="medfesCalculate" class="waves-effect pink lighten-3 waves-light btn">Calculate</a>
+                    <a id="medfesSaveConfig" class="waves-effect pink lighten-5 waves-light btn">
+                        Save current configuration</a>
+                    <div class="result-box no-link" id="medfesResult">
+                        <div class="row result-row">
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="medfesResultLoveca"></div>
+                                <div class="result-large-label">Loveca Needed</div>
+                            </div>
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="medfesResultLiveCount"></div>
+                                <div class="result-large-label">Medley Plays</div>
+                            </div>
+                        </div>
+                        <ul class="collapsible small-collapsible z-depth-0" style="opacity: 0;"
+                            data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header grey lighten-5">Alternative LP Recovery Items</div>
+                                <div class="collapsible-body grey lighten-5">
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [100% LP] Needed</div>
+                                        <div class="result-small-number" id="medfesResultSugarPots100"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [50% LP] Needed</div>
+                                        <div class="result-small-number" id="medfesResultSugarPots50"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Cubes [50 LP] Needed</div>
+                                        <div class="result-small-number" id="medfesResultSugarCubes"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="result-small">
+                            <div class="result-small-label">Final Rank</div>
+                            <div class="result-small-number" id="medfesResultFinalRank"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total G Used
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="The total G cost of using the arrangement bonuses you selected on every medley.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="medfesResultGoldUsed"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total Play Time
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Assuming 3 minutes for one song, how much play time you need to reach the Point Target.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="medfesResultPlayTime"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Play Time Rate
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Play Time divided by Remaining Time. The higher this value is, the more efficiently you will need to play.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="medfesResultPlayTimeRate"></div>
+                        </div>
+                    </div>
+                    <span id="medfesError"></span>
+                </div>
+            </div>
+        </div>
+        <div id="chafes" class="col s12">
+            <div class="row">
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Timer Method</span>
+                                <div class="radio-row">
+                                    <input name="chafesTimerMethod" type="radio" id="chafesTimerMethodAuto" value="auto"
+                                           checked/>
+                                    <label for="chafesTimerMethodAuto">Automatic</label>
+                                    <input name="chafesTimerMethod" type="radio" id="chafesTimerMethodManual"
+                                           value="manual"/>
+                                    <label for="chafesTimerMethodManual">Manual Input</label>
+                                </div>
+                                <div id="chafesTimerMethodAutoSection">
+                                    <span class="form-label">Region</span>
+                                    <div class="radio-row">
+                                        <input name="chafesTimerRegion" type="radio" id="chafesTimerRegionEn" value="en"/>
+                                        <label for="chafesTimerRegionEn">Worldwide</label>
+                                        <input name="chafesTimerRegion" type="radio" id="chafesTimerRegionJp" value="jp"/>
+                                        <label for="chafesTimerRegionJp">Japan</label>
+                                    </div>
+                                    <div id="chafesTimerEventInfo" class="event-info">
+                                        <span class="form-label" id="chafesTimerLeft"></span>
+                                        <div class="event-progress-bar">
+                                            <div class="event-progress-done" id="chafesTimerProgress"></div>
+                                        </div>
+                                        <div class="event-banner-container">
+                                            <img src="" id="chafesEventBanner" class="event-banner">
+                                        </div>
+                                        <small class="event-info-note">Something wrong? <a data-target="sidebar"
+                                                                                           class="sidenav-trigger">Contact
+                                            me!</a></small>
+                                    </div>
+                                </div>
+                                <div id="chafesTimerMethodManualSection" class="manual-timer-input">
+                                    <div class="input-field">
+                                        <input id="chafesManualRestTime" type="number" min="0" step="any" class="validate"
+                                               placeholder="">
+                                        <label for="chafesManualRestTime">
+                                            Time Left In Hours</label>
+                                        <span class="helper-text" data-error="Must be a positive number!"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Challenge Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="chafesLiveDifficultyEasy">Easy</label>
+                                    <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="chafesLiveDifficultyNorm">Normal</label>
+                                    <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="chafesLiveDifficultyHard">Hard</label>
+                                    <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="chafesLiveDifficultyEx">EX</label>
+                                </div>
+                                <span class="form-label">Songs per Challenge</span>
+                                <div class="radio-row">
+                                    <input name="chafesLiveSongs" type="radio" id="chafesLiveSongs1" value="1"/>
+                                    <label for="chafesLiveSongs1">1</label>
+                                    <input name="chafesLiveSongs" type="radio" id="chafesLiveSongs2" value="2"/>
+                                    <label for="chafesLiveSongs2">2</label>
+                                    <input name="chafesLiveSongs" type="radio" id="chafesLiveSongs3" value="3"/>
+                                    <label for="chafesLiveSongs3">3</label>
+                                    <input name="chafesLiveSongs" type="radio" id="chafesLiveSongs4" value="4"/>
+                                    <label for="chafesLiveSongs4">4</label>
+                                    <input name="chafesLiveSongs" type="radio" id="chafesLiveSongs5" value="5"/>
+                                    <label for="chafesLiveSongs5">5</label>
+                                </div>
+                                <span class="form-label">Live Score Rank</span>
+                                <div class="radio-row">
+                                    <input name="chafesLiveScore" type="radio" id="chafesLiveScoreN" value="N"/>
+                                    <label for="chafesLiveScoreN">None</label>
+                                    <input name="chafesLiveScore" type="radio" id="chafesLiveScoreC" value="C"/>
+                                    <label for="chafesLiveScoreC">C</label>
+                                    <input name="chafesLiveScore" type="radio" id="chafesLiveScoreB" value="B"/>
+                                    <label for="chafesLiveScoreB">B</label>
+                                    <input name="chafesLiveScore" type="radio" id="chafesLiveScoreA" value="A"/>
+                                    <label for="chafesLiveScoreA">A</label>
+                                    <input name="chafesLiveScore" type="radio" id="chafesLiveScoreS" value="S"/>
+                                    <label for="chafesLiveScoreS">S</label>
+                                </div>
+                                <span class="form-label">Live Combo Rank</span>
+                                <div class="radio-row">
+                                    <input name="chafesLiveCombo" type="radio" id="chafesLiveComboN" value="N"/>
+                                    <label for="chafesLiveComboN">None</label>
+                                    <input name="chafesLiveCombo" type="radio" id="chafesLiveComboC" value="C"/>
+                                    <label for="chafesLiveComboC">C</label>
+                                    <input name="chafesLiveCombo" type="radio" id="chafesLiveComboB" value="B"/>
+                                    <label for="chafesLiveComboB">B</label>
+                                    <input name="chafesLiveCombo" type="radio" id="chafesLiveComboA" value="A"/>
+                                    <label for="chafesLiveComboA">A</label>
+                                    <input name="chafesLiveCombo" type="radio" id="chafesLiveComboS" value="S"/>
+                                    <label for="chafesLiveComboS">S</label>
+                                </div>
+                                <span class="form-label">Live Multiplier</span>
+                                <div class="radio-row">
+                                    <input name="chafesLiveMultiplier" type="radio" id="chafesLiveMultiplier1"
+                                           value="1"/>
+                                    <label for="chafesLiveMultiplier1">x1</label>
+                                    <input name="chafesLiveMultiplier" type="radio" id="chafesLiveMultiplier2"
+                                           value="2"/>
+                                    <label for="chafesLiveMultiplier2">x2</label>
+                                    <input name="chafesLiveMultiplier" type="radio" id="chafesLiveMultiplier3"
+                                           value="3"/>
+                                    <label for="chafesLiveMultiplier3">x3</label>
+                                    <input name="chafesLiveMultiplier" type="radio" id="chafesLiveMultiplier4"
+                                           value="4"/>
+                                    <label for="chafesLiveMultiplier4">x4</label>
+                                </div>
+                                <span class="form-label">Live Multiplier Usage</span>
+                                <div class="radio-row">
+                                    <input name="chafesLiveMultiplierUse" type="radio" id="chafesLiveMultiplierUseAll"
+                                           value="ALL"/>
+                                    <label for="chafesLiveMultiplierUseAll">All Songs</label>
+                                    <input name="chafesLiveMultiplierUse" type="radio" id="chafesLiveMultiplierUseLast"
+                                           value="LAST"/>
+                                    <label for="chafesLiveMultiplierUseLast">Last Song Only</label>
+                                </div>
+                                <ul id="chafesArrange" class="collapsible small-collapsible with-margin z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">Arrangement Bonuses (<span
+                                                id="chafesArrangeCount">0</span>&nbsp;selected)
+                                        </div>
+                                        <div class="collapsible-body checkbox-list">
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="chafesArrangeRewardsUp"/>
+                                                <span>G/S Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="chafesArrangePerfectSupport"/>
+                                                <span>Perfect Support</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="chafesArrangeExpUp"/>
+                                                <span>EXP Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="chafesArrangeScoreUp"/>
+                                                <span>Score Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="chafesArrangeSkillRateUp"/>
+                                                <span>Skill Rate Boost</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" class="filled-in" id="chafesArrangeEventPointUp"/>
+                                                <span>Event Point Boost</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">flag</i>Stats and Target
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input id="chafesTargetEventPoints" type="number" min="1" class="validate"
+                                           placeholder="">
+                                    <label for="chafesTargetEventPoints">
+                                        Target Event Points</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="chafesCurrentEventPoints" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="chafesCurrentEventPoints">
+                                        Current Event Points</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="chafesCurrentRank" type="number" min="1" class="validate" placeholder="">
+                                    <label for="chafesCurrentRank">
+                                        Current Rank</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <ul id="chafesCurrentExtra" class="collapsible small-collapsible z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">
+                                            Optional Fields
+                                            <div class="explain-button bigger">
+                                                <a class="tooltipped" data-position="top" data-delay="0"
+                                                   data-tooltip="These values usually make no difference, but might be
+                                                   useful for calculations in the last few hours of an event.">
+                                                    <i class="material-icons">help</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <input id="chafesCurrentLP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="chafesCurrentLP">
+                                                    Current LP</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                            <div class="input-field">
+                                                <input id="chafesCurrentEXP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="chafesCurrentEXP">
+                                                    Current EXP in Rank</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="buttons col s12 xl4 offset-xl4">
+                    <a id="chafesCalculate" class="waves-effect pink lighten-3 waves-light btn">Calculate</a>
+                    <a id="chafesSaveConfig" class="waves-effect pink lighten-5 waves-light btn">
+                        Save current configuration</a>
+                    <div class="result-box no-link" id="chafesResult">
+                        <div class="row result-row">
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="chafesResultLoveca"></div>
+                                <div class="result-large-label">Loveca Needed</div>
+                            </div>
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="chafesResultLiveCount"></div>
+                                <div class="result-large-label">Challenge Plays</div>
+                            </div>
+                        </div>
+                        <ul class="collapsible small-collapsible z-depth-0" style="opacity: 0;"
+                            data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header grey lighten-5">Alternative LP Recovery Items</div>
+                                <div class="collapsible-body grey lighten-5">
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [100% LP] Needed</div>
+                                        <div class="result-small-number" id="chafesResultSugarPots100"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [50% LP] Needed</div>
+                                        <div class="result-small-number" id="chafesResultSugarPots50"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Cubes [50 LP] Needed</div>
+                                        <div class="result-small-number" id="chafesResultSugarCubes"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="result-small">
+                            <div class="result-small-label">Final Rank</div>
+                            <div class="result-small-number" id="chafesResultFinalRank"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total G Used
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="The total G cost of using the arrangement bonuses you selected on every challenge.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="chafesResultGoldUsed"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total Play Time
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Assuming 3 minutes for one song, how much play time you need to reach the Point Target.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="chafesResultPlayTime"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Play Time Rate
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Play Time divided by Remaining Time. The higher this value is, the more efficiently you will need to play.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="chafesResultPlayTimeRate"></div>
+                        </div>
+                    </div>
+                    <span id="chafesError"></span>
+                </div>
+            </div>
+        </div>
+        <div id="rally" class="col s12">
+            <div class="row">
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Timer Method</span>
+                                <div class="radio-row">
+                                    <input name="rallyTimerMethod" type="radio" id="rallyTimerMethodAuto" value="auto"
+                                           checked/>
+                                    <label for="rallyTimerMethodAuto">Automatic</label>
+                                    <input name="rallyTimerMethod" type="radio" id="rallyTimerMethodManual"
+                                           value="manual"/>
+                                    <label for="rallyTimerMethodManual">Manual Input</label>
+                                </div>
+                                <div id="rallyTimerMethodAutoSection">
+                                    <span class="form-label">Region</span>
+                                    <div class="radio-row">
+                                        <input name="rallyTimerRegion" type="radio" id="rallyTimerRegionEn" value="en"/>
+                                        <label for="rallyTimerRegionEn">Worldwide</label>
+                                        <input name="rallyTimerRegion" type="radio" id="rallyTimerRegionJp" value="jp"/>
+                                        <label for="rallyTimerRegionJp">Japan</label>
+                                    </div>
+                                    <div id="rallyTimerEventInfo" class="event-info">
+                                        <span class="form-label" id="rallyTimerLeft"></span>
+                                        <div class="event-progress-bar">
+                                            <div class="event-progress-done" id="rallyTimerProgress"></div>
+                                        </div>
+                                        <div class="event-banner-container">
+                                            <img src="" id="rallyEventBanner" class="event-banner">
+                                        </div>
+                                        <small class="event-info-note">Something wrong? <a data-target="sidebar"
+                                                                                           class="sidenav-trigger">Contact
+                                            me!</a></small>
+                                    </div>
+                                </div>
+                                <div id="rallyTimerMethodManualSection" class="manual-timer-input">
+                                    <div class="input-field">
+                                        <input id="rallyManualRestTime" type="number" min="0" step="any" class="validate"
+                                               placeholder="">
+                                        <label for="rallyManualRestTime">
+                                            Time Left In Hours</label>
+                                        <span class="helper-text" data-error="Must be a positive number!"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Live Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="rallyLiveDifficulty" type="radio" id="rallyLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="rallyLiveDifficultyEasy">Easy</label>
+                                    <input name="rallyLiveDifficulty" type="radio" id="rallyLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="rallyLiveDifficultyNorm">Normal</label>
+                                    <input name="rallyLiveDifficulty" type="radio" id="rallyLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="rallyLiveDifficultyHard">Hard</label>
+                                    <input name="rallyLiveDifficulty" type="radio" id="rallyLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="rallyLiveDifficultyEx">EX</label>
+                                </div>
+                                <span class="form-label">Live Score Rank</span>
+                                <div class="radio-row">
+                                    <input name="rallyLiveScore" type="radio" id="rallyLiveScoreN" value="N"/>
+                                    <label for="rallyLiveScoreN">None</label>
+                                    <input name="rallyLiveScore" type="radio" id="rallyLiveScoreC" value="C"/>
+                                    <label for="rallyLiveScoreC">C</label>
+                                    <input name="rallyLiveScore" type="radio" id="rallyLiveScoreB" value="B"/>
+                                    <label for="rallyLiveScoreB">B</label>
+                                    <input name="rallyLiveScore" type="radio" id="rallyLiveScoreA" value="A"/>
+                                    <label for="rallyLiveScoreA">A</label>
+                                    <input name="rallyLiveScore" type="radio" id="rallyLiveScoreS" value="S"/>
+                                    <label for="rallyLiveScoreS">S</label>
+                                </div>
+                                <span class="form-label">Live Combo Rank</span>
+                                <div class="radio-row">
+                                    <input name="rallyLiveCombo" type="radio" id="rallyLiveComboN" value="N"/>
+                                    <label for="rallyLiveComboN">None</label>
+                                    <input name="rallyLiveCombo" type="radio" id="rallyLiveComboC" value="C"/>
+                                    <label for="rallyLiveComboC">C</label>
+                                    <input name="rallyLiveCombo" type="radio" id="rallyLiveComboB" value="B"/>
+                                    <label for="rallyLiveComboB">B</label>
+                                    <input name="rallyLiveCombo" type="radio" id="rallyLiveComboA" value="A"/>
+                                    <label for="rallyLiveComboA">A</label>
+                                    <input name="rallyLiveCombo" type="radio" id="rallyLiveComboS" value="S"/>
+                                    <label for="rallyLiveComboS">S</label>
+                                </div>
+                                <span class="form-label">Live Multiplier</span>
+                                <div class="radio-row">
+                                    <input name="rallyLiveMultiplier" type="radio" id="rallyLiveMultiplier1"
+                                           value="1"/>
+                                    <label for="rallyLiveMultiplier1">x1</label>
+                                    <input name="rallyLiveMultiplier" type="radio" id="rallyLiveMultiplier2"
+                                           value="2"/>
+                                    <label for="rallyLiveMultiplier2">x2</label>
+                                    <input name="rallyLiveMultiplier" type="radio" id="rallyLiveMultiplier3"
+                                           value="3"/>
+                                    <label for="rallyLiveMultiplier3">x3</label>
+                                    <input name="rallyLiveMultiplier" type="radio" id="rallyLiveMultiplier4"
+                                           value="4"/>
+                                    <label for="rallyLiveMultiplier4">x4</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">flag</i>Stats and Target
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input id="rallyTargetEventPoints" type="number" min="1" class="validate"
+                                           placeholder="">
+                                    <label for="rallyTargetEventPoints">
+                                        Target Event Points</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="rallyCurrentEventPoints" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="rallyCurrentEventPoints">
+                                        Current Event Points</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="rallyCurrentRank" type="number" min="1" class="validate" placeholder="">
+                                    <label for="rallyCurrentRank">
+                                        Current Rank</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <ul id="rallyCurrentExtra" class="collapsible small-collapsible z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">
+                                            Optional Fields
+                                            <div class="explain-button bigger">
+                                                <a class="tooltipped" data-position="top" data-delay="0"
+                                                   data-tooltip="These values usually make no difference, but might be
+                                                   useful for calculations in the last few hours of an event.">
+                                                    <i class="material-icons">help</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <input id="rallyCurrentLP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="rallyCurrentLP">
+                                                    Current LP</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                            <div class="input-field">
+                                                <input id="rallyCurrentEXP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="rallyCurrentEXP">
+                                                    Current EXP in Rank</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="buttons col s12 xl4 offset-xl4">
+                    <a id="rallyCalculate" class="waves-effect pink lighten-3 waves-light btn">Calculate</a>
+                    <a id="rallySaveConfig" class="waves-effect pink lighten-5 waves-light btn">
+                        Save current configuration</a>
+                    <div class="result-box no-link" id="rallyResult">
+                        <div class="row result-row">
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="rallyResultLoveca"></div>
+                                <div class="result-large-label">Loveca Needed</div>
+                            </div>
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="rallyResultLiveCount"></div>
+                                <div class="result-large-label">Live Plays</div>
+                            </div>
+                        </div>
+                        <ul class="collapsible small-collapsible z-depth-0" style="opacity: 0;"
+                            data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header grey lighten-5">Alternative LP Recovery Items</div>
+                                <div class="collapsible-body grey lighten-5">
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [100% LP] Needed</div>
+                                        <div class="result-small-number" id="rallyResultSugarPots100"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [50% LP] Needed</div>
+                                        <div class="result-small-number" id="rallyResultSugarPots50"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Cubes [50 LP] Needed</div>
+                                        <div class="result-small-number" id="rallyResultSugarCubes"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="result-small">
+                            <div class="result-small-label">Final Rank</div>
+                            <div class="result-small-number" id="rallyResultFinalRank"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total Play Time
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Assuming 3 minutes for one song, how much play time you need to reach the Point Target.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="rallyResultPlayTime"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Play Time Rate
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Play Time divided by Remaining Time. The higher this value is, the more efficiently you will need to play.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="rallyResultPlayTimeRate"></div>
+                        </div>
+                    </div>
+                    <span id="rallyError"></span>
+                </div>
+            </div>
+        </div>
+        <div id="friendm" class="col s12">
+            <div class="row">
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Timer Method</span>
+                                <div class="radio-row">
+                                    <input name="friendmTimerMethod" type="radio" id="friendmTimerMethodAuto" value="auto"
+                                           checked/>
+                                    <label for="friendmTimerMethodAuto">Automatic</label>
+                                    <input name="friendmTimerMethod" type="radio" id="friendmTimerMethodManual"
+                                           value="manual"/>
+                                    <label for="friendmTimerMethodManual">Manual Input</label>
+                                </div>
+                                <div id="friendmTimerMethodAutoSection">
+                                    <span class="form-label">Region</span>
+                                    <div class="radio-row">
+                                        <input name="friendmTimerRegion" type="radio" id="friendmTimerRegionEn" value="en"/>
+                                        <label for="friendmTimerRegionEn">Worldwide</label>
+                                        <input name="friendmTimerRegion" type="radio" id="friendmTimerRegionJp" value="jp"/>
+                                        <label for="friendmTimerRegionJp">Japan</label>
+                                    </div>
+                                    <div id="friendmTimerEventInfo" class="event-info">
+                                        <span class="form-label" id="friendmTimerLeft"></span>
+                                        <div class="event-progress-bar">
+                                            <div class="event-progress-done" id="friendmTimerProgress"></div>
+                                        </div>
+                                        <div class="event-banner-container">
+                                            <img src="" id="friendmEventBanner" class="event-banner">
+                                        </div>
+                                        <small class="event-info-note">Something wrong? <a data-target="sidebar"
+                                                                                           class="sidenav-trigger">Contact
+                                            me!</a></small>
+                                    </div>
+                                </div>
+                                <div id="friendmTimerMethodManualSection" class="manual-timer-input">
+                                    <div class="input-field">
+                                        <input id="friendmManualRestTime" type="number" min="0" step="any" class="validate"
+                                               placeholder="">
+                                        <label for="friendmManualRestTime">
+                                            Time Left In Hours</label>
+                                        <span class="helper-text" data-error="Must be a positive number!"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
+                            </div>
+                            <div class="collapsible-body">
+                                <span class="form-label">Live Difficulty</span>
+                                <div class="radio-row">
+                                    <input name="friendmLiveDifficulty" type="radio" id="friendmLiveDifficultyEasy"
+                                           value="EASY"/>
+                                    <label for="friendmLiveDifficultyEasy">Easy</label>
+                                    <input name="friendmLiveDifficulty" type="radio" id="friendmLiveDifficultyNorm"
+                                           value="NORMAL"/>
+                                    <label for="friendmLiveDifficultyNorm">Normal</label>
+                                    <input name="friendmLiveDifficulty" type="radio" id="friendmLiveDifficultyHard"
+                                           value="HARD"/>
+                                    <label for="friendmLiveDifficultyHard">Hard</label>
+                                    <input name="friendmLiveDifficulty" type="radio" id="friendmLiveDifficultyEx"
+                                           value="EX"/>
+                                    <label for="friendmLiveDifficultyEx">EX</label>
+                                </div>
+                                <span class="form-label">Individual Score Rank</span>
+                                <div class="radio-row">
+                                    <input name="friendmLiveScore" type="radio" id="friendmLiveScoreN" value="N"/>
+                                    <label for="friendmLiveScoreN">None</label>
+                                    <input name="friendmLiveScore" type="radio" id="friendmLiveScoreC" value="C"/>
+                                    <label for="friendmLiveScoreC">C</label>
+                                    <input name="friendmLiveScore" type="radio" id="friendmLiveScoreB" value="B"/>
+                                    <label for="friendmLiveScoreB">B</label>
+                                    <input name="friendmLiveScore" type="radio" id="friendmLiveScoreA" value="A"/>
+                                    <label for="friendmLiveScoreA">A</label>
+                                    <input name="friendmLiveScore" type="radio" id="friendmLiveScoreS" value="S"/>
+                                    <label for="friendmLiveScoreS">S</label>
+                                </div>
+                                <span class="form-label">Individual Combo Rank</span>
+                                <div class="radio-row">
+                                    <input name="friendmLiveCombo" type="radio" id="friendmLiveComboN" value="N"/>
+                                    <label for="friendmLiveComboN">None</label>
+                                    <input name="friendmLiveCombo" type="radio" id="friendmLiveComboC" value="C"/>
+                                    <label for="friendmLiveComboC">C</label>
+                                    <input name="friendmLiveCombo" type="radio" id="friendmLiveComboB" value="B"/>
+                                    <label for="friendmLiveComboB">B</label>
+                                    <input name="friendmLiveCombo" type="radio" id="friendmLiveComboA" value="A"/>
+                                    <label for="friendmLiveComboA">A</label>
+                                    <input name="friendmLiveCombo" type="radio" id="friendmLiveComboS" value="S"/>
+                                    <label for="friendmLiveComboS">S</label>
+                                </div>
+                                <span class="form-label">Individual Contribution Position</span>
+                                <div class="radio-row">
+                                    <input name="friendmLivePosition" type="radio" id="friendmLivePositionP1" value="P1"/>
+                                    <label for="friendmLivePositionP1">1st</label>
+                                    <input name="friendmLivePosition" type="radio" id="friendmLivePositionP2" value="P2"/>
+                                    <label for="friendmLivePositionP2">2nd</label>
+                                    <input name="friendmLivePosition" type="radio" id="friendmLivePositionP3" value="P3"/>
+                                    <label for="friendmLivePositionP3">3rd</label>
+                                    <input name="friendmLivePosition" type="radio" id="friendmLivePositionP4" value="P4"/>
+                                    <label for="friendmLivePositionP4">4th</label>
+                                    <input name="friendmLivePosition" type="radio" id="friendmLivePositionAverage"
+                                           value="AVERAGE"/>
+                                    <label for="friendmLivePositionAverage">Average</label>
+                                </div>
+                                <span class="form-label">Group Mission Rank</span>
+                                <div class="radio-row">
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupN" value="N"/>
+                                    <label for="friendmLiveGroupN">None</label>
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupC" value="C"/>
+                                    <label for="friendmLiveGroupC">C</label>
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupB" value="B"/>
+                                    <label for="friendmLiveGroupB">B</label>
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupA" value="A"/>
+                                    <label for="friendmLiveGroupA">A</label>
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupS" value="S"/>
+                                    <label for="friendmLiveGroupS">S</label>
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupSS" value="SS"/>
+                                    <label for="friendmLiveGroupSS">SS</label>
+                                    <input name="friendmLiveGroup" type="radio" id="friendmLiveGroupSSS" value="SSS"/>
+                                    <label for="friendmLiveGroupSSS">SSS</label>
+                                </div>
+                                <span class="form-label">Live Multiplier</span>
+                                <div class="radio-row">
+                                    <input name="friendmLiveMultiplier" type="radio" id="friendmLiveMultiplier1"
+                                           value="1"/>
+                                    <label for="friendmLiveMultiplier1">x1</label>
+                                    <input name="friendmLiveMultiplier" type="radio" id="friendmLiveMultiplier2"
+                                           value="2"/>
+                                    <label for="friendmLiveMultiplier2">x2</label>
+                                    <input name="friendmLiveMultiplier" type="radio" id="friendmLiveMultiplier3"
+                                           value="3"/>
+                                    <label for="friendmLiveMultiplier3">x3</label>
+                                    <input name="friendmLiveMultiplier" type="radio" id="friendmLiveMultiplier4"
+                                           value="4"/>
+                                    <label for="friendmLiveMultiplier4">x4</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 xl4">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header"><i class="material-icons">flag</i>Stats and Target
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input id="friendmTargetEventPoints" type="number" min="1" class="validate"
+                                           placeholder="">
+                                    <label for="friendmTargetEventPoints">
+                                        Target Event Points</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="friendmCurrentEventPoints" type="number" min="0" class="validate"
+                                           placeholder="">
+                                    <label for="friendmCurrentEventPoints">
+                                        Current Event Points</label>
+                                    <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                </div>
+                                <div class="input-field">
+                                    <input id="friendmCurrentRank" type="number" min="1" class="validate" placeholder="">
+                                    <label for="friendmCurrentRank">
+                                        Current Rank</label>
+                                    <span class="helper-text" data-error="Must be an integer greater than 0!"></span>
+                                </div>
+                                <ul id="friendmCurrentExtra" class="collapsible small-collapsible z-depth-0"
+                                    data-collapsible="expandable">
+                                    <li>
+                                        <div class="collapsible-header">
+                                            Optional Fields
+                                            <div class="explain-button bigger">
+                                                <a class="tooltipped" data-position="top" data-delay="0"
+                                                   data-tooltip="These values usually make no difference, but might be
+                                                   useful for calculations in the last few hours of an event.">
+                                                    <i class="material-icons">help</i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="collapsible-body">
+                                            <div class="input-field">
+                                                <input id="friendmCurrentLP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="friendmCurrentLP">
+                                                    Current LP</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                            <div class="input-field">
+                                                <input id="friendmCurrentEXP" type="number" min="0" class="validate"
+                                                       placeholder="0">
+                                                <label for="friendmCurrentEXP">
+                                                    Current EXP in Rank</label>
+                                                <span class="helper-text" data-error="Must be a positive integer!"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="buttons col s12 xl4 offset-xl4">
+                    <a id="friendmCalculate" class="waves-effect pink lighten-3 waves-light btn">Calculate</a>
+                    <a id="friendmSaveConfig" class="waves-effect pink lighten-5 waves-light btn">
+                        Save current configuration</a>
+                    <div class="result-box no-link" id="friendmResult">
+                        <div class="row result-row">
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="friendmResultLoveca"></div>
+                                <div class="result-large-label">Loveca Needed</div>
+                            </div>
+                            <div class="col s6 result-large">
+                                <div class="result-large-number" id="friendmResultLiveCount"></div>
+                                <div class="result-large-label">Match Plays</div>
+                            </div>
+                        </div>
+                        <ul class="collapsible small-collapsible z-depth-0" style="opacity: 0;"
+                            data-collapsible="expandable">
+                            <li>
+                                <div class="collapsible-header grey lighten-5">Alternative LP Recovery Items</div>
+                                <div class="collapsible-body grey lighten-5">
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [100% LP] Needed</div>
+                                        <div class="result-small-number" id="friendmResultSugarPots100"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Pots [50% LP] Needed</div>
+                                        <div class="result-small-number" id="friendmResultSugarPots50"></div>
+                                    </div>
+                                    <div class="result-small">
+                                        <div class="result-small-label">Sugar Cubes [50 LP] Needed</div>
+                                        <div class="result-small-number" id="friendmResultSugarCubes"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="result-small">
+                            <div class="result-small-label">Final Rank</div>
+                            <div class="result-small-number" id="friendmResultFinalRank"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Total Play Time
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Assuming 3 minutes for one song, how much play time you need to reach the Point Target.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="friendmResultPlayTime"></div>
+                        </div>
+                        <div class="result-small">
+                            <div class="result-small-label">Play Time Rate
+                                <div class="explain-button">
+                                    <a class="tooltipped" data-position="top" data-delay="0"
+                                       data-tooltip="Play Time divided by Remaining Time. The higher this value is, the more efficiently you will need to play.">
+                                        <i class="material-icons">help</i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="result-small-number" id="friendmResultPlayTimeRate"></div>
+                        </div>
+                    </div>
+                    <span id="friendmError"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="popup-background valign-wrapper" id="popUp">
+        <div class="popup-dialog z-depth-5 card white">
+            <div class="card-content black-text">
+                <p id="popUpContent"></p>
+            </div>
+            <div class="card-action right-align">
+                <a class="pink-text" id="popUpButton">Close</a>
+                <a class="pink-text" id="dialogYesButton">Yes</a>
+                <a class="pink-text" id="dialogNoButton">No</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/register-sw.js"></script>
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/materialize.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+
+    <script type="text/javascript" src="js/networkinfo.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/token.js"></script>
+    <script type="text/javascript" src="js/scorem.js"></script>
+    <script type="text/javascript" src="js/medfes.js"></script>
+    <script type="text/javascript" src="js/chafes.js"></script>
+    <script type="text/javascript" src="js/rally.js"></script>
+    <script type="text/javascript" src="js/friendm.js"></script>
+</body>
+</html>
