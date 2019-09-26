@@ -23,7 +23,7 @@ echo "Minify Javascript..."
 mkdir build/js
 for F in js/*.js; do
     echo "    ${F}"
-    node_modules/.bin/uglifyjs --compress sequences=true,conditionals=true,booleans=true,dead_code=true,unused=true,if_return=true,join_vars=true,drop_console=true --mangle --comments '/^\/*!/' -o build/${F} ${F}
+    node_modules/.bin/uglifyjs --compress sequences=true,conditionals=true,booleans=true,dead_code=true,unused=true,if_return=true,join_vars=true --mangle -o build/${F} ${F}
 done
 
 echo "Minify CSS..."
@@ -47,7 +47,7 @@ for F in image/*.png; do
 done
 
 echo "Generate service worker..."
-node_modules/.bin/uglifyjs --compress sequences=true,conditionals=true,booleans=true,if_return=true,join_vars=true,drop_console=true --mangle -o build/serviceworker.js serviceworker.js
+node_modules/.bin/uglifyjs --compress sequences=true,conditionals=true,booleans=true,if_return=true,join_vars=true --mangle -o build/serviceworker.js serviceworker.js
 echo "" >> build/serviceworker.js
 echo -n "var cache_files = new Set([" >> build/serviceworker.js
 find build -not -path '*/\.*' -not -iname '.htaccess' -not -iname 'serviceworker.js' -not -iname 'networkinfo.js' -not -iname 'event_en.png' -not -iname 'event_jp.png' -type f -printf '"%P"\n' | tr '\n' ',' | sed 's/,$//' >> build/serviceworker.js
