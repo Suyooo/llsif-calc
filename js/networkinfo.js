@@ -1,10 +1,10 @@
-var enDateOverride = [new Date(Date.UTC(2019, 8, 6, 9)),
-    new Date(Date.UTC(2019, 8, 16, 8))];
+var enDateOverride = [new Date(Date.UTC(2019, 8, 27, 9)),
+    new Date(Date.UTC(2019, 9, 6, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>September 22 Update:</b> I changed some things on the stylesheet and in the Otasuke Sorter. Some colors might be messed up? Some cards might be miscategorized as promos? More details in the changelog. Please report any oddities you see (Discord tag is in the menu)! Thank you!<br><b>September 23 Update:</b> You know what, while I'm at it: here's the current LP/EXP inputs back, for your \"oh no, there's only a few hours left and I still need to meet my target\"-type calculations. Implemented in a different way than last time so calculations shouldn't break spectacularly, but if you notice anything odd, you can still report it!",
-    id: 10,
+    message: "<b>September Updates:</b> Several backend updates (in preparation for a SIFAS calc, maybe?). If you notice any oddities in regards to weird colors on elements, or the event info failing to update, please contact me (Discord tag is in the menu). Thank you!<br>This notification is dedicated to ZeroChew, who gave me a Nozomi and Kanan account for SIFAS. What a legend",
+    id: 11,
     allowDismiss: true
 };
 
