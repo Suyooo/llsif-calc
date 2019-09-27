@@ -13,9 +13,9 @@ cp changelog build
 echo "Copy app manifest..."
 cp manifest.json build
 
-echo "Copy JS Libraries..."
+echo "Copy Libraries..."
 mkdir build/vendor
-for F in vendor/*.js; do
+for F in vendor/*.*; do
     echo "    ${F}"
     cp ${F} build/vendor
 done
