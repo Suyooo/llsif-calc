@@ -13,6 +13,13 @@ cp changelog build
 echo "Copy app manifest..."
 cp manifest.json build
 
+echo "Copy JS Libraries..."
+mkdir build/vendor
+for F in vendor/*.js; do
+    echo "    ${F}"
+    cp ${F} build/vendor
+done
+
 echo "Minify HTML..."
 for F in *.html; do
     echo "    ${F}"
