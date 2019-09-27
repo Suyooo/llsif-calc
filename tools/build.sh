@@ -13,11 +13,17 @@ cp changelog build
 echo "Copy app manifest..."
 cp manifest.json build
 
-echo "Copy Libraries..."
+echo "Copy Library JS..."
 mkdir build/vendor
-for F in vendor/*.*; do
+for F in vendor/*.js; do
     echo "    ${F}"
     cp ${F} build/vendor
+done
+
+echo "Copy Library CSS..."
+for F in vendor/*.css; do
+    echo "    ${F}"
+    node_modules/.bin/purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
 done
 
 echo "Minify HTML..."
@@ -37,7 +43,7 @@ echo "Minify CSS..."
 mkdir build/css
 for F in css/*.css; do
     echo "    ${F}"
-    node_modules/.bin/purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js js/materialize.js -m -o build/${F}
+    node_modules/.bin/purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
 done
 
 echo "Copy JPG images..."
