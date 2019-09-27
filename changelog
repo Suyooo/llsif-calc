@@ -1,3 +1,7 @@
+September 27, 2019 - The Colors Did Mess Up Indeed Edition
+----------------------------
+- Fixed the "Contact me" link below the event banner being too dark on dark mode
+
 September 25, 2019 - The Future Is Here Edition
 ----------------------------
 - Removed AppCache, added Service Worker. What a garbage spec, but I'm glad it's done

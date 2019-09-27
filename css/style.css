@@ -68,17 +68,11 @@ body {
     overflow-y: scroll;
 }
 
-a:not(.btn), a:not(.btn):active, a:not(.btn):visited {
-    color: var(--key-normal);
+a:not(.btn), a:not(.btn):active, a:not(.btn):visited, a:not(.btn):hover, a:not(.btn):focus {
+    color: var(--key-important);
 }
 
 a:not(.btn):hover, a:not(.btn):focus {
-    color: var(--key-low);
-    text-decoration: underline;
-}
-
-#notificationMessage a:not(.btn):hover, #notificationMessage a:not(.btn):focus {
-    color: var(--key-dark);
     text-decoration: underline;
 }
 
