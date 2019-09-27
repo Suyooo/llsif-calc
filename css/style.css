@@ -165,10 +165,6 @@ li .active {
     font-weight: bold;
 }
 
-.popup-dialog ul:not(.browser-default) > li {
-    list-style: circle inside;
-}
-
 .sidenav {
     background-color: var(--sidenav);
 }
@@ -604,11 +600,16 @@ input[type="checkbox"] + span {
     z-index: 999;
     max-height: 100%;
     overflow-y: auto;
+    background-color: var(--background);
 }
 
 .popup-dialog a {
     text-decoration: none !important;
     cursor: pointer;
+}
+
+.popup-dialog ul:not(.browser-default) > li {
+    list-style: circle inside;
 }
 
 .toast span {

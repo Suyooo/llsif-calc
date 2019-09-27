@@ -2,6 +2,7 @@ September 27, 2019 - The Colors Did Mess Up Indeed Edition
 ----------------------------
 - Fixed the "Contact me" link below the event banner being too dark on dark mode
 - Fixed colors on some elements like number inputs and tab indicator
+- Fixed pop up dialogs not respecting dark mode
 - Fixed max EXP calculation for ranks > 1000
 
 September 25, 2019 - The Future Is Here Edition
