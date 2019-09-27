@@ -107,15 +107,18 @@ Common.getMaxLp = function (playerRank) {
 };
 
 /**
- * Calculates the experience points needed to rank up to the next rank, given a player's rank.
+ * Calculates the experience points needed to rank up to the next rank, given a player's rank. Slightly inaccurate, but
+ * usually the error is less than ten EXP. Taken from https://w.atwiki.jp/lovelive-sif/pages/23.html (comments too)
  * @param {number} playerRank The player's current rank.
  * @returns {number} EXP needed to rank up at the given rank.
  */
 Common.getNextRankUpExp = function (playerRank) {
     if (playerRank < COMMON_RANK_UP_EXP.length) {
         return COMMON_RANK_UP_EXP[playerRank];
-    } else {
+    } else if (playerRank < 1002) {
         return Math.round(34.45 * playerRank - 551);
+    } else {
+        return 34435 + (playerRank - 1001) * (35 + 3100 * (playerRank - 1000) / 2);
     }
 };
 
@@ -208,7 +211,7 @@ Common.calculateLpRecoveryInfo = function (playerRank, totalExpGained, playerExp
 
     // Small correction: partially regenerated LP are lost on refills because of overflow. Assuming you'll lose "half
     // an LP" per rank up, consider that LP recovery time lost by subtracting it from the time left
-    eventTimeLeftInMinutes -= ( recoveryInfo.rankUpCount) * (COMMON_LP_RECOVERY_TIME_IN_MINUTES / 2);
+    eventTimeLeftInMinutes -= (recoveryInfo.rankUpCount) * (COMMON_LP_RECOVERY_TIME_IN_MINUTES / 2);
     if (0 > eventTimeLeftInMinutes) {
         return null;
     }
