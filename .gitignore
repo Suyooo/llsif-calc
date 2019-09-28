@@ -3,4 +3,5 @@ api
 build
 doc
 node_modules
+package.json
 progress

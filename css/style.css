@@ -100,6 +100,15 @@ nav a {
     color: var(--link) !important;
 }
 
+.nav-extended .container {
+    background: url("../image/headericon_light.svg") no-repeat right;
+    background-size: contain;
+}
+
+.dark-mode .nav-extended .container {
+    background-image: url("../image/headericon_dark.svg");
+}
+
 .nav-content {
     overflow: hidden;
     height: 48px;

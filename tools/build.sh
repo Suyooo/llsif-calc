@@ -23,27 +23,27 @@ done
 echo "Copy Library CSS..."
 for F in vendor/*.css; do
     echo "    ${F}"
-    node_modules/.bin/purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
+    purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
 done
 
 echo "Minify HTML..."
 for F in *.html; do
     echo "    ${F}"
-    node_modules/.bin/html-minifier --collapse-whitespace -o build/${F} ${F}
+    html-minifier --collapse-whitespace -o build/${F} ${F}
 done
 
 echo "Minify Javascript..."
 mkdir build/js
 for F in js/*.js; do
     echo "    ${F}"
-    node_modules/.bin/uglifyjs --compress sequences=true,conditionals=true,booleans=true,dead_code=true,unused=true,if_return=true,join_vars=true --mangle -o build/${F} ${F}
+    uglifyjs --compress sequences=true,conditionals=true,booleans=true,dead_code=true,unused=true,if_return=true,join_vars=true --mangle -o build/${F} ${F}
 done
 
 echo "Minify CSS..."
 mkdir build/css
 for F in css/*.css; do
     echo "    ${F}"
-    node_modules/.bin/purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
+    purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
 done
 
 echo "Copy JPG images..."
@@ -59,8 +59,14 @@ for F in image/*.png; do
     pngcrush -s -rem gAMA -rem cHRM -rem iCCP -rem sRGB -rem alla -rem text ${F} build/${F}
 done
 
+echo "Optimize SVG images..."
+for F in image/headericon_*.svg; do
+    echo "    ${F}"
+    svgo -q ${F} -o build/${F}
+done
+
 echo "Generate service worker..."
-node_modules/.bin/uglifyjs --compress sequences=true,conditionals=true,booleans=true,if_return=true,join_vars=true --mangle -o build/serviceworker.js serviceworker.js
+uglifyjs --compress sequences=true,conditionals=true,booleans=true,if_return=true,join_vars=true --mangle -o build/serviceworker.js serviceworker.js
 echo "" >> build/serviceworker.js
 echo -n "var cache_files = new Set([" >> build/serviceworker.js
 find build -not -path '*/\.*' -not -iname '.htaccess' -not -iname 'serviceworker.js' -not -iname 'networkinfo.js' -not -iname 'event_en.png' -not -iname 'event_jp.png' -type f -printf '"%P"\n' | tr '\n' ',' | sed 's/,$//' >> build/serviceworker.js
