@@ -3,7 +3,7 @@ var enDateOverride = [new Date(Date.UTC(2019, 8, 27, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>September Updates:</b> Several backend updates (in preparation for a SIFAS calc, maybe?). If you notice any oddities in regards to weird colors on elements, or the event info failing to update, please contact me (Discord tag is in the menu). Thank you!<br>This notification is dedicated to ZeroChew, who gave me a Nozomi and Kanan account for SIFAS. What a legend",
+    message: "<b>September Updates:</b> Several backend updates (in preparation for a SIFAS calc, maybe?). If you notice any oddities in regards to weird colors on elements, or the event info failing to update, please contact me (Discord tag is in the menu). Thank you!",
     id: 11,
     allowDismiss: true
 };
