@@ -127,18 +127,18 @@ ScoreMatchData.setToUi = function (savedData) {
  */
 ScoreMatchData.prototype.alert = function () {
     alert("scoremTimerMethodAuto: " + this.scoremTimerMethodAuto + "\n" +
-        "scoremTimerRegion: " + this.scoremTimerRegion + "\n" +
-        "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
-        "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
-        "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +
-        "scoremLiveScore: " + this.scoremLiveScore + "\n" +
-        "scoremLivePosition: " + this.scoremLivePosition + "\n" +
-        "scoremLiveMultiplier: " + this.scoremLiveMultiplier + "\n" +
-        "scoremTargetEventPoints: " + this.scoremTargetEventPoints + "\n" +
-        "scoremCurrentEventPoints: " + this.scoremCurrentEventPoints + "\n" +
-        "scoremCurrentRank: " + this.scoremCurrentRank + "\n" +
-        "scoremCurrentLP: " + this.scoremCurrentLP + "\n" +
-        "scoremCurrentEXP: " + this.scoremCurrentEXP);
+          "scoremTimerRegion: " + this.scoremTimerRegion + "\n" +
+          "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
+          "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
+          "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +
+          "scoremLiveScore: " + this.scoremLiveScore + "\n" +
+          "scoremLivePosition: " + this.scoremLivePosition + "\n" +
+          "scoremLiveMultiplier: " + this.scoremLiveMultiplier + "\n" +
+          "scoremTargetEventPoints: " + this.scoremTargetEventPoints + "\n" +
+          "scoremCurrentEventPoints: " + this.scoremCurrentEventPoints + "\n" +
+          "scoremCurrentRank: " + this.scoremCurrentRank + "\n" +
+          "scoremCurrentLP: " + this.scoremCurrentLP + "\n" +
+          "scoremCurrentEXP: " + this.scoremCurrentEXP);
 };
 
 /**
@@ -254,7 +254,8 @@ ScoreMatchEstimator.estimate = function (liveInfo, eventPointsLeft, timeLeft, pl
         return new ScoreMatchEstimationInfo(liveCount, null, timeLeft);
     }
     var recoveryInfo =
-        Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount, playerLp, timeLeft);
+        Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount,
+            playerLp, timeLeft);
     return new ScoreMatchEstimationInfo(liveCount, recoveryInfo, timeLeft)
 };
 
@@ -284,7 +285,8 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
 
     if (this.lpRecoveryInfo !== null) {
         Results.setBigResult($("#scoremResultLoveca"), this.lpRecoveryInfo.lovecaUses);
-        $("#scoremResultFinalRank").text(this.lpRecoveryInfo.finalRank);
+        $("#scoremResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
+                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#scoremResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
         $("#scoremResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#scoremResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -314,7 +316,7 @@ ScoreMatchData.prototype.validate = function () {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-            "Please change the event point target in order to calculate again");
+                    "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.scoremCurrentEventPoints) {

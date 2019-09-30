@@ -127,18 +127,18 @@ RallyData.setToUi = function (savedData) {
  */
 RallyData.prototype.alert = function () {
     alert("rallyTimerMethodAuto: " + this.rallyTimerMethodAuto + "\n" +
-        "rallyTimerRegion: " + this.rallyTimerRegion + "\n" +
-        "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
-        "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
-        "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +
-        "rallyLiveScore: " + this.rallyLiveScore + "\n" +
-        "rallyLiveCombo: " + this.rallyLiveCombo + "\n" +
-        "rallyLiveMultiplier: " + this.rallyLiveMultiplier + "\n" +
-        "rallyTargetEventPoints: " + this.rallyTargetEventPoints + "\n" +
-        "rallyCurrentEventPoints: " + this.rallyCurrentEventPoints + "\n" +
-        "rallyCurrentRank: " + this.rallyCurrentRank + "\n" +
-        "rallyCurrentLP: " + this.rallyCurrentLP + "\n" +
-        "rallyCurrentEXP: " + this.rallyCurrentEXP);
+          "rallyTimerRegion: " + this.rallyTimerRegion + "\n" +
+          "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
+          "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
+          "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +
+          "rallyLiveScore: " + this.rallyLiveScore + "\n" +
+          "rallyLiveCombo: " + this.rallyLiveCombo + "\n" +
+          "rallyLiveMultiplier: " + this.rallyLiveMultiplier + "\n" +
+          "rallyTargetEventPoints: " + this.rallyTargetEventPoints + "\n" +
+          "rallyCurrentEventPoints: " + this.rallyCurrentEventPoints + "\n" +
+          "rallyCurrentRank: " + this.rallyCurrentRank + "\n" +
+          "rallyCurrentLP: " + this.rallyCurrentLP + "\n" +
+          "rallyCurrentEXP: " + this.rallyCurrentEXP);
 };
 
 /**
@@ -272,7 +272,8 @@ RallyEstimator.estimate = function (liveInfo, eventPointsLeft, timeLeft, playerR
     var liveCount = Math.ceil(eventPointsLeft / liveInfo.point);
     if (liveCount * COMMON_LIVE_TIME_IN_MINUTES > timeLeft) return new RallyEstimationInfo(liveCount, null, timeLeft);
     var recoveryInfo =
-        Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount, playerLp, timeLeft);
+        Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount,
+            playerLp, timeLeft);
     return new RallyEstimationInfo(liveCount, recoveryInfo, timeLeft);
 };
 
@@ -302,7 +303,8 @@ RallyEstimationInfo.prototype.showResult = function () {
 
     if (this.lpRecoveryInfo) {
         Results.setBigResult($("#rallyResultLoveca"), this.lpRecoveryInfo.lovecaUses);
-        $("#rallyResultFinalRank").text(this.lpRecoveryInfo.finalRank);
+        $("#rallyResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
+                                        Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#rallyResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
         $("#rallyResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#rallyResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -332,10 +334,10 @@ RallyData.prototype.validate = function () {
     } else if (this.getEventPointsLeft(true) <= 0) {
         if (this.getEventPointsLeft(false) <= 0) {
             errors.push("The given event point target has been reached! " +
-                "Please change the event point target in order to calculate again");
+                        "Please change the event point target in order to calculate again");
         } else {
             errors.push("In order to reach the given event point target, " +
-                "you only need to clear the rest of the stories. No lives need to be played");
+                        "you only need to clear the rest of the stories. No lives need to be played");
         }
     }
 

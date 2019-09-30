@@ -20,6 +20,7 @@ function Common() {
  * @property {number} lovecaLpRecovery - Average LP gained when using a loveca.
  * @property {number} lovecaUses - Total amount of loveca used.
  * @property {number} finalRank - The player's final rank after reaching the target.
+ * @property {number} finalRankExp - The player's final EXP in the final rank after reaching the target.
  * @param {number} initialRank The player's initial rank.
  * @constructor
  */
@@ -30,6 +31,7 @@ function LpRecoveryInfo(initialRank) {
     this.lovecaLpRecovery = 0;
     this.lovecaUses = 0;
     this.finalRank = initialRank;
+    this.finalRankExp = 0;
 }
 
 /**
@@ -136,6 +138,7 @@ Common.calculateTotalRankUpLpRecovery = function (playerRank, totalExpGained, pl
     while (COMMON_RANKUP_LIMITATION > recoveryInfo.rankUpCount) {
         var expForNextRank = this.getNextRankUpExp(recoveryInfo.finalRank);
         if (expForNextRank > totalExpGained) {
+            recoveryInfo.finalRankExp = totalExpGained;
             return recoveryInfo;
         }
         totalExpGained -= expForNextRank;

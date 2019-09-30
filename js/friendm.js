@@ -135,20 +135,20 @@ FriendlyMatchData.setToUi = function (savedData) {
  */
 FriendlyMatchData.prototype.alert = function () {
     alert("friendmTimerMethodAuto: " + this.friendmTimerMethodAuto + "\n" +
-        "friendmTimerRegion: " + this.friendmTimerRegion + "\n" +
-        "friendmTimerMethodManual: " + this.friendmTimerMethodManual + "\n" +
-        "friendmManualRestTimeInHours: " + this.friendmManualRestTimeInHours + "\n" +
-        "friendmLiveDifficulty: " + this.friendmLiveDifficulty + "\n" +
-        "friendmLiveOwnScore: " + this.friendmLiveOwnScore + "\n" +
-        "friendmLiveOwnCombo: " + this.friendmLiveOwnCombo + "\n" +
-        "friendmLiveOwnPosition: " + this.friendmLiveOwnPosition + "\n" +
-        "friendmLiveGroupMission: " + this.friendmLiveGroupMission + "\n" +
-        "friendmLiveMultiplier: " + this.friendmLiveMultiplier + "\n" +
-        "friendmTargetEventPoints: " + this.friendmTargetEventPoints + "\n" +
-        "friendmCurrentEventPoints: " + this.friendmCurrentEventPoints + "\n" +
-        "friendmCurrentRank: " + this.friendmCurrentRank + "\n" +
-        "friendmCurrentLP: " + this.friendmCurrentLP + "\n" +
-        "friendmCurrentEXP: " + this.friendmCurrentEXP);
+          "friendmTimerRegion: " + this.friendmTimerRegion + "\n" +
+          "friendmTimerMethodManual: " + this.friendmTimerMethodManual + "\n" +
+          "friendmManualRestTimeInHours: " + this.friendmManualRestTimeInHours + "\n" +
+          "friendmLiveDifficulty: " + this.friendmLiveDifficulty + "\n" +
+          "friendmLiveOwnScore: " + this.friendmLiveOwnScore + "\n" +
+          "friendmLiveOwnCombo: " + this.friendmLiveOwnCombo + "\n" +
+          "friendmLiveOwnPosition: " + this.friendmLiveOwnPosition + "\n" +
+          "friendmLiveGroupMission: " + this.friendmLiveGroupMission + "\n" +
+          "friendmLiveMultiplier: " + this.friendmLiveMultiplier + "\n" +
+          "friendmTargetEventPoints: " + this.friendmTargetEventPoints + "\n" +
+          "friendmCurrentEventPoints: " + this.friendmCurrentEventPoints + "\n" +
+          "friendmCurrentRank: " + this.friendmCurrentRank + "\n" +
+          "friendmCurrentLP: " + this.friendmCurrentLP + "\n" +
+          "friendmCurrentEXP: " + this.friendmCurrentEXP);
 };
 
 /**
@@ -204,8 +204,10 @@ FriendlyMatchData.prototype.getLiveOwnComboRate = function () {
 };
 
 /**
- * Get an index associated with the inputted individual contribution position for lookup in the point multiplier arrays.
- * @returns {number} An index for array lookup, or {@link FRIENDLY_MATCH_OWN_POSITION_RATE}.ERROR if the input is invalid.
+ * Get an index associated with the inputted individual contribution position for lookup in the point multiplier
+ * arrays.
+ * @returns {number} An index for array lookup, or {@link FRIENDLY_MATCH_OWN_POSITION_RATE}.ERROR if the input is
+ *     invalid.
  */
 FriendlyMatchData.prototype.getLiveOwnPositionRate = function () {
     var posRate = FRIENDLY_MATCH_OWN_POSITION_RATE[this.friendmLiveOwnPosition];
@@ -215,7 +217,8 @@ FriendlyMatchData.prototype.getLiveOwnPositionRate = function () {
 
 /**
  * Get an index associated with the inputted group mission rank for lookup in the point multiplier arrays.
- * @returns {number} An index for array lookup, or {@link FRIENDLY_MATCH_GROUP_MISSION_RATE}.ERROR if the input is invalid.
+ * @returns {number} An index for array lookup, or {@link FRIENDLY_MATCH_GROUP_MISSION_RATE}.ERROR if the input is
+ *     invalid.
  */
 FriendlyMatchData.prototype.getLiveGroupMissionRate = function () {
     var missionRate = FRIENDLY_MATCH_GROUP_MISSION_RATE[this.friendmLiveGroupMission];
@@ -250,7 +253,8 @@ FriendlyMatchData.prototype.createLiveInfo = function () {
         return null;
     }
     return new FriendlyMatchLiveInfo(COMMON_LP_COST[diffId] * multiplier,
-        Math.round(FRIENDLY_MATCH_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate * missionRate * posRate) * multiplier,
+        Math.round(FRIENDLY_MATCH_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate * missionRate * posRate) *
+        multiplier,
         COMMON_EXP_REWARD[diffId] * multiplier);
 };
 
@@ -285,7 +289,8 @@ FriendlyMatchEstimator.estimate = function (liveInfo, eventPointsLeft, timeLeft,
     if (liveCount * COMMON_LIVE_TIME_IN_MINUTES > timeLeft)
         return new FriendlyMatchEstimationInfo(liveCount, null, timeLeft);
     var lpRecoveryInfo =
-        Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount, playerLp, timeLeft);
+        Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount,
+            playerLp, timeLeft);
     return new FriendlyMatchEstimationInfo(liveCount, lpRecoveryInfo, timeLeft)
 };
 
@@ -315,7 +320,8 @@ FriendlyMatchEstimationInfo.prototype.showResult = function () {
 
     if (this.lpRecoveryInfo) {
         Results.setBigResult($("#friendmResultLoveca"), this.lpRecoveryInfo.lovecaUses);
-        $("#friendmResultFinalRank").text(this.lpRecoveryInfo.finalRank);
+        $("#friendmResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp +
+                                          "/" + Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#friendmResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
         $("#friendmResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#friendmResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -345,7 +351,7 @@ FriendlyMatchData.prototype.validate = function () {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-            "Please change the event point target in order to calculate again");
+                    "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.friendmCurrentEventPoints) {

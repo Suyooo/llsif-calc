@@ -166,25 +166,25 @@ MedFesData.setToUi = function (savedData) {
  */
 MedFesData.prototype.alert = function () {
     alert("medfesTimerMethodAuto: " + this.medfesTimerMethodAuto + "\n" +
-        "medfesTimerMethodManual: " + this.medfesTimerMethodManual + "\n" +
-        "medfesManualRestTimeInHours: " + this.medfesManualRestTimeInHours + "\n" +
-        "medfesLiveDifficulty: " + this.medfesLiveDifficulty + "\n" +
-        "medfesLiveSongs: " + this.medfesLiveSongs + "\n" +
-        "medfesLiveScore: " + this.medfesLiveScore + "\n" +
-        "medfesLiveCombo: " + this.medfesLiveCombo + "\n" +
-        "medfesArrangeRewardsUp: " + this.medfesArrangeRewardsUp + "\n" +
-        "medfesArrangePerfectSupport: " + this.medfesArrangePerfectSupport + "\n" +
-        "medfesArrangeExpUp: " + this.medfesArrangeExpUp + "\n" +
-        "medfesArrangeScoreUp: " + this.medfesArrangeScoreUp + "\n" +
-        "medfesArrangeSkillRateUp: " + this.medfesArrangeSkillRateUp + "\n" +
-        "medfesArrangeEventPointUp: " + this.medfesArrangeEventPointUp + "\n" +
-        "medfesArrangeRecovery: " + this.medfesArrangeRecovery + "\n" +
-        "medfesArrangeAlwaysCheer: " + this.medfesArrangeAlwaysCheer + "\n" +
-        "medfesTargetEventPoints: " + this.medfesTargetEventPoints + "\n" +
-        "medfesCurrentEventPoints: " + this.medfesCurrentEventPoints + "\n" +
-        "medfesCurrentRank: " + this.medfesCurrentRank + "\n" +
-        "medfesCurrentLP: " + this.medfesCurrentLP + "\n" +
-        "medfesCurrentEXP: " + this.medfesCurrentEXP);
+          "medfesTimerMethodManual: " + this.medfesTimerMethodManual + "\n" +
+          "medfesManualRestTimeInHours: " + this.medfesManualRestTimeInHours + "\n" +
+          "medfesLiveDifficulty: " + this.medfesLiveDifficulty + "\n" +
+          "medfesLiveSongs: " + this.medfesLiveSongs + "\n" +
+          "medfesLiveScore: " + this.medfesLiveScore + "\n" +
+          "medfesLiveCombo: " + this.medfesLiveCombo + "\n" +
+          "medfesArrangeRewardsUp: " + this.medfesArrangeRewardsUp + "\n" +
+          "medfesArrangePerfectSupport: " + this.medfesArrangePerfectSupport + "\n" +
+          "medfesArrangeExpUp: " + this.medfesArrangeExpUp + "\n" +
+          "medfesArrangeScoreUp: " + this.medfesArrangeScoreUp + "\n" +
+          "medfesArrangeSkillRateUp: " + this.medfesArrangeSkillRateUp + "\n" +
+          "medfesArrangeEventPointUp: " + this.medfesArrangeEventPointUp + "\n" +
+          "medfesArrangeRecovery: " + this.medfesArrangeRecovery + "\n" +
+          "medfesArrangeAlwaysCheer: " + this.medfesArrangeAlwaysCheer + "\n" +
+          "medfesTargetEventPoints: " + this.medfesTargetEventPoints + "\n" +
+          "medfesCurrentEventPoints: " + this.medfesCurrentEventPoints + "\n" +
+          "medfesCurrentRank: " + this.medfesCurrentRank + "\n" +
+          "medfesCurrentLP: " + this.medfesCurrentLP + "\n" +
+          "medfesCurrentEXP: " + this.medfesCurrentEXP);
 };
 
 /**
@@ -366,7 +366,9 @@ MedFesEstimator.estimate = function (liveInfo, eventPointsLeft, timeLeft, player
     if (liveCount * COMMON_LIVE_TIME_IN_MINUTES * songAmount > timeLeft) {
         return new MedFesEstimationInfo(liveCount, songAmount, totalGoldCost, null, timeLeft);
     }
-    var recoveryInfo = Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp * liveCount, playerLp, timeLeft);
+    var recoveryInfo = Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp *
+                                                                                                       liveCount,
+        playerLp, timeLeft);
     return new MedFesEstimationInfo(liveCount, songAmount, totalGoldCost, recoveryInfo, timeLeft);
 };
 
@@ -397,7 +399,8 @@ MedFesEstimationInfo.prototype.showResult = function () {
 
     if (this.lpRecoveryInfo !== null) {
         Results.setBigResult($("#medfesResultLoveca"), this.lpRecoveryInfo.lovecaUses);
-        $("#medfesResultFinalRank").text(this.lpRecoveryInfo.finalRank);
+        $("#medfesResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
+                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#medfesResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
         $("#medfesResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#medfesResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -427,7 +430,7 @@ MedFesData.prototype.validate = function () {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-            "Please change the event point target in order to calculate again");
+                    "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.medfesCurrentEventPoints) {

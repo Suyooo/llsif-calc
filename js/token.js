@@ -126,7 +126,8 @@ TokenData.prototype.readFromUi = function () {
     this.tokenEventLiveMultiplier = ReadHelpers.toNum($("input:radio[name=tokenEventLiveMultiplier]:checked").val());
     this.tokenNormalLiveDifficulty = $("input:radio[name=tokenNormalLiveDifficulty]:checked").val();
     this.tokenNormalLiveMultiplier = ReadHelpers.toNum($("input:radio[name=tokenNormalLiveMultiplier]:checked").val());
-    this.tokenNormalLiveLPReduction = ReadHelpers.toNum($("input:radio[name=tokenNormalLiveLPReduction]:checked").val());
+    this.tokenNormalLiveLPReduction =
+        ReadHelpers.toNum($("input:radio[name=tokenNormalLiveLPReduction]:checked").val());
     this.tokenTargetEventPoints = ReadHelpers.toNum($("#tokenTargetEventPoints").val());
     this.tokenCurrentEventPoints = ReadHelpers.toNum($("#tokenCurrentEventPoints").val());
     this.tokenCurrentEventToken = ReadHelpers.toNum($("#tokenCurrentEventToken").val());
@@ -157,7 +158,8 @@ TokenData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=tokenEventLiveMultiplier]"), savedData.tokenEventLiveMultiplier);
     SetHelpers.radioButtonHelper($("input:radio[name=tokenNormalLiveDifficulty]"), savedData.tokenNormalLiveDifficulty);
     SetHelpers.radioButtonHelper($("input:radio[name=tokenNormalLiveMultiplier]"), savedData.tokenNormalLiveMultiplier);
-    SetHelpers.radioButtonHelper($("input:radio[name=tokenNormalLiveLPReduction]"), savedData.tokenNormalLiveLPReduction);
+    SetHelpers.radioButtonHelper($("input:radio[name=tokenNormalLiveLPReduction]"),
+        savedData.tokenNormalLiveLPReduction);
     SetHelpers.inputHelper($("#tokenTargetEventPoints"), savedData.tokenTargetEventPoints);
     SetHelpers.inputHelper($("#tokenCurrentEventPoints"), savedData.tokenCurrentEventPoints);
     SetHelpers.inputHelper($("#tokenCurrentEventToken"), savedData.tokenCurrentEventToken);
@@ -175,22 +177,22 @@ TokenData.setToUi = function (savedData) {
  */
 TokenData.prototype.alert = function () {
     alert("tokenTimerMethodAuto: " + this.tokenTimerMethodAuto + "\n" +
-        "tokenTimerRegion: " + this.tokenTimerRegion + "\n" +
-        "tokenTimerMethodManual: " + this.tokenTimerMethodManual + "\n" +
-        "tokenManualRestTimeInHours: " + this.tokenManualRestTimeInHours + "\n" +
-        "tokenEventLiveDifficulty: " + this.tokenEventLiveDifficulty + "\n" +
-        "tokenEventLiveScore: " + this.tokenEventLiveScore + "\n" +
-        "tokenEventLiveCombo: " + this.tokenEventLiveCombo + "\n" +
-        "tokenEventLiveMultiplier: " + this.tokenEventLiveMultiplier + "\n" +
-        "tokenNormalLiveDifficulty: " + this.tokenNormalLiveDifficulty + "\n" +
-        "tokenNormalLiveMultiplier: " + this.tokenNormalLiveMultiplier + "\n" +
-        "tokenNormalLPReduction: " + this.tokenNormalLiveLPReduction + "\n" +
-        "tokenTargetEventPoints: " + this.tokenTargetEventPoints + "\n" +
-        "tokenCurrentRank: " + this.tokenCurrentRank + "\n" +
-        "tokenCurrentEventToken: " + this.tokenCurrentEventToken + "\n" +
-        "tokenCurrentEventPoints: " + this.tokenCurrentEventPoints + "\n" +
-        "tokenCurrentLP: " + this.tokenCurrentLP + "\n" +
-        "tokenCurrentEXP: " + this.tokenCurrentEXP);
+          "tokenTimerRegion: " + this.tokenTimerRegion + "\n" +
+          "tokenTimerMethodManual: " + this.tokenTimerMethodManual + "\n" +
+          "tokenManualRestTimeInHours: " + this.tokenManualRestTimeInHours + "\n" +
+          "tokenEventLiveDifficulty: " + this.tokenEventLiveDifficulty + "\n" +
+          "tokenEventLiveScore: " + this.tokenEventLiveScore + "\n" +
+          "tokenEventLiveCombo: " + this.tokenEventLiveCombo + "\n" +
+          "tokenEventLiveMultiplier: " + this.tokenEventLiveMultiplier + "\n" +
+          "tokenNormalLiveDifficulty: " + this.tokenNormalLiveDifficulty + "\n" +
+          "tokenNormalLiveMultiplier: " + this.tokenNormalLiveMultiplier + "\n" +
+          "tokenNormalLPReduction: " + this.tokenNormalLiveLPReduction + "\n" +
+          "tokenTargetEventPoints: " + this.tokenTargetEventPoints + "\n" +
+          "tokenCurrentRank: " + this.tokenCurrentRank + "\n" +
+          "tokenCurrentEventToken: " + this.tokenCurrentEventToken + "\n" +
+          "tokenCurrentEventPoints: " + this.tokenCurrentEventPoints + "\n" +
+          "tokenCurrentLP: " + this.tokenCurrentLP + "\n" +
+          "tokenCurrentEXP: " + this.tokenCurrentEXP);
 };
 
 /**
@@ -384,7 +386,8 @@ TokenEstimator.calculateLiveCount = function (eventLiveInfo, eventPointsLeft, cu
  */
 TokenData.prototype.estimate = function () {
     return TokenEstimator.estimate(this.createEventLiveInfo(), this.createNormalLiveInfo(), this.getEventPointsLeft(),
-        this.tokenCurrentEventToken, this.getRestTimeInMinutes(), this.tokenCurrentRank, this.tokenCurrentEXP, this.tokenCurrentLP);
+        this.tokenCurrentEventToken, this.getRestTimeInMinutes(), this.tokenCurrentRank, this.tokenCurrentEXP,
+        this.tokenCurrentLP);
 };
 
 /**
@@ -412,7 +415,8 @@ TokenEstimator.estimate = function (eventLiveInfo, normalLiveInfo, eventPointsLe
     if (liveCount.totalLiveCount() * COMMON_LIVE_TIME_IN_MINUTES > timeLeft) {
         return new TokenEstimationInfo(liveCount, null, timeLeft);
     }
-    var recoveryInfo = Common.calculateLpRecoveryInfo(playerRank, liveCount.exp, playerExp, liveCount.lp, playerLp, timeLeft);
+    var recoveryInfo = Common.calculateLpRecoveryInfo(playerRank, liveCount.exp, playerExp, liveCount.lp, playerLp,
+        timeLeft);
     return new TokenEstimationInfo(liveCount, recoveryInfo, timeLeft);
 };
 
@@ -443,7 +447,8 @@ TokenEstimationInfo.prototype.showResult = function () {
 
     if (this.lpRecoveryInfo !== null) {
         Results.setBigResult($("#tokenResultLoveca"), this.lpRecoveryInfo.lovecaUses);
-        $("#tokenResultFinalRank").text(this.lpRecoveryInfo.finalRank);
+        $("#tokenResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
+                                        Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#tokenResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
         $("#tokenResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#tokenResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -477,7 +482,7 @@ TokenData.prototype.validate = function () {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-            "Please change the event point target in order to calculate again");
+                    "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.tokenCurrentEventPoints) {
