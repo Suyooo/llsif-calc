@@ -3,8 +3,8 @@ var enDateOverride = [new Date(Date.UTC(2019, 8, 27, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>September Updates:</b> Several backend updates (in preparation for a SIFAS calc, maybe?). If you notice any oddities in regards to weird colors on elements, or the event info failing to update, please contact me (Discord tag is in the menu). Thank you!",
-    id: 11,
+    message: "The <a href=\"/sifas/calc\"><b>SIFAS Event Calculator</b></a> is now available at <a href=\"/sifas/calc\">suyo.be/sifas/calc</a>! The results it calculates won't be correct until a few hours after event start, but feel free to play around with the buttons!<br>Also, <a href=\"https://github.com/Suyooo/llsif-calc/\">this project is now on GitHub</a>! Check the sidebar menu for a link to the Issues page where you can post all of your problems and suggestions for the calculator!",
+    id: 12,
     allowDismiss: true
 };
 

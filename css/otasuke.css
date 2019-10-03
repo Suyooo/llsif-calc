@@ -31,11 +31,11 @@ th, tr td:first-child {
 }
 
 tbody tr:nth-child(-n+9):nth-child(odd) {
-    background-color: #f8e7e7 !important;
+    background-color: var(--key-low) !important;
 }
 
 tbody tr:nth-child(-n+9):nth-child(even) {
-    background-color: #ffeeee !important;
+    background-color: var(--key-low2) !important;
 }
 
 #resulttable img {
@@ -50,7 +50,7 @@ tbody tr:nth-child(-n+9):nth-child(even) {
     line-height: 1em;
     text-align: center;
     font-weight: normal;
-    color: lightgrey;
+    color: var(--dark-border);
     float: left;
     padding-top: 1em;
     margin-right: 1em;
@@ -66,14 +66,14 @@ tbody tr:nth-child(-n+9):nth-child(even) {
     padding: 0 !important;
     margin: 10px 0 !important;
     line-height: 2em !important;
-    color: rgba(0,0,0,0.87) !important;
+    color: var(--text) !important;
 }
 
 #schoolidolu-accounts label div {
     padding: 5px;
 }
 #schoolidolu-accounts label:nth-child(2n) div {
-    background-color: #f2f2f2 !important;
+    background-color: var(--sneaky) !important;
 }
 
 .schoolidolu-account span {
@@ -87,12 +87,16 @@ tbody tr:nth-child(-n+9):nth-child(even) {
     margin-right: 1em;
 }
 
+label {
+    color: var(--text);
+}
+
 [type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:after {
-    background-color: #fa5d94;
+    background-color: var(--key-normal);
 }
 
 [type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:before, [type="radio"].with-gap:checked+span:after {
-    border: 2px solid #fa5d94;
+    border: 2px solid var(--key-normal);
 }
 
 #schoolidolu-accounts input[type=radio]+span:before, #schoolidolu-accounts input[type=radio]+span:after {
