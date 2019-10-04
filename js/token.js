@@ -444,9 +444,11 @@ TokenEstimationInfo.prototype.showResult = function () {
     Results.setBigResult($("#tokenResultNormalLiveCount"), this.liveCount.normalLiveCount);
     $("#tokenResultPlayTime").text(Common.minutesToString(this.getPlayTime()));
     $("#tokenResultPlayTimeRate").text((100 * this.getPlayTimeRate()).toFixed(2) + "%");
+    var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
         Results.setBigResult($("#tokenResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#tokenResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#tokenResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
@@ -460,7 +462,7 @@ TokenEstimationInfo.prototype.showResult = function () {
         $("#tokenResultSugarPots100").text("---");
     }
 
-    Results.show($("#tokenResult"));
+    Results.show($("#tokenResult"), showSleepWarning);
 };
 
 /**

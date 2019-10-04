@@ -317,9 +317,11 @@ FriendlyMatchEstimationInfo.prototype.showResult = function () {
     Results.setBigResult($("#friendmResultLiveCount"), this.liveCount);
     $("#friendmResultPlayTime").text(Common.minutesToString(this.getPlayTime()));
     $("#friendmResultPlayTimeRate").text((100 * this.getPlayTimeRate()).toFixed(2) + "%");
+    var showSleepWarning = false;
 
     if (this.lpRecoveryInfo) {
         Results.setBigResult($("#friendmResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#friendmResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp +
                                           "/" + Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#friendmResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
@@ -333,7 +335,7 @@ FriendlyMatchEstimationInfo.prototype.showResult = function () {
         $("#friendmResultSugarPots100").text("---");
     }
 
-    Results.show($("#friendmResult"));
+    Results.show($("#friendmResult"), showSleepWarning);
 };
 
 /**

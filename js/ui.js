@@ -455,10 +455,18 @@ Results.hide = function (resultDiv) {
  * Shows calculation results with an animation. The values have been filled by the calculator before this method is
  * called.
  * @param resultDiv jQuery element representing the div containing the results.
+ * @param showSleepWarning Whether the collapsible with the sleep warning should be shown.
  */
-Results.show = function (resultDiv) {
+Results.show = function (resultDiv, showSleepWarning) {
     $(".result-large", resultDiv).delay(100).fadeTo(400, 1);
-    $(".collapsible", resultDiv).delay(200).fadeTo(400, 1);
+
+    $(".recovery-items", resultDiv).delay(200).fadeTo(400, 1);
+    if (showSleepWarning) {
+        $(".sleep-warning", resultDiv).delay(250).fadeTo(400, 1);
+    } else {
+        $(".sleep-warning", resultDiv).hide();
+    }
+
     var delay = 300;
     $(".result-small", resultDiv).each(function () {
         $(this).delay(delay).fadeTo(400, 1);

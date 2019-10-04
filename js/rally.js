@@ -300,9 +300,11 @@ RallyEstimationInfo.prototype.showResult = function () {
     Results.setBigResult($("#rallyResultLiveCount"), this.liveCount);
     $("#rallyResultPlayTime").text(Common.minutesToString(this.getPlayTime()));
     $("#rallyResultPlayTimeRate").text((100 * this.getPlayTimeRate()).toFixed(2) + "%");
+    var showSleepWarning = false;
 
     if (this.lpRecoveryInfo) {
         Results.setBigResult($("#rallyResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#rallyResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#rallyResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
@@ -316,7 +318,7 @@ RallyEstimationInfo.prototype.showResult = function () {
         $("#rallyResultSugarPots100").text("---");
     }
 
-    Results.show($("#rallyResult"));
+    Results.show($("#rallyResult"), showSleepWarning);
 };
 
 /**

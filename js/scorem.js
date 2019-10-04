@@ -282,9 +282,11 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
     Results.setBigResult($("#scoremResultLiveCount"), this.liveCount);
     $("#scoremResultPlayTime").text(Common.minutesToString(this.getPlayTime()));
     $("#scoremResultPlayTimeRate").text((100 * this.getPlayTimeRate()).toFixed(2) + "%");
+    var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
         Results.setBigResult($("#scoremResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#scoremResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                          Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#scoremResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
@@ -298,7 +300,7 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
         $("#scoremResultSugarPots100").text("---");
     }
 
-    Results.show($("#scoremResult"));
+    Results.show($("#scoremResult"), showSleepWarning);
 };
 
 /**

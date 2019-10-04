@@ -468,9 +468,11 @@ ChaFesEstimationInfo.prototype.showResult = function () {
     $("#chafesResultGoldUsed").text(Common.goldToString(this.gold));
     $("#chafesResultPlayTime").text(Common.minutesToString(this.getPlayTime()));
     $("#chafesResultPlayTimeRate").text((100 * this.getPlayTimeRate()).toFixed(2) + "%");
+    var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
         Results.setBigResult($("#chafesResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#chafesResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                          Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#chafesResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
@@ -484,7 +486,7 @@ ChaFesEstimationInfo.prototype.showResult = function () {
         $("#chafesResultSugarPots100").text("---");
     }
 
-    Results.show($("#chafesResult"));
+    Results.show($("#chafesResult"), showSleepWarning);
 };
 
 /**
