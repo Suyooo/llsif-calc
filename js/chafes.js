@@ -496,6 +496,12 @@ ChaFesData.prototype.validate = function () {
 
     if (null === this.createLiveInfo()) {
         errors.push("Live parameters have not been set");
+    } else {
+        var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[this.getLiveDifficulty()];
+        if (maxLPCostOfSingleLive > Common.getMaxLp(this.chafesCurrentRank)) {
+            errors.push("The chosen live parameters result in an LP cost (" + maxLPCostOfSingleLive +
+                        ") that's higher than your max LP (" + Common.getMaxLp(this.chafesCurrentRank) + ")");
+        }
     }
 
     if (0 === this.chafesTargetEventPoints) {

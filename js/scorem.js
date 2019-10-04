@@ -308,8 +308,12 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
 ScoreMatchData.prototype.validate = function () {
     var errors = [];
 
-    if (null === this.createLiveInfo()) {
+    var liveInfo = this.createLiveInfo();
+    if (null === liveInfo) {
         errors.push("Live parameters have not been set");
+    } else if (liveInfo.lp > Common.getMaxLp(this.scoremCurrentRank)) {
+        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                    ") that's higher than your max LP (" + Common.getMaxLp(this.scoremCurrentRank) + ")");
     }
 
     if (0 >= this.scoremTargetEventPoints) {

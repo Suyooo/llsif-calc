@@ -316,7 +316,7 @@ TokenData.prototype.createNormalLiveInfo = function () {
     var diffId = this.getNormalLiveDifficulty(),
         multiplier = this.getNormalLiveMultiplier(),
         reduction = this.getNormalLiveLPReduction();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || multiplier === 0) {
+    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || multiplier === 0 || reduction === 0) {
         return null;
     }
     var lpCost = COMMON_LP_COST[diffId] * reduction,
@@ -474,8 +474,12 @@ TokenData.prototype.validate = function () {
         errors.push("Event live parameters have not been set");
     }
 
-    if (null === this.createNormalLiveInfo()) {
+    var liveInfo = this.createNormalLiveInfo();
+    if (null === liveInfo) {
         errors.push("Normal live parameters have not been set");
+    } else if (liveInfo.lp > Common.getMaxLp(this.tokenCurrentRank)) {
+        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                    ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
     }
 
     if (0 >= this.tokenTargetEventPoints) {

@@ -13,6 +13,7 @@
  * @property {number} medfesLiveSongs - The amount of songs the player plays per medley.
  * @property {rank} medfesLiveScore - Which score rank the player clears medleys with.
  * @property {rank} medfesLiveCombo - Which combo rank the player clears medleys with.
+ * @property {number} medfesLiveMultiplier - Which multiplier the player plays lives on.
  * @property {boolean} medfesArrangeRewardsUp - Whether medleys are played with the Gold/Silver Reward Boost.
  * @property {boolean} medfesArrangePerfectSupport - Whether medleys are played with Perfect Support.
  * @property {boolean} medfesArrangeExpUp - Whether medleys are played with the EXP Boost.
@@ -37,6 +38,7 @@ function MedFesData() {
     this.medfesLiveSongs = 0;
     this.medfesLiveScore = "N";
     this.medfesLiveCombo = "N";
+    this.medfesLiveMultiplier = 0;
     this.medfesArrangeRewardsUp = false;
     this.medfesArrangePerfectSupport = false;
     this.medfesArrangeExpUp = false;
@@ -106,6 +108,7 @@ MedFesData.prototype.readFromUi = function () {
     this.medfesLiveSongs = ReadHelpers.toNum($("input:radio[name=medfesLiveSongs]:checked").val());
     this.medfesLiveScore = $("input:radio[name=medfesLiveScore]:checked").val();
     this.medfesLiveCombo = $("input:radio[name=medfesLiveCombo]:checked").val();
+    this.medfesLiveMultiplier = $("input:radio[name=medfesLiveMultiplier]:checked").val();
     this.medfesArrangeRewardsUp = $("#medfesArrangeRewardsUp").prop("checked");
     this.medfesArrangePerfectSupport = $("#medfesArrangePerfectSupport").prop("checked");
     this.medfesArrangeExpUp = $("#medfesArrangeExpUp").prop("checked");
@@ -141,6 +144,7 @@ MedFesData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveSongs]"), savedData.medfesLiveSongs);
     SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveScore]"), savedData.medfesLiveScore);
     SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveCombo]"), savedData.medfesLiveCombo);
+    SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveMultiplier]"), savedData.medfesLiveMultiplier);
     SetHelpers.checkBoxHelper($("#medfesArrangeRewardsUp"), savedData.medfesArrangeRewardsUp);
     SetHelpers.checkBoxHelper($("#medfesArrangePerfectSupport"), savedData.medfesArrangePerfectSupport);
     SetHelpers.checkBoxHelper($("#medfesArrangeExpUp"), savedData.medfesArrangeExpUp);
@@ -172,6 +176,7 @@ MedFesData.prototype.alert = function () {
           "medfesLiveSongs: " + this.medfesLiveSongs + "\n" +
           "medfesLiveScore: " + this.medfesLiveScore + "\n" +
           "medfesLiveCombo: " + this.medfesLiveCombo + "\n" +
+          "medfesLiveMultiplier: " + this.medfesLiveMultiplier + "\n" +
           "medfesArrangeRewardsUp: " + this.medfesArrangeRewardsUp + "\n" +
           "medfesArrangePerfectSupport: " + this.medfesArrangePerfectSupport + "\n" +
           "medfesArrangeExpUp: " + this.medfesArrangeExpUp + "\n" +
@@ -246,6 +251,16 @@ MedFesData.prototype.getLiveComboRate = function () {
 MedFesData.prototype.getLiveSongAmount = function () {
     var songCount = this.medfesLiveSongs;
     if (songCount >= 1) return songCount;
+    return 0;
+};
+
+/**
+ * Gets the inputted event live multiplier
+ * @returns {number} A reward/cost multiplier, or 0 if the input is invalid.
+ */
+MedFesData.prototype.getLiveMultiplier = function () {
+    var multiplier = this.medfesLiveMultiplier;
+    if (multiplier >= 1) return multiplier;
     return 0;
 };
 
@@ -326,11 +341,12 @@ MedFesData.prototype.createLiveInfo = function () {
     var lpCost = this.getLiveLpCost(),
         eventPoints = this.getLiveTotalPoints(),
         expReward = this.getLiveExpReward(),
-        goldCost = this.getLiveGoldCost();
-    if (0 === lpCost || 0 === eventPoints || 0 === expReward) {
+        goldCost = this.getLiveGoldCost(),
+        multiplier = this.getLiveMultiplier();
+    if (0 === lpCost || 0 === eventPoints || 0 === expReward || 0 === multiplier) {
         return null;
     }
-    return new MedFesLiveInfo(lpCost, eventPoints, expReward, goldCost);
+    return new MedFesLiveInfo(lpCost * multiplier, eventPoints * multiplier, expReward * multiplier, goldCost);
 };
 
 /**
@@ -422,8 +438,12 @@ MedFesEstimationInfo.prototype.showResult = function () {
 MedFesData.prototype.validate = function () {
     var errors = [];
 
-    if (null === this.createLiveInfo()) {
+    var liveInfo = this.createLiveInfo();
+    if (null === liveInfo) {
         errors.push("Live parameters have not been set");
+    } else if (liveInfo.lp > Common.getMaxLp(this.medfesCurrentRank)) {
+        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                    ") that's higher than your max LP (" + Common.getMaxLp(this.medfesCurrentRank) + ")");
     }
 
     if (0 === this.medfesTargetEventPoints) {
