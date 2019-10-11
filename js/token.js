@@ -447,19 +447,21 @@ TokenEstimationInfo.prototype.showResult = function () {
     var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
-        Results.setBigResult($("#tokenResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        Results.setBigResult($("#tokenResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#tokenResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
-        $("#tokenResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
+        $("#tokenResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#tokenResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#tokenResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
+        $("#tokenResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
     } else {
-        Results.setBigResult($("#tokenResultLoveca"), "---");
+        Results.setBigResult($("#tokenResultRefills"), "---");
         $("#tokenResultFinalRank").text("---");
-        $("#tokenResultSugarCubes").text("---");
+        $("#tokenResultLoveca").text("---");
         $("#tokenResultSugarPots50").text("---");
         $("#tokenResultSugarPots100").text("---");
+        $("#tokenResultSugarCubes").text("---");
     }
 
     Results.show($("#tokenResult"), showSleepWarning);

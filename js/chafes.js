@@ -471,19 +471,21 @@ ChaFesEstimationInfo.prototype.showResult = function () {
     var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
-        Results.setBigResult($("#chafesResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        Results.setBigResult($("#chafesResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#chafesResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                          Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
-        $("#chafesResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
+        $("#chafesResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#chafesResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#chafesResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
+        $("#chafesResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
     } else {
-        Results.setBigResult($("#chafesResultLoveca"), "---");
+        Results.setBigResult($("#chafesResultRefills"), "---");
         $("#chafesResultFinalRank").text("---");
-        $("#chafesResultSugarCubes").text("---");
+        $("#chafesResultLoveca").text("---");
         $("#chafesResultSugarPots50").text("---");
         $("#chafesResultSugarPots100").text("---");
+        $("#chafesResultSugarCubes").text("---");
     }
 
     Results.show($("#chafesResult"), showSleepWarning);

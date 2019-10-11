@@ -285,19 +285,21 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
     var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
-        Results.setBigResult($("#scoremResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        Results.setBigResult($("#scoremResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#scoremResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                          Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
-        $("#scoremResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
+        $("#scoremResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#scoremResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#scoremResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
+        $("#scoremResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
     } else {
-        Results.setBigResult($("#scoremResultLoveca"), "---");
+        Results.setBigResult($("#scoremResultRefills"), "---");
         $("#scoremResultFinalRank").text("---");
-        $("#scoremResultSugarCubes").text("---");
+        $("#scoremResultLoveca").text("---");
         $("#scoremResultSugarPots50").text("---");
         $("#scoremResultSugarPots100").text("---");
+        $("#scoremResultSugarCubes").text("---");
     }
 
     Results.show($("#scoremResult"), showSleepWarning);

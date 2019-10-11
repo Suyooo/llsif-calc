@@ -415,19 +415,21 @@ MedFesEstimationInfo.prototype.showResult = function () {
     var showSleepWarning = false;
 
     if (this.lpRecoveryInfo !== null) {
-        Results.setBigResult($("#medfesResultLoveca"), this.lpRecoveryInfo.lovecaUses);
+        Results.setBigResult($("#medfesResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#medfesResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
                                          Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
-        $("#medfesResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
+        $("#medfesResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#medfesResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#medfesResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
+        $("#medfesResultSugarCubes").text(Math.ceil(this.lpRecoveryInfo.lpToRecover / 50));
     } else {
-        Results.setBigResult($("#medfesResultLoveca"), "---");
+        Results.setBigResult($("#medfesResultRefills"), "---");
         $("#medfesResultFinalRank").text("---");
-        $("#medfesResultSugarCubes").text("---");
+        $("#medfesResultLoveca").text("---");
         $("#medfesResultSugarPots50").text("---");
         $("#medfesResultSugarPots100").text("---");
+        $("#medfesResultSugarCubes").text("---");
     }
 
     Results.show($("#medfesResult"), showSleepWarning);
