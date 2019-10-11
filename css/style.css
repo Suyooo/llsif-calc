@@ -353,13 +353,16 @@ ul.collapsible {
     margin-top: -1px;
 }
 
-.input-field {
-    margin-bottom: 0;
+input {
+    color: var(--text);
 }
 
-.input-field input[type=number] {
-    margin-bottom: 16px;
-    color: var(--text);
+.input-field > input {
+    margin-bottom: 12px !important;
+}
+
+.input-field {
+    margin-bottom: 0;
 }
 
 .input-field label:not(.label-icon).active {
@@ -367,27 +370,35 @@ ul.collapsible {
     transition: color .2s ease-out;
 }
 
-.input-field input[type=number]:focus {
+input:focus {
     border-bottom: 1px solid var(--dark-border) !important;
     box-shadow: 0 1px 0 0 var(--dark-border) !important;
 }
 
-.input-field input[type=number].valid {
+input.valid {
     border-bottom: 1px solid var(--dark-border) !important;
     box-shadow: 0 1px 0 0 var(--dark-border) !important;
 }
 
-.input-field input[type=number].invalid {
+input.invalid {
     border-bottom: 1px solid var(--error) !important;
     box-shadow: 0 1px 0 0 var(--error) !important;
 }
 
-.input-field input[type=number]:not(.invalid) + label {
+label, input:not(.invalid) + label {
     color: var(--text)DE !important;
 }
 
-.input-field input[type=number].invalid + label {
+input.invalid + label {
     color: var(--error) !important;
+}
+
+.input-field.below-radio {
+    padding-top: 1rem;
+}
+
+.input-field.below-radio label {
+    margin-top: 1rem;
 }
 
 .form-label {
