@@ -458,19 +458,19 @@ Results.hide = function (resultDiv) {
  * @param showSleepWarning Whether the collapsible with the sleep warning should be shown.
  */
 Results.show = function (resultDiv, showSleepWarning) {
-    $(".result-large", resultDiv).delay(100).fadeTo(400, 1);
+    $(".result-large", resultDiv).delay(50).fadeTo(200, 1);
 
-    $(".recovery-items", resultDiv).delay(200).fadeTo(400, 1);
+    $(".recovery-items", resultDiv).delay(100).fadeTo(200, 1);
     if (showSleepWarning) {
-        $(".sleep-warning", resultDiv).delay(250).fadeTo(400, 1);
+        $(".sleep-warning", resultDiv).delay(125).fadeTo(200, 1);
     } else {
         $(".sleep-warning", resultDiv).hide();
     }
 
-    var delay = 300;
+    var delay = 150;
     $(".result-small", resultDiv).each(function () {
-        $(this).delay(delay).fadeTo(400, 1);
-        delay += 100;
+        $(this).delay(delay).fadeTo(200, 1);
+        delay += 50;
     });
     $(resultDiv).removeClass("no-link");
 };
@@ -483,9 +483,14 @@ Results.show = function (resultDiv, showSleepWarning) {
 Results.setBigResult = function (element, text) {
     element.removeClass("shrink");
     element.text(text);
-    if (element[0].scrollWidth - 5 > element.width()) {
-        element.addClass("shrink");
-    }
+    var checkSmall = function () {
+        if (element[0].scrollWidth === 0) {
+            setTimeout(checkSmall, 500);
+        } else if (element[0].scrollWidth - 5 > element.width()) {
+            element.addClass("shrink");
+        }
+    };
+    checkSmall();
 };
 
 /**
