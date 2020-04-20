@@ -68,7 +68,7 @@ function TokenEventLiveInfo(token, point, exp) {
  * @property {number} exp - EXP reward for one normal live.
  * @constructor
  */
-function TokenNormalLiveInfo(lp, token, exp) {
+function TokenNormalLiveInfo(lp, token, point, exp) {
     this.lp = lp;
     this.token = token;
     this.exp = exp;
@@ -339,7 +339,7 @@ TokenData.prototype.createNormalLiveInfo = function () {
     var lpCost = COMMON_LP_COST[diffId] * reduction,
         tokenReward = TOKEN_NORMAL_TOKEN[diffId],
         expReward = COMMON_EXP_REWARD[diffId];
-    return new TokenNormalLiveInfo(lpCost * multiplier, tokenReward * multiplier, expReward * multiplier);
+    return new TokenNormalLiveInfo(lpCost * multiplier, tokenReward * multiplier, Math.round(tokenReward * multiplier * yellBonus), expReward * multiplier);
 };
 
 /**
@@ -355,13 +355,14 @@ TokenLiveCount.prototype.totalLiveCount = function () {
  * @param {TokenEventLiveInfo} eventLiveInfo Cost and reward info about one event live play.
  * @param {number} eventPointsLeft The amount of event points left to meet the target.
  * @param {number} currentEventToken The current amount of event token.
+ * @param {number} yellBonus The reward multiplier from the player's Yell unit.
  * @returns {TokenLiveCount} A new object with only event live properties set.
  */
-TokenEstimator.calculateEventLiveCount = function (eventLiveInfo, eventPointsLeft, currentEventToken) {
+TokenEstimator.calculateEventLiveCount = function (eventLiveInfo, eventPointsLeft, currentEventToken, yellBonus) {
     var eventLiveCount = Math.ceil(eventPointsLeft / (eventLiveInfo.point));
     var tokenRequired = 0;
     if (eventLiveCount * eventLiveInfo.token > currentEventToken) {
-        eventLiveCount = Math.ceil((eventPointsLeft + currentEventToken) / (eventLiveInfo.token + eventLiveInfo.point));
+        eventLiveCount = Math.ceil((eventPointsLeft + currentEventToken * yellBonus) / (eventLiveInfo.token * yellBonus + eventLiveInfo.point));
         tokenRequired = eventLiveCount * eventLiveInfo.token - currentEventToken;
     }
     return new TokenLiveCount(eventLiveCount, tokenRequired, 0, eventLiveCount * eventLiveInfo.exp, 0);
@@ -387,10 +388,11 @@ TokenEstimator.calculateNormalLiveCount = function (liveCount, normalLiveInfo) {
  * @param {number} eventPointsLeft The amount of event points left to meet the target.
  * @param {number} currentEventToken The current amount of event token.
  * @param {TokenNormalLiveInfo} normalLiveInfo Cost and reward info about one normal live play.
+ * @param {number} yellBonus The reward multiplier from the player's Yell unit.
  * @returns {TokenLiveCount} A new object with all properties set.
  */
-TokenEstimator.calculateLiveCount = function (eventLiveInfo, eventPointsLeft, currentEventToken, normalLiveInfo) {
-    var liveCount = this.calculateEventLiveCount(eventLiveInfo, eventPointsLeft, currentEventToken);
+TokenEstimator.calculateLiveCount = function (eventLiveInfo, eventPointsLeft, currentEventToken, normalLiveInfo, yellBonus) {
+    var liveCount = this.calculateEventLiveCount(eventLiveInfo, eventPointsLeft, currentEventToken, yellBonus);
     this.calculateNormalLiveCount(liveCount, normalLiveInfo);
     return liveCount;
 };
@@ -403,8 +405,8 @@ TokenEstimator.calculateLiveCount = function (eventLiveInfo, eventPointsLeft, cu
  */
 TokenData.prototype.estimate = function () {
     return TokenEstimator.estimate(this.createEventLiveInfo(), this.createNormalLiveInfo(), this.getEventPointsLeft(),
-        this.tokenCurrentEventToken, this.getRestTimeInMinutes(), this.tokenCurrentRank, this.tokenCurrentEXP,
-        this.tokenCurrentLP);
+        this.tokenCurrentEventToken, this.getYellBonus(), this.getRestTimeInMinutes(), this.tokenCurrentRank,
+        this.tokenCurrentEXP, this.tokenCurrentLP);
 };
 
 /**
@@ -419,6 +421,7 @@ TokenData.prototype.estimate = function () {
  * @param {TokenNormalLiveInfo} normalLiveInfo Cost and reward info about one normal live play.
  * @param {number} eventPointsLeft The amount of event points left to meet the target.
  * @param {number} currentEventToken The initial amount of event token.
+ * @param {number} yellBonus The reward multiplier from the player's Yell unit.
  * @param {number} timeLeft The amount of event time left, in minutes.
  * @param {number} playerRank The player's initial rank.
  * @param {number} playerExp The player's initial EXP in the initial rank.
@@ -426,9 +429,9 @@ TokenData.prototype.estimate = function () {
  * @returns {TokenEstimationInfo} A new object with all properties set, or the recoveryInfo property set to null if
  *      reaching the target is impossible.
  */
-TokenEstimator.estimate = function (eventLiveInfo, normalLiveInfo, eventPointsLeft, currentEventToken, timeLeft,
+TokenEstimator.estimate = function (eventLiveInfo, normalLiveInfo, eventPointsLeft, currentEventToken, yellBonus, timeLeft,
                                     playerRank, playerExp, playerLp) {
-    var liveCount = this.calculateLiveCount(eventLiveInfo, eventPointsLeft, currentEventToken, normalLiveInfo);
+    var liveCount = this.calculateLiveCount(eventLiveInfo, eventPointsLeft, currentEventToken, normalLiveInfo, yellBonus);
     if (liveCount.totalLiveCount() * COMMON_LIVE_TIME_IN_MINUTES > timeLeft) {
         return new TokenEstimationInfo(liveCount, null, timeLeft);
     }
