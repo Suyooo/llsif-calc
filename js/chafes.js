@@ -6,7 +6,7 @@
  * An object used to store input values for the Challenge Festival calculator.
  * @class ChaFesData
  * @property {boolean} chafesTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} chafesTimerRegion - Which server to use for the Automatic Timer.
+ * @property {region} chafesRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} chafesTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} chafesManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficulty} chafesLiveDifficulty - The difficulty challenges are played on.
@@ -30,7 +30,7 @@
  */
 function ChaFesData() {
     this.chafesTimerMethodAuto = false;
-    this.chafesTimerRegion = "en";
+    this.chafesRegion = "en";
     this.chafesTimerMethodManual = false;
     this.chafesManualRestTimeInHours = 0;
     this.chafesLiveDifficulty = "EASY";
@@ -99,7 +99,7 @@ function ChaFesEstimationInfo(fesCount, songs, gold, lpRecoveryInfo, restTime) {
  */
 ChaFesData.prototype.readFromUi = function () {
     this.chafesTimerMethodAuto = $("#chafesTimerMethodAuto").prop("checked");
-    this.chafesTimerRegion = $("input:radio[name=chafesTimerRegion]:checked").val();
+    this.chafesRegion = $("input:radio[name=chafesRegion]:checked").val();
     this.chafesTimerMethodManual = $("#chafesTimerMethodManual").prop("checked");
     this.chafesManualRestTimeInHours = ReadHelpers.toNum($("#chafesManualRestTime").val());
     this.chafesLiveDifficulty = $("input:radio[name=chafesLiveDifficulty]:checked").val();
@@ -127,9 +127,9 @@ ChaFesData.prototype.readFromUi = function () {
  */
 ChaFesData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#chafesTimerMethodAuto"), savedData.chafesTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=chafesTimerRegion]"), savedData.chafesTimerRegion);
-    if (savedData.chafesTimerRegion !== undefined) {
-        updateAutoTimerSection("chafes");
+    SetHelpers.radioButtonHelper($("input:radio[name=chafesRegion]"), savedData.chafesRegion);
+    if (savedData.chafesRegion !== undefined) {
+        updateTimerSection("chafes");
     }
     var manualButton = $("#chafesTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.chafesTimerMethodManual);
@@ -193,7 +193,7 @@ ChaFesData.prototype.alert = function () {
  */
 ChaFesData.prototype.getRestTimeInMinutes = function () {
     if (this.chafesTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.chafesTimerRegion);
+        return Common.getAutoRestTimeInMinutes(this.chafesRegion);
     }
     if (this.chafesTimerMethodManual) {
         return 60 * this.chafesManualRestTimeInHours;
@@ -498,6 +498,11 @@ ChaFesEstimationInfo.prototype.showResult = function () {
 ChaFesData.prototype.validate = function () {
     var errors = [];
 
+    if (this.chafesRegion != "en" && this.chafesRegion != "jp") {
+        errors.push("Choose a region");
+        return errors;
+    }
+
     if (null === this.createLiveInfo()) {
         errors.push("Live parameters have not been set");
     } else {
@@ -536,9 +541,6 @@ ChaFesData.prototype.validate = function () {
     } else if (this.chafesTimerMethodAuto) {
         if (this.getRestTimeInMinutes() <= 0) {
             errors.push("Event is already finished. Select Manual Input in order to calculate");
-        }
-        if (this.chafesTimerRegion != "en" && this.chafesTimerRegion != "jp") {
-            errors.push("Choose a region for the Automatic Timer");
         }
     } else if (this.chafesTimerMethodManual) {
         if (isNaN(this.getRestTimeInMinutes())) {

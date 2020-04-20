@@ -6,7 +6,7 @@
  * An object used to store input values for the Score Match calculator.
  * @class ScoreMatchData
  * @property {boolean} scoremTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} scoremTimerRegion - Which server to use for the Automatic Timer.
+ * @property {region} scoremRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} scoremTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} scoremManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficulty} scoremLiveDifficulty - The difficulty lives are played on.
@@ -22,7 +22,7 @@
  */
 function ScoreMatchData() {
     this.scoremTimerMethodAuto = false;
-    this.scoremTimerRegion = "en";
+    this.scoremRegion = "en";
     this.scoremTimerMethodManual = false;
     this.scoremManualRestTimeInHours = 0;
     this.scoremLiveDifficulty = "EASY";
@@ -77,7 +77,7 @@ function ScoreMatchEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 ScoreMatchData.prototype.readFromUi = function () {
     this.scoremTimerMethodAuto = $("#scoremTimerMethodAuto").prop("checked");
-    this.scoremTimerRegion = $("input:radio[name=scoremTimerRegion]:checked").val();
+    this.scoremRegion = $("input:radio[name=scoremRegion]:checked").val();
     this.scoremTimerMethodManual = $("#scoremTimerMethodManual").prop("checked");
     this.scoremManualRestTimeInHours = ReadHelpers.toNum($("#scoremManualRestTime").val());
     this.scoremLiveDifficulty = $("input:radio[name=scoremLiveDifficulty]:checked").val();
@@ -97,9 +97,9 @@ ScoreMatchData.prototype.readFromUi = function () {
  */
 ScoreMatchData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#scoremTimerMethodAuto"), savedData.scoremTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=scoremTimerRegion]"), savedData.scoremTimerRegion);
-    if (savedData.scoremTimerRegion !== undefined) {
-        updateAutoTimerSection("scorem");
+    SetHelpers.radioButtonHelper($("input:radio[name=scoremRegion]"), savedData.scoremRegion);
+    if (savedData.scoremRegion !== undefined) {
+        updateTimerSection("scorem");
     }
     var manualButton = $("#scoremTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.scoremTimerMethodManual);
@@ -127,7 +127,7 @@ ScoreMatchData.setToUi = function (savedData) {
  */
 ScoreMatchData.prototype.alert = function () {
     alert("scoremTimerMethodAuto: " + this.scoremTimerMethodAuto + "\n" +
-          "scoremTimerRegion: " + this.scoremTimerRegion + "\n" +
+          "scoremTimerRegion: " + this.scoremRegion + "\n" +
           "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
           "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
           "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +
@@ -147,7 +147,7 @@ ScoreMatchData.prototype.alert = function () {
  */
 ScoreMatchData.prototype.getRestTimeInMinutes = function () {
     if (this.scoremTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.scoremTimerRegion);
+        return Common.getAutoRestTimeInMinutes(this.scoremRegion);
     }
     if (this.scoremTimerMethodManual) {
         return 60 * this.scoremManualRestTimeInHours;
@@ -312,6 +312,11 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
 ScoreMatchData.prototype.validate = function () {
     var errors = [];
 
+    if (this.scoremRegion != "en" && this.scoremRegion != "jp") {
+        errors.push("Choose a region");
+        return errors;
+    }
+
     var liveInfo = this.createLiveInfo();
     if (null === liveInfo) {
         errors.push("Live parameters have not been set");
@@ -348,9 +353,6 @@ ScoreMatchData.prototype.validate = function () {
     } else if (this.scoremTimerMethodAuto) {
         if (this.getRestTimeInMinutes() <= 0) {
             errors.push("Event is already finished. Select Manual Input in order to calculate");
-        }
-        if (this.scoremTimerRegion != "en" && this.scoremTimerRegion != "jp") {
-            errors.push("Choose a region for the Automatic Timer");
         }
     } else if (this.scoremTimerMethodManual) {
         if (isNaN(this.getRestTimeInMinutes())) {

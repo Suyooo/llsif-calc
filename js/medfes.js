@@ -6,7 +6,7 @@
  * An object used to store input values for the Medley Festival calculator.
  * @class MedFesData
  * @property {boolean} medfesTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} medfesTimerRegion - Which server to use for the Automatic Timer.
+ * @property {region} medfesRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} medfesTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} medfesManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficulty} medfesLiveDifficulty - The difficulty medleys are played on.
@@ -31,7 +31,7 @@
  */
 function MedFesData() {
     this.medfesTimerMethodAuto = false;
-    this.medfesTimerRegion = "en";
+    this.medfesRegion = "en";
     this.medfesTimerMethodManual = false;
     this.medfesManualRestTimeInHours = 0;
     this.medfesLiveDifficulty = "EASY";
@@ -101,7 +101,7 @@ function MedFesEstimationInfo(fesCount, songs, gold, lpRecoveryInfo, restTime) {
  */
 MedFesData.prototype.readFromUi = function () {
     this.medfesTimerMethodAuto = $("#medfesTimerMethodAuto").prop("checked");
-    this.medfesTimerRegion = $("input:radio[name=medfesTimerRegion]:checked").val();
+    this.medfesRegion = $("input:radio[name=medfesRegion]:checked").val();
     this.medfesTimerMethodManual = $("#medfesTimerMethodManual").prop("checked");
     this.medfesManualRestTimeInHours = ReadHelpers.toNum($("#medfesManualRestTime").val());
     this.medfesLiveDifficulty = $("input:radio[name=medfesLiveDifficulty]:checked").val();
@@ -130,9 +130,9 @@ MedFesData.prototype.readFromUi = function () {
  */
 MedFesData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#medfesTimerMethodAuto"), savedData.medfesTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=medfesTimerRegion]"), savedData.medfesTimerRegion);
-    if (savedData.medfesTimerRegion !== undefined) {
-        updateAutoTimerSection("medfes");
+    SetHelpers.radioButtonHelper($("input:radio[name=medfesRegion]"), savedData.medfesRegion);
+    if (savedData.medfesRegion !== undefined) {
+        updateTimerSection("medfes");
     }
     var manualButton = $("#medfesTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.medfesTimerMethodManual);
@@ -198,7 +198,7 @@ MedFesData.prototype.alert = function () {
  */
 MedFesData.prototype.getRestTimeInMinutes = function () {
     if (this.medfesTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.medfesTimerRegion);
+        return Common.getAutoRestTimeInMinutes(this.medfesRegion);
     }
     if (this.medfesTimerMethodManual) {
         return 60 * this.medfesManualRestTimeInHours;
@@ -442,6 +442,11 @@ MedFesEstimationInfo.prototype.showResult = function () {
 MedFesData.prototype.validate = function () {
     var errors = [];
 
+    if (this.medfesRegion != "en" && this.medfesRegion != "jp") {
+        errors.push("Choose a region");
+        return errors;
+    }
+
     var liveInfo = this.createLiveInfo();
     if (null === liveInfo) {
         errors.push("Live parameters have not been set");
@@ -478,9 +483,6 @@ MedFesData.prototype.validate = function () {
     } else if (this.medfesTimerMethodAuto) {
         if (this.getRestTimeInMinutes() <= 0) {
             errors.push("Event is already finished. Select Manual Input in order to calculate");
-        }
-        if (this.medfesTimerRegion != "en" && this.medfesTimerRegion != "jp") {
-            errors.push("Choose a region for the Automatic Timer");
         }
     } else if (this.medfesTimerMethodManual) {
         if (isNaN(this.getRestTimeInMinutes())) {

@@ -6,7 +6,7 @@
  * An object used to store input values for the Token Event calculator.
  * @class TokenData
  * @property {boolean} tokenTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} tokenTimerRegion - Which server to use for the Automatic Timer.
+ * @property {region} tokenRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} tokenTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} tokenManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficulty} tokenEventLiveDifficulty - The difficulty event lives are played on.
@@ -27,7 +27,7 @@
  */
 function TokenData() {
     this.tokenTimerMethodAuto = false;
-    this.tokenTimerRegion = "en";
+    this.tokenRegion = "en";
     this.tokenTimerMethodManual = false;
     this.tokenManualRestTimeInHours = 0;
     this.tokenEventLiveDifficulty = "EASY";
@@ -119,7 +119,7 @@ function TokenEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 TokenData.prototype.readFromUi = function () {
     this.tokenTimerMethodAuto = $("#tokenTimerMethodAuto").prop("checked");
-    this.tokenTimerRegion = $("input:radio[name=tokenTimerRegion]:checked").val();
+    this.tokenTimerRegion = $("input:radio[name=tokenRegion]:checked").val();
     this.tokenTimerMethodManual = $("#tokenTimerMethodManual").prop("checked");
     this.tokenManualRestTimeInHours = ReadHelpers.toNum($("#tokenManualRestTime").val());
     this.tokenEventLiveDifficulty = $("input:radio[name=tokenEventLiveDifficulty]:checked").val();
@@ -145,9 +145,9 @@ TokenData.prototype.readFromUi = function () {
  */
 TokenData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#tokenTimerMethodAuto"), savedData.tokenTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=tokenTimerRegion]"), savedData.tokenTimerRegion);
-    if (savedData.tokenTimerRegion !== undefined) {
-        updateAutoTimerSection("token");
+    SetHelpers.radioButtonHelper($("input:radio[name=tokenRegion]"), savedData.tokenRegion);
+    if (savedData.tokenRegion !== undefined) {
+        updateTimerSection("token");
     }
     var manualButton = $("#tokenTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.tokenTimerMethodManual);
@@ -181,7 +181,7 @@ TokenData.setToUi = function (savedData) {
  */
 TokenData.prototype.alert = function () {
     alert("tokenTimerMethodAuto: " + this.tokenTimerMethodAuto + "\n" +
-          "tokenTimerRegion: " + this.tokenTimerRegion + "\n" +
+          "tokenRegion: " + this.tokenRegion + "\n" +
           "tokenTimerMethodManual: " + this.tokenTimerMethodManual + "\n" +
           "tokenManualRestTimeInHours: " + this.tokenManualRestTimeInHours + "\n" +
           "tokenEventLiveDifficulty: " + this.tokenEventLiveDifficulty + "\n" +
@@ -206,7 +206,7 @@ TokenData.prototype.alert = function () {
  */
 TokenData.prototype.getRestTimeInMinutes = function () {
     if (this.tokenTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.tokenTimerRegion)
+        return Common.getAutoRestTimeInMinutes(this.tokenRegion)
     }
     if (this.tokenTimerMethodManual) {
         return 60 * this.tokenManualRestTimeInHours;
@@ -291,7 +291,7 @@ TokenData.prototype.createEventLiveInfo = function () {
         expReward = COMMON_EXP_REWARD[diffId],
         pointReward = TOKEN_EVENT_POINTS[diffId][rankId][comboId] * yellBonus;
     if (undefined === pointReward) return null;
-    return new TokenEventLiveInfo(tokenCost * multiplier, pointReward * multiplier, expReward * multiplier);
+    return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * multiplier), expReward * multiplier);
 };
 
 /**
@@ -331,8 +331,9 @@ TokenData.prototype.getNormalLiveLPReduction = function () {
 TokenData.prototype.createNormalLiveInfo = function () {
     var diffId = this.getNormalLiveDifficulty(),
         multiplier = this.getNormalLiveMultiplier(),
-        reduction = this.getNormalLiveLPReduction();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || multiplier === 0 || reduction === 0) {
+        reduction = this.getNormalLiveLPReduction(),
+        yellBonus = this.getYellBonus();
+    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || multiplier === 0 || reduction === 0 || yellBonus === 0) {
         return null;
     }
     var lpCost = COMMON_LP_COST[diffId] * reduction,
@@ -490,6 +491,11 @@ TokenEstimationInfo.prototype.showResult = function () {
 TokenData.prototype.validate = function () {
     var errors = [];
 
+    if (this.tokenRegion != "en" && this.tokenRegion != "jp") {
+        errors.push("Choose a region");
+        return errors;
+    }
+
     if (null === this.createEventLiveInfo()) {
         errors.push("Event live parameters have not been set");
     }
@@ -534,9 +540,6 @@ TokenData.prototype.validate = function () {
     } else if (this.tokenTimerMethodAuto) {
         if (this.getRestTimeInMinutes() <= 0) {
             errors.push("Event is already finished. Select Manual Input in order to calculate");
-        }
-        if (this.tokenTimerRegion != "en" && this.tokenTimerRegion != "jp") {
-            errors.push("Choose a region for the Automatic Timer");
         }
     } else if (this.tokenTimerMethodManual) {
         if (isNaN(this.getRestTimeInMinutes())) {
@@ -627,6 +630,69 @@ TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EASY] = TOKEN_EVENT_POINT_TABLE_EASY;
 TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.NORMAL] = TOKEN_EVENT_POINT_TABLE_NORMAL;
 TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.HARD] = TOKEN_EVENT_POINT_TABLE_HARD;
 TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EX] = TOKEN_EVENT_POINT_TABLE_EX;
+
+/**
+ * Event point rewards tables for WWevent lives on Easy difficulty - first dimension is rank, second is combo.
+ * @constant
+ * @type {number[][]}
+ */
+var TOKEN_EVENT_POINT_TABLE_WW_EASY = [
+    [57, 58, 59, 60, 61],
+    [60, 61, 62, 63, 64],
+    [63, 64, 65, 66, 68],
+    [64, 65, 66, 68, 70],
+    [66, 67, 69, 70, 71]
+];
+
+/**
+ * Event point rewards tables for WW event lives on Normal difficulty - first dimension is rank, second is combo.
+ * @constant
+ * @type {number[][]}
+ */
+var TOKEN_EVENT_POINT_TABLE_WW_NORMAL = [
+    [114, 117, 120, 122, 124],
+    [121, 123, 126, 128, 131],
+    [125, 129, 132, 135, 137],
+    [133, 135, 137, 140, 143],
+    [137, 140, 143, 145, 148]
+];
+
+/**
+ * Event point rewards tables for WW event lives on Hard difficulty - first dimension is rank, second is combo.
+ * @constant
+ * @type {number[][]}
+ */
+var TOKEN_EVENT_POINT_TABLE_WW_HARD = [
+    [194, 197, 202, 207, 214],
+    [204, 209, 213, 219, 226],
+    [215, 220, 224, 231, 237],
+    [226, 230, 235, 242, 249],
+    [237, 241, 246, 254, 261]
+];
+
+/**
+ * Event point rewards tables for WW event lives on Expert difficulty - first dimension is rank, second is combo.
+ * @constant
+ * @type {number[][]}
+ */
+var TOKEN_EVENT_POINT_TABLE_WW_EX = [
+    [403, 413, 421, 446, 459],
+    [426, 435, 444, 470, 484],
+    [448, 458, 467, 495, 509],
+    [475, 485, 495, 525, 540],
+    [498, 508, 518, 549, 565]
+];
+
+/**
+ * Array saving references to all WW point tables, for access using the difficulty ID from COMMON_DIFFICULTY_IDS.
+ * @constant
+ * @type {number[][][]}
+ */
+var TOKEN_EVENT_POINTS_WW = [];
+TOKEN_EVENT_POINTS_WW[COMMON_DIFFICULTY_IDS.EASY] = TOKEN_EVENT_POINT_TABLE_WW_EASY;
+TOKEN_EVENT_POINTS_WW[COMMON_DIFFICULTY_IDS.NORMAL] = TOKEN_EVENT_POINT_TABLE_WW_NORMAL;
+TOKEN_EVENT_POINTS_WW[COMMON_DIFFICULTY_IDS.HARD] = TOKEN_EVENT_POINT_TABLE_WW_HARD;
+TOKEN_EVENT_POINTS_WW[COMMON_DIFFICULTY_IDS.EX] = TOKEN_EVENT_POINT_TABLE_WW_EX;
 
 /**
  * Token cost for an event live of each difficulty.

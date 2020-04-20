@@ -3,7 +3,7 @@ var enDateOverride = [new Date(Date.UTC(2020, 3, 10, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "The new Yell Unit feature from JP has been added to the calculator! (You can leave it empty if you play on WW.)<br>Stay healthy, stay home (if it's possible for you), wash your hands and grind responsibly ❤︎",
+    message: "The new event song rewards and the Yell Unit feature from JP have been added to the calculator! (You can leave the Yell Multiplier empty if you play on WW.)<br>Stay healthy, stay home (if it's possible for you), wash your hands and grind responsibly ❤︎",
     id: 14,
     allowDismiss: true
 };

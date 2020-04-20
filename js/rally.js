@@ -6,7 +6,7 @@
  * An object used to store input values for the Token Event calculator.
  * @class RallyData
  * @property {boolean} rallyTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} rallyTimerRegion - Which server to use for the Automatic Timer.
+ * @property {region} rallyRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} rallyTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} rallyManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficulty} rallyLiveDifficulty - The difficulty lives are played on.
@@ -22,7 +22,7 @@
  */
 function RallyData() {
     this.rallyTimerMethodAuto = false;
-    this.rallyTimerRegion = "en";
+    this.rallyRegion = "en";
     this.rallyTimerMethodManual = false;
     this.rallyManualRestTimeInHours = 0;
     this.rallyLiveDifficulty = "EASY";
@@ -77,7 +77,7 @@ function RallyEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 RallyData.prototype.readFromUi = function () {
     this.rallyTimerMethodAuto = $("#rallyTimerMethodAuto").prop("checked");
-    this.rallyTimerRegion = $("input:radio[name=rallyTimerRegion]:checked").val();
+    this.rallyRegion = $("input:radio[name=rallyRegion]:checked").val();
     this.rallyTimerMethodManual = $("#rallyTimerMethodManual").prop("checked");
     this.rallyManualRestTimeInHours = ReadHelpers.toNum($("#rallyManualRestTime").val());
     this.rallyLiveDifficulty = $("input:radio[name=rallyLiveDifficulty]:checked").val();
@@ -97,9 +97,9 @@ RallyData.prototype.readFromUi = function () {
  */
 RallyData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#rallyTimerMethodAuto"), savedData.rallyTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=rallyTimerRegion]"), savedData.rallyTimerRegion);
-    if (savedData.rallyTimerRegion !== undefined) {
-        updateAutoTimerSection("rally");
+    SetHelpers.radioButtonHelper($("input:radio[name=rallyRegion]"), savedData.rallyRegion);
+    if (savedData.rallyRegion !== undefined) {
+        updateTimerSection("rally");
     }
     var manualButton = $("#rallyTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.rallyTimerMethodManual);
@@ -127,7 +127,7 @@ RallyData.setToUi = function (savedData) {
  */
 RallyData.prototype.alert = function () {
     alert("rallyTimerMethodAuto: " + this.rallyTimerMethodAuto + "\n" +
-          "rallyTimerRegion: " + this.rallyTimerRegion + "\n" +
+          "rallyTimerRegion: " + this.rallyRegion + "\n" +
           "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
           "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
           "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +
@@ -147,7 +147,7 @@ RallyData.prototype.alert = function () {
  */
 RallyData.prototype.getRestTimeInMinutes = function () {
     if (this.rallyTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.rallyTimerRegion);
+        return Common.getAutoRestTimeInMinutes(this.rallyRegion);
     }
     if (this.rallyTimerMethodManual) {
         return 60 * this.rallyManualRestTimeInHours;
@@ -330,6 +330,11 @@ RallyEstimationInfo.prototype.showResult = function () {
 RallyData.prototype.validate = function () {
     var errors = [];
 
+    if (this.rallyRegion != "en" && this.rallyRegion != "jp") {
+        errors.push("Choose a region");
+        return errors;
+    }
+
     var liveInfo = this.createLiveInfo();
     if (null === liveInfo) {
         errors.push("Live parameters have not been set");
@@ -371,9 +376,6 @@ RallyData.prototype.validate = function () {
     } else if (this.rallyTimerMethodAuto) {
         if (this.getRestTimeInMinutes() <= 0) {
             errors.push("Event is already finished. Select Manual Input in order to calculate");
-        }
-        if (this.rallyTimerRegion != "en" && this.rallyTimerRegion != "jp") {
-            errors.push("Choose a region for the Automatic Timer");
         }
     } else if (this.rallyTimerMethodManual) {
         if (isNaN(this.getRestTimeInMinutes())) {

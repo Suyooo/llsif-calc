@@ -132,25 +132,24 @@
             <div class="col s12 xl4">
                 <ul class="collapsible" data-collapsible="expandable">
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                        <div class="collapsible-header"><i class="material-icons">public</i>Region Settings
                         </div>
                         <div class="collapsible-body">
+                            <span class="form-label">Region</span>
+                            <div class="radio-row">
+                                <input name="tokenRegion" type="radio" id="tokenRegionEn" value="en"/>
+                                <label for="tokenRegionEn">Worldwide</label>
+                                <input name="tokenRegion" type="radio" id="tokenRegionJp" value="jp"/>
+                                <label for="tokenRegionJp">Japan</label>
+                            </div>
                             <span class="form-label">Timer Method</span>
                             <div class="radio-row">
-                                <input name="tokenTimerMethod" type="radio" id="tokenTimerMethodAuto" value="auto"
-                                       checked/>
+                                <input name="tokenTimerMethod" type="radio" id="tokenTimerMethodAuto" value="auto"/>
                                 <label for="tokenTimerMethodAuto">Automatic</label>
                                 <input name="tokenTimerMethod" type="radio" id="tokenTimerMethodManual" value="manual"/>
                                 <label for="tokenTimerMethodManual">Manual Input</label>
                             </div>
                             <div id="tokenTimerMethodAutoSection">
-                                <span class="form-label">Region</span>
-                                <div class="radio-row">
-                                    <input name="tokenTimerRegion" type="radio" id="tokenTimerRegionEn" value="en"/>
-                                    <label for="tokenTimerRegionEn">Worldwide</label>
-                                    <input name="tokenTimerRegion" type="radio" id="tokenTimerRegionJp" value="jp"/>
-                                    <label for="tokenTimerRegionJp">Japan</label>
-                                </div>
                                 <div id="tokenTimerEventInfo" class="event-info">
                                     <span class="form-label" id="tokenTimerLeft"></span>
                                     <div class="event-progress-bar">
@@ -161,7 +160,7 @@
                                     </div>
                                     <small class="event-info-note">Something wrong? <a data-target="sidebar"
                                                                                        class="sidenav-trigger">Contact
-                                                                                                               me!</a>
+                                        me!</a>
                                     </small>
                                 </div>
                             </div>
@@ -173,6 +172,13 @@
                                         Time Left In Hours</label>
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="tokenMinimumSleepHours" type="number" min="0" step="any" class="validate"
+                                       placeholder="8">
+                                <label for="tokenMinimumSleepHours">
+                                    Minimum Hours Of Sleep</label>
+                                <span class="helper-text" data-error="Must be a positive number!"></span>
                             </div>
                         </div>
                     </li>
@@ -281,9 +287,9 @@
                             </div>
                             <div class="input-field below-radio">
                                 <input id="tokenYellBonus" type="number" min="100" class="validate"
-                                       placeholder="">
+                                       placeholder="100">
                                 <label for="tokenYellBonus">
-                                    Yell Unit Bonus in Percent</label>
+                                    Yell Unit Multiplier in Percent</label>
                                 <span class="helper-text" data-error="Must be an integer equal to or greater than 100!"></span>
                             </div>
                         </div>
@@ -466,26 +472,24 @@
             <div class="col s12 xl4">
                 <ul class="collapsible" data-collapsible="expandable">
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                        <div class="collapsible-header"><i class="material-icons">public</i>Region Settings
                         </div>
                         <div class="collapsible-body">
+                            <span class="form-label">Region</span>
+                            <div class="radio-row">
+                                <input name="scoremRegion" type="radio" id="scoremRegionEn" value="en"/>
+                                <label for="scoremRegionEn">Worldwide</label>
+                                <input name="scoremRegion" type="radio" id="scoremRegionJp" value="jp"/>
+                                <label for="scoremRegionJp">Japan</label>
+                            </div>
                             <span class="form-label">Timer Method</span>
                             <div class="radio-row">
-                                <input name="scoremTimerMethod" type="radio" id="scoremTimerMethodAuto" value="auto"
-                                       checked/>
+                                <input name="scoremTimerMethod" type="radio" id="scoremTimerMethodAuto" value="auto"/>
                                 <label for="scoremTimerMethodAuto">Automatic</label>
-                                <input name="scoremTimerMethod" type="radio" id="scoremTimerMethodManual"
-                                       value="manual"/>
+                                <input name="scoremTimerMethod" type="radio" id="scoremTimerMethodManual" value="manual"/>
                                 <label for="scoremTimerMethodManual">Manual Input</label>
                             </div>
                             <div id="scoremTimerMethodAutoSection">
-                                <span class="form-label">Region</span>
-                                <div class="radio-row">
-                                    <input name="scoremTimerRegion" type="radio" id="scoremTimerRegionEn" value="en"/>
-                                    <label for="scoremTimerRegionEn">Worldwide</label>
-                                    <input name="scoremTimerRegion" type="radio" id="scoremTimerRegionJp" value="jp"/>
-                                    <label for="scoremTimerRegionJp">Japan</label>
-                                </div>
                                 <div id="scoremTimerEventInfo" class="event-info">
                                     <span class="form-label" id="scoremTimerLeft"></span>
                                     <div class="event-progress-bar">
@@ -496,7 +500,7 @@
                                     </div>
                                     <small class="event-info-note">Something wrong? <a data-target="sidebar"
                                                                                        class="sidenav-trigger">Contact
-                                                                                                               me!</a>
+                                        me!</a>
                                     </small>
                                 </div>
                             </div>
@@ -508,6 +512,13 @@
                                         Time Left In Hours</label>
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="scoremMinimumSleepHours" type="number" min="0" step="any" class="validate"
+                                       placeholder="8">
+                                <label for="scoremMinimumSleepHours">
+                                    Minimum Hours Of Sleep</label>
+                                <span class="helper-text" data-error="Must be a positive number!"></span>
                             </div>
                         </div>
                     </li>
@@ -744,26 +755,24 @@
             <div class="col s12 xl4">
                 <ul class="collapsible" data-collapsible="expandable">
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                        <div class="collapsible-header"><i class="material-icons">public</i>Region Settings
                         </div>
                         <div class="collapsible-body">
+                            <span class="form-label">Region</span>
+                            <div class="radio-row">
+                                <input name="medfesRegion" type="radio" id="medfesRegionEn" value="en"/>
+                                <label for="medfesRegionEn">Worldwide</label>
+                                <input name="medfesRegion" type="radio" id="medfesRegionJp" value="jp"/>
+                                <label for="medfesRegionJp">Japan</label>
+                            </div>
                             <span class="form-label">Timer Method</span>
                             <div class="radio-row">
-                                <input name="medfesTimerMethod" type="radio" id="medfesTimerMethodAuto" value="auto"
-                                       checked/>
+                                <input name="medfesTimerMethod" type="radio" id="medfesTimerMethodAuto" value="auto"/>
                                 <label for="medfesTimerMethodAuto">Automatic</label>
-                                <input name="medfesTimerMethod" type="radio" id="medfesTimerMethodManual"
-                                       value="manual"/>
+                                <input name="medfesTimerMethod" type="radio" id="medfesTimerMethodManual" value="manual"/>
                                 <label for="medfesTimerMethodManual">Manual Input</label>
                             </div>
                             <div id="medfesTimerMethodAutoSection">
-                                <span class="form-label">Region</span>
-                                <div class="radio-row">
-                                    <input name="medfesTimerRegion" type="radio" id="medfesTimerRegionEn" value="en"/>
-                                    <label for="medfesTimerRegionEn">Worldwide</label>
-                                    <input name="medfesTimerRegion" type="radio" id="medfesTimerRegionJp" value="jp"/>
-                                    <label for="medfesTimerRegionJp">Japan</label>
-                                </div>
                                 <div id="medfesTimerEventInfo" class="event-info">
                                     <span class="form-label" id="medfesTimerLeft"></span>
                                     <div class="event-progress-bar">
@@ -774,7 +783,7 @@
                                     </div>
                                     <small class="event-info-note">Something wrong? <a data-target="sidebar"
                                                                                        class="sidenav-trigger">Contact
-                                                                                                               me!</a>
+                                        me!</a>
                                     </small>
                                 </div>
                             </div>
@@ -786,6 +795,13 @@
                                         Time Left In Hours</label>
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="medfesMinimumSleepHours" type="number" min="0" step="any" class="validate"
+                                       placeholder="8">
+                                <label for="medfesMinimumSleepHours">
+                                    Minimum Hours Of Sleep</label>
+                                <span class="helper-text" data-error="Must be a positive number!"></span>
                             </div>
                         </div>
                     </li>
@@ -1083,26 +1099,24 @@
             <div class="col s12 xl4">
                 <ul class="collapsible" data-collapsible="expandable">
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                        <div class="collapsible-header"><i class="material-icons">public</i>Region Settings
                         </div>
                         <div class="collapsible-body">
+                            <span class="form-label">Region</span>
+                            <div class="radio-row">
+                                <input name="chafesRegion" type="radio" id="chafesRegionEn" value="en"/>
+                                <label for="chafesRegionEn">Worldwide</label>
+                                <input name="chafesRegion" type="radio" id="chafesRegionJp" value="jp"/>
+                                <label for="chafesRegionJp">Japan</label>
+                            </div>
                             <span class="form-label">Timer Method</span>
                             <div class="radio-row">
-                                <input name="chafesTimerMethod" type="radio" id="chafesTimerMethodAuto" value="auto"
-                                       checked/>
+                                <input name="chafesTimerMethod" type="radio" id="chafesTimerMethodAuto" value="auto"/>
                                 <label for="chafesTimerMethodAuto">Automatic</label>
-                                <input name="chafesTimerMethod" type="radio" id="chafesTimerMethodManual"
-                                       value="manual"/>
+                                <input name="chafesTimerMethod" type="radio" id="chafesTimerMethodManual" value="manual"/>
                                 <label for="chafesTimerMethodManual">Manual Input</label>
                             </div>
                             <div id="chafesTimerMethodAutoSection">
-                                <span class="form-label">Region</span>
-                                <div class="radio-row">
-                                    <input name="chafesTimerRegion" type="radio" id="chafesTimerRegionEn" value="en"/>
-                                    <label for="chafesTimerRegionEn">Worldwide</label>
-                                    <input name="chafesTimerRegion" type="radio" id="chafesTimerRegionJp" value="jp"/>
-                                    <label for="chafesTimerRegionJp">Japan</label>
-                                </div>
                                 <div id="chafesTimerEventInfo" class="event-info">
                                     <span class="form-label" id="chafesTimerLeft"></span>
                                     <div class="event-progress-bar">
@@ -1113,7 +1127,7 @@
                                     </div>
                                     <small class="event-info-note">Something wrong? <a data-target="sidebar"
                                                                                        class="sidenav-trigger">Contact
-                                                                                                               me!</a>
+                                        me!</a>
                                     </small>
                                 </div>
                             </div>
@@ -1125,6 +1139,13 @@
                                         Time Left In Hours</label>
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="chafesMinimumSleepHours" type="number" min="0" step="any" class="validate"
+                                       placeholder="8">
+                                <label for="chafesMinimumSleepHours">
+                                    Minimum Hours Of Sleep</label>
+                                <span class="helper-text" data-error="Must be a positive number!"></span>
                             </div>
                         </div>
                     </li>
@@ -1427,26 +1448,24 @@
             <div class="col s12 xl4">
                 <ul class="collapsible" data-collapsible="expandable">
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                        <div class="collapsible-header"><i class="material-icons">public</i>Region Settings
                         </div>
                         <div class="collapsible-body">
+                            <span class="form-label">Region</span>
+                            <div class="radio-row">
+                                <input name="rallyRegion" type="radio" id="rallyRegionEn" value="en"/>
+                                <label for="rallyRegionEn">Worldwide</label>
+                                <input name="rallyRegion" type="radio" id="rallyRegionJp" value="jp"/>
+                                <label for="rallyRegionJp">Japan</label>
+                            </div>
                             <span class="form-label">Timer Method</span>
                             <div class="radio-row">
-                                <input name="rallyTimerMethod" type="radio" id="rallyTimerMethodAuto" value="auto"
-                                       checked/>
+                                <input name="rallyTimerMethod" type="radio" id="rallyTimerMethodAuto" value="auto"/>
                                 <label for="rallyTimerMethodAuto">Automatic</label>
-                                <input name="rallyTimerMethod" type="radio" id="rallyTimerMethodManual"
-                                       value="manual"/>
+                                <input name="rallyTimerMethod" type="radio" id="rallyTimerMethodManual" value="manual"/>
                                 <label for="rallyTimerMethodManual">Manual Input</label>
                             </div>
                             <div id="rallyTimerMethodAutoSection">
-                                <span class="form-label">Region</span>
-                                <div class="radio-row">
-                                    <input name="rallyTimerRegion" type="radio" id="rallyTimerRegionEn" value="en"/>
-                                    <label for="rallyTimerRegionEn">Worldwide</label>
-                                    <input name="rallyTimerRegion" type="radio" id="rallyTimerRegionJp" value="jp"/>
-                                    <label for="rallyTimerRegionJp">Japan</label>
-                                </div>
                                 <div id="rallyTimerEventInfo" class="event-info">
                                     <span class="form-label" id="rallyTimerLeft"></span>
                                     <div class="event-progress-bar">
@@ -1457,7 +1476,7 @@
                                     </div>
                                     <small class="event-info-note">Something wrong? <a data-target="sidebar"
                                                                                        class="sidenav-trigger">Contact
-                                                                                                               me!</a>
+                                        me!</a>
                                     </small>
                                 </div>
                             </div>
@@ -1469,6 +1488,13 @@
                                         Time Left In Hours</label>
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="rallyMinimumSleepHours" type="number" min="0" step="any" class="validate"
+                                       placeholder="8">
+                                <label for="rallyMinimumSleepHours">
+                                    Minimum Hours Of Sleep</label>
+                                <span class="helper-text" data-error="Must be a positive number!"></span>
                             </div>
                         </div>
                     </li>
@@ -1704,26 +1730,24 @@
             <div class="col s12 xl4">
                 <ul class="collapsible" data-collapsible="expandable">
                     <li>
-                        <div class="collapsible-header"><i class="material-icons">date_range</i>Date Settings
+                        <div class="collapsible-header"><i class="material-icons">public</i>Region Settings
                         </div>
                         <div class="collapsible-body">
+                            <span class="form-label">Region</span>
+                            <div class="radio-row">
+                                <input name="friendmRegion" type="radio" id="friendmRegionEn" value="en"/>
+                                <label for="friendmRegionEn">Worldwide</label>
+                                <input name="friendmRegion" type="radio" id="friendmRegionJp" value="jp"/>
+                                <label for="friendmRegionJp">Japan</label>
+                            </div>
                             <span class="form-label">Timer Method</span>
                             <div class="radio-row">
-                                <input name="friendmTimerMethod" type="radio" id="friendmTimerMethodAuto" value="auto"
-                                       checked/>
+                                <input name="friendmTimerMethod" type="radio" id="friendmTimerMethodAuto" value="auto"/>
                                 <label for="friendmTimerMethodAuto">Automatic</label>
-                                <input name="friendmTimerMethod" type="radio" id="friendmTimerMethodManual"
-                                       value="manual"/>
+                                <input name="friendmTimerMethod" type="radio" id="friendmTimerMethodManual" value="manual"/>
                                 <label for="friendmTimerMethodManual">Manual Input</label>
                             </div>
                             <div id="friendmTimerMethodAutoSection">
-                                <span class="form-label">Region</span>
-                                <div class="radio-row">
-                                    <input name="friendmTimerRegion" type="radio" id="friendmTimerRegionEn" value="en"/>
-                                    <label for="friendmTimerRegionEn">Worldwide</label>
-                                    <input name="friendmTimerRegion" type="radio" id="friendmTimerRegionJp" value="jp"/>
-                                    <label for="friendmTimerRegionJp">Japan</label>
-                                </div>
                                 <div id="friendmTimerEventInfo" class="event-info">
                                     <span class="form-label" id="friendmTimerLeft"></span>
                                     <div class="event-progress-bar">
@@ -1734,7 +1758,7 @@
                                     </div>
                                     <small class="event-info-note">Something wrong? <a data-target="sidebar"
                                                                                        class="sidenav-trigger">Contact
-                                                                                                               me!</a>
+                                        me!</a>
                                     </small>
                                 </div>
                             </div>
@@ -1746,6 +1770,13 @@
                                         Time Left In Hours</label>
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="friendmMinimumSleepHours" type="number" min="0" step="any" class="validate"
+                                       placeholder="8">
+                                <label for="friendmMinimumSleepHours">
+                                    Minimum Hours Of Sleep</label>
+                                <span class="helper-text" data-error="Must be a positive number!"></span>
                             </div>
                         </div>
                     </li>
