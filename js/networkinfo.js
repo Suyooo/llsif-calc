@@ -1,10 +1,10 @@
-var enDateOverride = [new Date(Date.UTC(2020, 0, 22, 9)),
-    new Date(Date.UTC(2020, 1, 1, 8))];
+var enDateOverride = [new Date(Date.UTC(2020, 3, 10, 9)),
+    new Date(Date.UTC(2020, 3, 20, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "The <a href=\"/sifas/calc\"><b>SIFAS Event Calculator</b></a> is now available at <a href=\"/sifas/calc\">suyo.be/sifas/calc</a>!<br>Also, <a href=\"https://github.com/Suyooo/llsif-calc/\">this project is now on GitHub</a>! Check the sidebar menu for a link to the Issues page where you can post all of your problems and suggestions for the calculator!",
-    id: 12,
+    message: "The new Yell Unit feature from JP has been added to the calculator! (You can leave it empty if you play on WW.)<br>Stay healthy, stay home (if it's possible for you), wash your hands and grind responsibly ❤︎",
+    id: 14,
     allowDismiss: true
 };
 

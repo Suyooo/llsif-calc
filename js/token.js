@@ -16,6 +16,7 @@
  * @property {difficulty} tokenNormalLiveDifficulty - The difficulty normal lives are played on.
  * @property {number} tokenNormalLiveMultiplier - Which multiplier the player plays normal lives on.
  * @property {number} tokenNormalLiveLPReduction - A percentage to multiply LP with.
+ * @property {number} tokenYellBonus - The yell unit bonus in percent.
  * @property {number} tokenTargetEventPoints - The desired final amount of event points.
  * @property {number} tokenCurrentEventPoints - The current amount of event points.
  * @property {number} tokenCurrentEventToken - The current amount of event token.
@@ -36,6 +37,7 @@ function TokenData() {
     this.tokenNormalLiveDifficulty = "EASY";
     this.tokenNormalLiveMultiplier = 0;
     this.tokenNormalLiveLPReduction = 1;
+    this.tokenYellBonus = 100;
     this.tokenTargetEventPoints = 0;
     this.tokenCurrentEventPoints = 0;
     this.tokenCurrentEventToken = 0;
@@ -128,6 +130,7 @@ TokenData.prototype.readFromUi = function () {
     this.tokenNormalLiveMultiplier = ReadHelpers.toNum($("input:radio[name=tokenNormalLiveMultiplier]:checked").val());
     this.tokenNormalLiveLPReduction =
         ReadHelpers.toNum($("input:radio[name=tokenNormalLiveLPReduction]:checked").val());
+    this.tokenYellBonus = ReadHelpers.toNum($("#tokenYellBonus").val(), 100);
     this.tokenTargetEventPoints = ReadHelpers.toNum($("#tokenTargetEventPoints").val());
     this.tokenCurrentEventPoints = ReadHelpers.toNum($("#tokenCurrentEventPoints").val());
     this.tokenCurrentEventToken = ReadHelpers.toNum($("#tokenCurrentEventToken").val());
@@ -160,6 +163,7 @@ TokenData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=tokenNormalLiveMultiplier]"), savedData.tokenNormalLiveMultiplier);
     SetHelpers.radioButtonHelper($("input:radio[name=tokenNormalLiveLPReduction]"),
         savedData.tokenNormalLiveLPReduction);
+    SetHelpers.inputHelper($("#tokenYellBonus"), savedData.tokenYellBonus);
     SetHelpers.inputHelper($("#tokenTargetEventPoints"), savedData.tokenTargetEventPoints);
     SetHelpers.inputHelper($("#tokenCurrentEventPoints"), savedData.tokenCurrentEventPoints);
     SetHelpers.inputHelper($("#tokenCurrentEventToken"), savedData.tokenCurrentEventToken);
@@ -187,6 +191,7 @@ TokenData.prototype.alert = function () {
           "tokenNormalLiveDifficulty: " + this.tokenNormalLiveDifficulty + "\n" +
           "tokenNormalLiveMultiplier: " + this.tokenNormalLiveMultiplier + "\n" +
           "tokenNormalLPReduction: " + this.tokenNormalLiveLPReduction + "\n" +
+          "tokenYellBonus: " + this.tokenYellBonus + "\n" +
           "tokenTargetEventPoints: " + this.tokenTargetEventPoints + "\n" +
           "tokenCurrentRank: " + this.tokenCurrentRank + "\n" +
           "tokenCurrentEventToken: " + this.tokenCurrentEventToken + "\n" +
@@ -258,6 +263,16 @@ TokenData.prototype.getEventLiveMultiplier = function () {
 };
 
 /**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+TokenData.prototype.getYellBonus = function () {
+    var yellBonus = this.tokenYellBonus;
+    if (yellBonus >= 100) return yellBonus/100;
+    return 0;
+};
+
+/**
  * Creates a {@link TokenEventLiveInfo} object using the event live input values, representing one play.
  * @returns {?TokenEventLiveInfo} A new object with all properties set, or null if the event live inputs are invalid.
  */
@@ -265,15 +280,16 @@ TokenData.prototype.createEventLiveInfo = function () {
     var diffId = this.getEventLiveDifficulty(),
         rankId = this.getEventLiveScore(),
         comboId = this.getEventLiveCombo(),
-        multiplier = this.getEventLiveMultiplier();
+        multiplier = this.getEventLiveMultiplier(),
+        yellBonus = this.getYellBonus();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || rankId == TOKEN_RANK.ERROR
-        || comboId == TOKEN_RANK.ERROR || multiplier === 0) {
+        || comboId == TOKEN_RANK.ERROR || multiplier === 0 || yellBonus === 0) {
         return null;
     }
 
     var tokenCost = TOKEN_EVENT_TOKEN[diffId],
         expReward = COMMON_EXP_REWARD[diffId],
-        pointReward = TOKEN_EVENT_POINTS[diffId][rankId][comboId];
+        pointReward = TOKEN_EVENT_POINTS[diffId][rankId][comboId] * yellBonus;
     if (undefined === pointReward) return null;
     return new TokenEventLiveInfo(tokenCost * multiplier, pointReward * multiplier, expReward * multiplier);
 };
