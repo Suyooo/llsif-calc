@@ -127,7 +127,7 @@ ScoreMatchData.setToUi = function (savedData) {
  */
 ScoreMatchData.prototype.alert = function () {
     alert("scoremTimerMethodAuto: " + this.scoremTimerMethodAuto + "\n" +
-          "scoremTimerRegion: " + this.scoremRegion + "\n" +
+          "scoremRegion: " + this.scoremRegion + "\n" +
           "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
           "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
           "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +

@@ -119,7 +119,7 @@ function TokenEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 TokenData.prototype.readFromUi = function () {
     this.tokenTimerMethodAuto = $("#tokenTimerMethodAuto").prop("checked");
-    this.tokenTimerRegion = $("input:radio[name=tokenRegion]:checked").val();
+    this.tokenRegion = $("input:radio[name=tokenRegion]:checked").val();
     this.tokenTimerMethodManual = $("#tokenTimerMethodManual").prop("checked");
     this.tokenManualRestTimeInHours = ReadHelpers.toNum($("#tokenManualRestTime").val());
     this.tokenEventLiveDifficulty = $("input:radio[name=tokenEventLiveDifficulty]:checked").val();
@@ -181,23 +181,23 @@ TokenData.setToUi = function (savedData) {
  */
 TokenData.prototype.alert = function () {
     alert("tokenTimerMethodAuto: " + this.tokenTimerMethodAuto + "\n" +
-          "tokenRegion: " + this.tokenRegion + "\n" +
-          "tokenTimerMethodManual: " + this.tokenTimerMethodManual + "\n" +
-          "tokenManualRestTimeInHours: " + this.tokenManualRestTimeInHours + "\n" +
-          "tokenEventLiveDifficulty: " + this.tokenEventLiveDifficulty + "\n" +
-          "tokenEventLiveScore: " + this.tokenEventLiveScore + "\n" +
-          "tokenEventLiveCombo: " + this.tokenEventLiveCombo + "\n" +
-          "tokenEventLiveMultiplier: " + this.tokenEventLiveMultiplier + "\n" +
-          "tokenNormalLiveDifficulty: " + this.tokenNormalLiveDifficulty + "\n" +
-          "tokenNormalLiveMultiplier: " + this.tokenNormalLiveMultiplier + "\n" +
-          "tokenNormalLPReduction: " + this.tokenNormalLiveLPReduction + "\n" +
-          "tokenYellBonus: " + this.tokenYellBonus + "\n" +
-          "tokenTargetEventPoints: " + this.tokenTargetEventPoints + "\n" +
-          "tokenCurrentRank: " + this.tokenCurrentRank + "\n" +
-          "tokenCurrentEventToken: " + this.tokenCurrentEventToken + "\n" +
-          "tokenCurrentEventPoints: " + this.tokenCurrentEventPoints + "\n" +
-          "tokenCurrentLP: " + this.tokenCurrentLP + "\n" +
-          "tokenCurrentEXP: " + this.tokenCurrentEXP);
+        "tokenRegion: " + this.tokenRegion + "\n" +
+        "tokenTimerMethodManual: " + this.tokenTimerMethodManual + "\n" +
+        "tokenManualRestTimeInHours: " + this.tokenManualRestTimeInHours + "\n" +
+        "tokenEventLiveDifficulty: " + this.tokenEventLiveDifficulty + "\n" +
+        "tokenEventLiveScore: " + this.tokenEventLiveScore + "\n" +
+        "tokenEventLiveCombo: " + this.tokenEventLiveCombo + "\n" +
+        "tokenEventLiveMultiplier: " + this.tokenEventLiveMultiplier + "\n" +
+        "tokenNormalLiveDifficulty: " + this.tokenNormalLiveDifficulty + "\n" +
+        "tokenNormalLiveMultiplier: " + this.tokenNormalLiveMultiplier + "\n" +
+        "tokenNormalLPReduction: " + this.tokenNormalLiveLPReduction + "\n" +
+        "tokenYellBonus: " + this.tokenYellBonus + "\n" +
+        "tokenTargetEventPoints: " + this.tokenTargetEventPoints + "\n" +
+        "tokenCurrentRank: " + this.tokenCurrentRank + "\n" +
+        "tokenCurrentEventToken: " + this.tokenCurrentEventToken + "\n" +
+        "tokenCurrentEventPoints: " + this.tokenCurrentEventPoints + "\n" +
+        "tokenCurrentLP: " + this.tokenCurrentLP + "\n" +
+        "tokenCurrentEXP: " + this.tokenCurrentEXP);
 };
 
 /**
@@ -206,7 +206,7 @@ TokenData.prototype.alert = function () {
  */
 TokenData.prototype.getRestTimeInMinutes = function () {
     if (this.tokenTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.tokenRegion)
+        return Common.getAutoRestTimeInMinutes(this.tokenRegion);
     }
     if (this.tokenTimerMethodManual) {
         return 60 * this.tokenManualRestTimeInHours;
@@ -268,7 +268,7 @@ TokenData.prototype.getEventLiveMultiplier = function () {
  */
 TokenData.prototype.getYellBonus = function () {
     var yellBonus = this.tokenYellBonus;
-    if (yellBonus >= 100) return yellBonus/100;
+    if (yellBonus >= 100) return yellBonus / 100;
     return 0;
 };
 
@@ -289,9 +289,9 @@ TokenData.prototype.createEventLiveInfo = function () {
 
     var tokenCost = TOKEN_EVENT_TOKEN[diffId],
         expReward = COMMON_EXP_REWARD[diffId],
-        pointReward = TOKEN_EVENT_POINTS[diffId][rankId][comboId] * yellBonus;
+        pointReward = this.tokenRegion == "en" ? TOKEN_EVENT_POINTS_WW[diffId][rankId][comboId] : TOKEN_EVENT_POINTS[diffId][rankId][comboId];
     if (undefined === pointReward) return null;
-    return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * multiplier), expReward * multiplier);
+    return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * multiplier * yellBonus), expReward * multiplier);
 };
 
 /**
@@ -467,7 +467,7 @@ TokenEstimationInfo.prototype.showResult = function () {
         Results.setBigResult($("#tokenResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#tokenResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
-                                        Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
+            Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#tokenResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#tokenResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#tokenResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -505,14 +505,14 @@ TokenData.prototype.validate = function () {
         errors.push("Normal live parameters have not been set");
     } else if (liveInfo.lp > Common.getMaxLp(this.tokenCurrentRank)) {
         errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                    ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
+            ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
     }
 
     if (0 >= this.tokenTargetEventPoints) {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-                    "Please change the event point target in order to calculate again");
+            "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.tokenCurrentEventPoints) {
@@ -574,11 +574,11 @@ var TOKEN_RANK = {
  * @type {number[][]}
  */
 var TOKEN_EVENT_POINT_TABLE_EASY = [
-    [57, 58, 59, 60, 61],
-    [60, 61, 62, 63, 64],
-    [63, 64, 65, 66, 68],
-    [64, 65, 66, 68, 70],
-    [66, 67, 69, 70, 71]
+    [58, 59.16, 60.32, 61.48, 63.8],
+    [60.9, 62.118, 63.336, 64.554, 66.99],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [66.12, 67.4424, 68.7648, 70.0872, 72.732]
 ];
 
 /**
@@ -587,11 +587,11 @@ var TOKEN_EVENT_POINT_TABLE_EASY = [
  * @type {number[][]}
  */
 var TOKEN_EVENT_POINT_TABLE_NORMAL = [
-    [114, 117, 120, 122, 124],
-    [121, 123, 126, 128, 131],
-    [125, 129, 132, 135, 137],
-    [133, 135, 137, 140, 143],
-    [137, 140, 143, 145, 148]
+    [117, 119.34, 121.68, 126.36, 131.04],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [128.7, 131.274, 133.848, 138.996, 144.144],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [138.06, 140.8212, 143.5824, 149.1048, 154.6272]
 ];
 
 /**
@@ -600,11 +600,11 @@ var TOKEN_EVENT_POINT_TABLE_NORMAL = [
  * @type {number[][]}
  */
 var TOKEN_EVENT_POINT_TABLE_HARD = [
-    [194, 197, 202, 207, 214],
-    [204, 209, 213, 219, 226],
-    [215, 220, 224, 231, 237],
-    [226, 230, 235, 242, 249],
-    [237, 241, 246, 254, 261]
+    [198, 201.96, 205.92, 217.8, 225.72],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [227.7, 232.254, 236.808, 250.47, 259.578],
+    [237.6, 242.352, 247.104, 261.36, 270.864]
 ];
 
 /**
@@ -613,11 +613,11 @@ var TOKEN_EVENT_POINT_TABLE_HARD = [
  * @type {number[][]}
  */
 var TOKEN_EVENT_POINT_TABLE_EX = [
-    [403, 413, 421, 446, 459],
-    [426, 435, 444, 470, 484],
-    [448, 458, 467, 495, 509],
-    [475, 485, 495, 525, 540],
-    [498, 508, 518, 549, 565]
+    [410, 418.2, 426.4, 459.2, 475.6],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [0, 0.0, 0.0, 0.0, 0.0],
+    [500.2, 510.204, 520.208, 560.224, 580.232]
 ];
 
 /**

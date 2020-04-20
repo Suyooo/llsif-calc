@@ -135,7 +135,7 @@ FriendlyMatchData.setToUi = function (savedData) {
  */
 FriendlyMatchData.prototype.alert = function () {
     alert("friendmTimerMethodAuto: " + this.friendmTimerMethodAuto + "\n" +
-          "friendmTimerRegion: " + this.friendmRegion + "\n" +
+          "friendmRegion: " + this.friendmRegion + "\n" +
           "friendmTimerMethodManual: " + this.friendmTimerMethodManual + "\n" +
           "friendmManualRestTimeInHours: " + this.friendmManualRestTimeInHours + "\n" +
           "friendmLiveDifficulty: " + this.friendmLiveDifficulty + "\n" +

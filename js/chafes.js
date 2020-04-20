@@ -166,6 +166,7 @@ ChaFesData.setToUi = function (savedData) {
  */
 ChaFesData.prototype.alert = function () {
     alert("chafesTimerMethodAuto: " + this.chafesTimerMethodAuto + "\n" +
+          "chafesRegion: " + this.chafesRegion + "\n" +
           "chafesTimerMethodManual: " + this.chafesTimerMethodManual + "\n" +
           "chafesManualRestTimeInHours: " + this.chafesManualRestTimeInHours + "\n" +
           "chafesLiveDifficulty: " + this.chafesLiveDifficulty + "\n" +

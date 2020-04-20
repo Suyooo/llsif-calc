@@ -127,7 +127,7 @@ RallyData.setToUi = function (savedData) {
  */
 RallyData.prototype.alert = function () {
     alert("rallyTimerMethodAuto: " + this.rallyTimerMethodAuto + "\n" +
-          "rallyTimerRegion: " + this.rallyRegion + "\n" +
+          "rallyRegion: " + this.rallyRegion + "\n" +
           "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
           "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
           "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +

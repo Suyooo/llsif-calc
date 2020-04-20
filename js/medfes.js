@@ -170,6 +170,7 @@ MedFesData.setToUi = function (savedData) {
  */
 MedFesData.prototype.alert = function () {
     alert("medfesTimerMethodAuto: " + this.medfesTimerMethodAuto + "\n" +
+          "medfesRegion: " + this.medfesRegion + "\n" +
           "medfesTimerMethodManual: " + this.medfesTimerMethodManual + "\n" +
           "medfesManualRestTimeInHours: " + this.medfesManualRestTimeInHours + "\n" +
           "medfesLiveDifficulty: " + this.medfesLiveDifficulty + "\n" +
