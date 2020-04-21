@@ -9,7 +9,7 @@
  * @property {region} tokenRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} tokenTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} tokenManualRestTimeInHours - The time left in hours, entered for Manual Input.
- * @property {difficulty} tokenEventLiveDifficulty - The difficulty event lives are played on.
+ * @property {difficultyWithM} tokenEventLiveDifficulty - The difficulty event lives are played on.
  * @property {rank} tokenEventLiveScore - Which score rank the player clears event lives with.
  * @property {rank} tokenEventLiveCombo - Which combo rank the player clears event lives with.
  * @property {number} tokenEventLiveMultiplier - Which multiplier the player plays event lives on.
@@ -289,7 +289,8 @@ TokenData.prototype.createEventLiveInfo = function () {
 
     var tokenCost = TOKEN_EVENT_TOKEN[diffId],
         expReward = COMMON_EXP_REWARD[diffId],
-        pointReward = this.tokenRegion == "en" ? TOKEN_EVENT_POINTS_WW[diffId][rankId][comboId] : TOKEN_EVENT_POINTS[diffId][rankId][comboId];
+        pointReward = this.tokenRegion == "en" ? TOKEN_EVENT_POINTS_WW[diffId][rankId][comboId] :
+            TOKEN_EVENT_POINTS_BASE[diffId] * TOKEN_EVENT_POINTS_SCORE_MULTI[diffId][rankId] * TOKEN_EVENT_POINTS_COMBO_MULTI[diffId][comboId];
     if (undefined === pointReward) return null;
     return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * multiplier * yellBonus), expReward * multiplier);
 };
@@ -509,6 +510,8 @@ TokenData.prototype.validate = function () {
     } else if (liveInfo.lp > Common.getMaxLp(this.tokenCurrentRank)) {
         errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
             ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
+    } else if (this.tokenRegion == "en" && this.tokenEventLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+        errors.push("Master difficulty for event lives is not available in the Worldwide server.");
     }
 
     if (0 >= this.tokenTargetEventPoints) {
@@ -568,74 +571,45 @@ var TOKEN_RANK = {
     "B": 2,
     "A": 3,
     "S": 4,
-    "ERROR": 5
+    "MASTER": 5,
+    "ERROR": 6
 };
 
 /**
- * Event point rewards tables for event lives on Easy difficulty - first dimension is rank, second is combo.
+ * Base event point rewards for event lives for each difficulty.
+ * @constant
+ * @type {number[]}
+ */
+var TOKEN_EVENT_POINTS_BASE = [58, 117, 198, 410, 533];
+
+/**
+ * Score rank multipliers for the event point rewards for event lives - first dimension is difficulty, second is rank.
  * @constant
  * @type {number[][]}
  */
-var TOKEN_EVENT_POINT_TABLE_EASY = [
-    [58, 59.16, 60.32, 61.48, 63.8],
-    [60.9, 62.118, 63.336, 64.554, 66.99],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [66.12, 67.4424, 68.7648, 70.0872, 72.732]
+var TOKEN_EVENT_POINTS_SCORE_MULTI = [
+    [1.00, 1.05, 1.10, 1.12, 1.14],
+    [1.00, 1.05, 1.10, 1.14, 1.18],
+    [1.00, 1.05, 1.10, 1.15, 1.20],
+    [1.00, 1.05, 1.10, 1.16, 1.22],
+    [1.00, 1.05, 1.10, 1.18, 1.26]
 ];
 
 /**
- * Event point rewards tables for event lives on Normal difficulty - first dimension is rank, second is combo.
+ * Combo rank multipliers for the event point rewards for event lives - first dimension is difficulty, second is rank.
  * @constant
  * @type {number[][]}
  */
-var TOKEN_EVENT_POINT_TABLE_NORMAL = [
-    [117, 119.34, 121.68, 126.36, 131.04],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [128.7, 131.274, 133.848, 138.996, 144.144],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [138.06, 140.8212, 143.5824, 149.1048, 154.6272]
+var TOKEN_EVENT_POINTS_COMBO_MULTI = [
+    [1.00, 1.02, 1.04, 1.06, 1.10],
+    [1.00, 1.02, 1.04, 1.08, 1.12],
+    [1.00, 1.02, 1.04, 1.10, 1.14],
+    [1.00, 1.02, 1.04, 1.12, 1.16],
+    [1.00, 1.02, 1.04, 1.14, 1.18]
 ];
 
 /**
- * Event point rewards tables for event lives on Hard difficulty - first dimension is rank, second is combo.
- * @constant
- * @type {number[][]}
- */
-var TOKEN_EVENT_POINT_TABLE_HARD = [
-    [198, 201.96, 205.92, 217.8, 225.72],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [227.7, 232.254, 236.808, 250.47, 259.578],
-    [237.6, 242.352, 247.104, 261.36, 270.864]
-];
-
-/**
- * Event point rewards tables for event lives on Expert difficulty - first dimension is rank, second is combo.
- * @constant
- * @type {number[][]}
- */
-var TOKEN_EVENT_POINT_TABLE_EX = [
-    [410, 418.2, 426.4, 459.2, 475.6],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [0, 0.0, 0.0, 0.0, 0.0],
-    [500.2, 510.204, 520.208, 560.224, 580.232]
-];
-
-/**
- * Array saving references to all point tables, for access using the difficulty ID from COMMON_DIFFICULTY_IDS.
- * @constant
- * @type {number[][][]}
- */
-var TOKEN_EVENT_POINTS = [];
-TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EASY] = TOKEN_EVENT_POINT_TABLE_EASY;
-TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.NORMAL] = TOKEN_EVENT_POINT_TABLE_NORMAL;
-TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.HARD] = TOKEN_EVENT_POINT_TABLE_HARD;
-TOKEN_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EX] = TOKEN_EVENT_POINT_TABLE_EX;
-
-/**
- * Event point rewards tables for WWevent lives on Easy difficulty - first dimension is rank, second is combo.
+ * Event point rewards tables for WW event lives on Easy difficulty - first dimension is rank, second is combo.
  * @constant
  * @type {number[][]}
  */

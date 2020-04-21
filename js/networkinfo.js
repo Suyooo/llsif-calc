@@ -3,10 +3,9 @@ var enDateOverride = [new Date(Date.UTC(2020, 3, 10, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    //message: "The new event song rewards and the Yell Unit feature from JP have been added to the calculator! (You can leave the Yell Multiplier empty if you play on WW.)<br>Stay healthy, stay home (if it's possible for you), wash your hands and grind responsibly ❤︎",
-    message: "EP reward tables for Event Songs are not complete yet. Only score rank S and no score rank are usable. Proceed with caution.<br>If you have any screenshots of the event point breakdown of a non-S rank play on any difficulty, please send it to me! (check the sidebar)",
+    message: "The new event song rewards (big thank you to Squall on SIFcord!!) and the Yell Unit feature from JP have been added to the calculator! (You can leave the Yell Multiplier empty if you play on WW.)<br>A lot was changed in the code so some places might break - please contact me if you find any problems (check the sidebar). Stay healthy, wash your hands and grind responsibly ❤",
     id: 14,
-    allowDismiss: false
+    allowDismiss: true
 };
 
 // Little prompt for appcache -> service worker migration, will be removed at some point

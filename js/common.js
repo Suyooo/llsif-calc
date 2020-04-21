@@ -316,8 +316,13 @@ Common.hoursBetween = function (datea, dateb) {
  */
 
 /**
- * A string, representing a live difficulty. Technical and Master are handled as EX.
+ * A string, representing a live difficulty, if Technical/Master are handled as EX.
  * @typedef {('EASY'|'NORMAL'|'HARD'|'EX')} difficulty
+ */
+
+/**
+ * A string, representing a live difficulty, if Master has seperate rewards.
+ * @typedef {('EASY'|'NORMAL'|'HARD'|'EX'|'MASTER')} difficultyWithM
  */
 
 /**
@@ -345,7 +350,8 @@ var COMMON_DIFFICULTY_IDS = {
     "NORMAL": 1,
     "HARD": 2,
     "EX": 3,
-    "ERROR": 4
+    "MASTER": 4,
+    "ERROR": 5
 };
 
 /**
@@ -358,6 +364,7 @@ COMMON_EXP_REWARD[COMMON_DIFFICULTY_IDS.EASY] = 12;
 COMMON_EXP_REWARD[COMMON_DIFFICULTY_IDS.NORMAL] = 26;
 COMMON_EXP_REWARD[COMMON_DIFFICULTY_IDS.HARD] = 46;
 COMMON_EXP_REWARD[COMMON_DIFFICULTY_IDS.EX] = 83;
+COMMON_EXP_REWARD[COMMON_DIFFICULTY_IDS.MASTER] = 83;
 
 /**
  * LP cost used across all events. Technical and Master are handled as Expert.
@@ -369,6 +376,7 @@ COMMON_LP_COST[COMMON_DIFFICULTY_IDS.EASY] = 5;
 COMMON_LP_COST[COMMON_DIFFICULTY_IDS.NORMAL] = 10;
 COMMON_LP_COST[COMMON_DIFFICULTY_IDS.HARD] = 15;
 COMMON_LP_COST[COMMON_DIFFICULTY_IDS.EX] = 25;
+COMMON_LP_COST[COMMON_DIFFICULTY_IDS.MASTER] = 25;
 
 /**
  * Length of one live (including things like team/guest selection), used as a rough estimate for calculation.
