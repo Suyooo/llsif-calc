@@ -292,7 +292,7 @@ TokenData.prototype.createEventLiveInfo = function () {
         pointReward = this.tokenRegion == "en" ? TOKEN_EVENT_POINTS_WW[diffId][rankId][comboId] :
             TOKEN_EVENT_POINTS_BASE[diffId] * TOKEN_EVENT_POINTS_SCORE_MULTI[diffId][rankId] * TOKEN_EVENT_POINTS_COMBO_MULTI[diffId][comboId];
     if (undefined === pointReward) return null;
-    return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * multiplier * yellBonus), expReward * multiplier);
+    return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * yellBonus) * multiplier, expReward * multiplier);
 };
 
 /**

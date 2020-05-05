@@ -3,8 +3,8 @@ var enDateOverride = [new Date(Date.UTC(2020, 3, 27, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "The new event song rewards (big thank you to Squall on SIFcord!!) and the Yell Unit feature from JP have been added to the calculator! (You can leave the Yell Multiplier empty if you play on WW.)<br>A lot was changed in the code so some places might break - please contact me if you find any problems (check the sidebar). Stay healthy, wash your hands and grind responsibly ❤",
-    id: 14,
+    message: "Master Difficulty has been added to Nakayoshi Match (thank you to Squall on SIFcord!). Stay healthy, wash your hands and grind responsibly ❤",
+    id: 15,
     allowDismiss: true
 };
 

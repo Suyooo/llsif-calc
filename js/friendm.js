@@ -15,6 +15,7 @@
  * @property {position} friendmLiveOwnPosition - Which position the player finishes lives in.
  * @property {rank_ext} friendmLiveGroupMission - Which mission rank the group clears lives with.
  * @property {number} friendmLiveMultiplier - Which multiplier the player plays lives on.
+ * @property {number} friendmYellBonus - The yell unit bonus in percent.
  * @property {number} friendmTargetEventPoints - The desired final amount of event points.
  * @property {number} friendmCurrentEventPoints - The current amount of event points.
  * @property {number} friendmCurrentRank - The player's current rank.
@@ -33,6 +34,7 @@ function FriendlyMatchData() {
     this.friendmLiveOwnPosition = "AVERAGE";
     this.friendmLiveGroupMission = "N";
     this.friendmLiveMultiplier = 1;
+    this.friendmYellBonus = 100;
     this.friendmTargetEventPoints = 0;
     this.friendmCurrentEventPoints = 0;
     this.friendmCurrentRank = 0;
@@ -90,6 +92,7 @@ FriendlyMatchData.prototype.readFromUi = function () {
     this.friendmLiveOwnPosition = $("input:radio[name=friendmLivePosition]:checked").val();
     this.friendmLiveGroupMission = $("input:radio[name=friendmLiveGroup]:checked").val();
     this.friendmLiveMultiplier = $("input:radio[name=friendmLiveMultiplier]:checked").val();
+    this.friendmYellBonus = ReadHelpers.toNum($("#friendmYellBonus").val(), 100);
     this.friendmTargetEventPoints = ReadHelpers.toNum($("#friendmTargetEventPoints").val());
     this.friendmCurrentEventPoints = ReadHelpers.toNum($("#friendmCurrentEventPoints").val());
     this.friendmCurrentRank = ReadHelpers.toNum($("#friendmCurrentRank").val());
@@ -119,6 +122,7 @@ FriendlyMatchData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=friendmLivePosition]"), savedData.friendmLiveOwnPosition);
     SetHelpers.radioButtonHelper($("input:radio[name=friendmLiveGroup]"), savedData.friendmLiveGroupMission);
     SetHelpers.radioButtonHelper($("input:radio[name=friendmLiveMultiplier]"), savedData.friendmLiveMultiplier);
+    SetHelpers.inputHelper($("#friendmYellBonus"), savedData.friendmYellBonus);
     SetHelpers.inputHelper($("#friendmTargetEventPoints"), savedData.friendmTargetEventPoints);
     SetHelpers.inputHelper($("#friendmCurrentEventPoints"), savedData.friendmCurrentEventPoints);
     SetHelpers.inputHelper($("#friendmCurrentRank"), savedData.friendmCurrentRank);
@@ -135,20 +139,21 @@ FriendlyMatchData.setToUi = function (savedData) {
  */
 FriendlyMatchData.prototype.alert = function () {
     alert("friendmTimerMethodAuto: " + this.friendmTimerMethodAuto + "\n" +
-          "friendmRegion: " + this.friendmRegion + "\n" +
-          "friendmTimerMethodManual: " + this.friendmTimerMethodManual + "\n" +
-          "friendmManualRestTimeInHours: " + this.friendmManualRestTimeInHours + "\n" +
-          "friendmLiveDifficulty: " + this.friendmLiveDifficulty + "\n" +
-          "friendmLiveOwnScore: " + this.friendmLiveOwnScore + "\n" +
-          "friendmLiveOwnCombo: " + this.friendmLiveOwnCombo + "\n" +
-          "friendmLiveOwnPosition: " + this.friendmLiveOwnPosition + "\n" +
-          "friendmLiveGroupMission: " + this.friendmLiveGroupMission + "\n" +
-          "friendmLiveMultiplier: " + this.friendmLiveMultiplier + "\n" +
-          "friendmTargetEventPoints: " + this.friendmTargetEventPoints + "\n" +
-          "friendmCurrentEventPoints: " + this.friendmCurrentEventPoints + "\n" +
-          "friendmCurrentRank: " + this.friendmCurrentRank + "\n" +
-          "friendmCurrentLP: " + this.friendmCurrentLP + "\n" +
-          "friendmCurrentEXP: " + this.friendmCurrentEXP);
+        "friendmRegion: " + this.friendmRegion + "\n" +
+        "friendmTimerMethodManual: " + this.friendmTimerMethodManual + "\n" +
+        "friendmManualRestTimeInHours: " + this.friendmManualRestTimeInHours + "\n" +
+        "friendmLiveDifficulty: " + this.friendmLiveDifficulty + "\n" +
+        "friendmLiveOwnScore: " + this.friendmLiveOwnScore + "\n" +
+        "friendmLiveOwnCombo: " + this.friendmLiveOwnCombo + "\n" +
+        "friendmLiveOwnPosition: " + this.friendmLiveOwnPosition + "\n" +
+        "friendmLiveGroupMission: " + this.friendmLiveGroupMission + "\n" +
+        "friendmLiveMultiplier: " + this.friendmLiveMultiplier + "\n" +
+        "friendmYellBonus: " + this.friendmYellBonus + "\n" +
+        "friendmTargetEventPoints: " + this.friendmTargetEventPoints + "\n" +
+        "friendmCurrentEventPoints: " + this.friendmCurrentEventPoints + "\n" +
+        "friendmCurrentRank: " + this.friendmCurrentRank + "\n" +
+        "friendmCurrentLP: " + this.friendmCurrentLP + "\n" +
+        "friendmCurrentEXP: " + this.friendmCurrentEXP);
 };
 
 /**
@@ -237,6 +242,16 @@ FriendlyMatchData.prototype.getLiveMultiplier = function () {
 };
 
 /**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+FriendlyMatchData.prototype.getYellBonus = function () {
+    var yellBonus = this.friendmYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
  * Creates a {@link FriendlyMatchLiveInfo} object using the live input values, representing one play.
  * @returns {?FriendlyMatchLiveInfo} A new object with all properties set, or null if the live inputs are invalid.
  */
@@ -246,15 +261,16 @@ FriendlyMatchData.prototype.createLiveInfo = function () {
         comboRate = this.getLiveOwnComboRate(),
         posRate = this.getLiveOwnPositionRate(),
         missionRate = this.getLiveGroupMissionRate(),
-        multiplier = this.getLiveMultiplier();
+        multiplier = this.getLiveMultiplier(),
+        yellBonus = this.getYellBonus();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || scoreRate == FRIENDLY_MATCH_OWN_SCORE_RATE.ERROR
         || comboRate == FRIENDLY_MATCH_OWN_COMBO_RATE.ERROR || posRate == FRIENDLY_MATCH_OWN_POSITION_RATE.ERROR
-        || missionRate == FRIENDLY_MATCH_GROUP_MISSION_RATE.ERROR || multiplier === 0) {
+        || missionRate == FRIENDLY_MATCH_GROUP_MISSION_RATE.ERROR || multiplier === 0 || yellBonus === 0) {
         return null;
     }
     return new FriendlyMatchLiveInfo(COMMON_LP_COST[diffId] * multiplier,
-        Math.round(FRIENDLY_MATCH_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate * missionRate * posRate) *
-        multiplier,
+        Math.round(FRIENDLY_MATCH_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate * missionRate * posRate
+            * yellBonus) * multiplier,
         COMMON_EXP_REWARD[diffId] * multiplier);
 };
 
@@ -323,7 +339,7 @@ FriendlyMatchEstimationInfo.prototype.showResult = function () {
         Results.setBigResult($("#friendmResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#friendmResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp +
-                                          "/" + Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
+            "/" + Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#friendmResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#friendmResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#friendmResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -357,14 +373,14 @@ FriendlyMatchData.prototype.validate = function () {
         errors.push("Live parameters have not been set");
     } else if (liveInfo.lp > Common.getMaxLp(this.friendmCurrentRank)) {
         errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                    ") that's higher than your max LP (" + Common.getMaxLp(this.friendmCurrentRank) + ")");
+            ") that's higher than your max LP (" + Common.getMaxLp(this.friendmCurrentRank) + ")");
     }
 
     if (0 >= this.friendmTargetEventPoints) {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-                    "Please change the event point target in order to calculate again");
+            "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.friendmCurrentEventPoints) {
