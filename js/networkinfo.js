@@ -1,5 +1,5 @@
-var enDateOverride = [new Date(Date.UTC(2020, 3, 10, 9)),
-    new Date(Date.UTC(2020, 3, 20, 8))];
+var enDateOverride = [new Date(Date.UTC(2020, 3, 27, 9)),
+    new Date(Date.UTC(2020, 4, 6, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {

@@ -9,7 +9,7 @@
  * @property {region} friendmRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} friendmTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} friendmManualRestTimeInHours - The time left in hours, entered for Manual Input.
- * @property {difficulty} friendmLiveDifficulty - The difficulty lives are played on.
+ * @property {difficultyWithM} friendmLiveDifficulty - The difficulty lives are played on.
  * @property {rank} friendmLiveOwnScore - Which score rank the player clears lives with.
  * @property {rank} friendmLiveOwnCombo - Which combo rank the player clears lives with.
  * @property {position} friendmLiveOwnPosition - Which position the player finishes lives in.
@@ -470,3 +470,4 @@ FRIENDLY_MATCH_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EASY] = 39;
 FRIENDLY_MATCH_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.NORMAL] = 89;
 FRIENDLY_MATCH_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.HARD] = 153;
 FRIENDLY_MATCH_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EX] = 301;
+FRIENDLY_MATCH_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.MASTER] = 390;
