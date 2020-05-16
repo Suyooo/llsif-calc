@@ -1,9 +1,9 @@
-var enDateOverride = [new Date(Date.UTC(2020, 3, 27, 9)),
-    new Date(Date.UTC(2020, 4, 6, 8))];
+var enDateOverride = [new Date(Date.UTC(2020, 4, 11, 9)),
+    new Date(Date.UTC(2020, 4, 19, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "Master Difficulty has been added to Nakayoshi Match (thank you to Squall on SIFcord!). Stay healthy, wash your hands and grind responsibly ❤",
+    message: "Master Difficulty and Yell Unit Bonus have been added to Nakayoshi Match (thank you to Squall on SIFcord!). Stay healthy, wash your hands and grind responsibly ❤",
     id: 15,
     allowDismiss: true
 };
