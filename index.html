@@ -546,7 +546,10 @@
                                 <label for="scoremLiveDifficultyHard">Hard</label>
                                 <input name="scoremLiveDifficulty" type="radio" id="scoremLiveDifficultyEx"
                                        value="EX"/>
-                                <label for="scoremLiveDifficultyEx">EX / Tech</label>
+                                <label for="scoremLiveDifficultyEx">EX</label>
+                                <input name="scoremLiveDifficulty" type="radio" id="scoremLiveDifficultyMaster"
+                                       value="MASTER"/>
+                                <label for="scoremLiveDifficultyMaster">Master</label>
                             </div>
                             <span class="form-label">Live Score Rank</span>
                             <div class="radio-row">
@@ -589,6 +592,13 @@
                                 <input name="scoremLiveMultiplier" type="radio" id="scoremLiveMultiplier4"
                                        value="4"/>
                                 <label for="scoremLiveMultiplier4">x4</label>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="scoremYellBonus" type="number" min="100" class="validate"
+                                       placeholder="100">
+                                <label for="scoremYellBonus">
+                                    Yell Unit Multiplier in Percent</label>
+                                <span class="helper-text" data-error="Must be an integer equal to or greater than 100!"></span>
                             </div>
                         </div>
                     </li>

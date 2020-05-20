@@ -9,10 +9,11 @@
  * @property {region} scoremRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} scoremTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} scoremManualRestTimeInHours - The time left in hours, entered for Manual Input.
- * @property {difficulty} scoremLiveDifficulty - The difficulty lives are played on.
+ * @property {difficultyWithM} scoremLiveDifficulty - The difficulty lives are played on.
  * @property {rank} scoremLiveScore - Which score rank the player clears lives with.
  * @property {position} scoremLivePosition - Which position the player finishes lives in.
  * @property {number} scoremLiveMultiplier - Which multiplier the player plays lives on.
+ * @property {number} scoremYellBonus - The yell unit bonus in percent.
  * @property {number} scoremTargetEventPoints - The desired final amount of event points.
  * @property {number} scoremCurrentEventPoints - The current amount of event points.
  * @property {number} scoremCurrentRank - The player's current rank.
@@ -29,6 +30,7 @@ function ScoreMatchData() {
     this.scoremLiveScore = "N";
     this.scoremLivePosition = "AVERAGE";
     this.scoremLiveMultiplier = 1;
+    this.scoremYellBonus = 100;
     this.scoremTargetEventPoints = 0;
     this.scoremCurrentEventPoints = 0;
     this.scoremCurrentRank = 0;
@@ -84,6 +86,7 @@ ScoreMatchData.prototype.readFromUi = function () {
     this.scoremLiveScore = $("input:radio[name=scoremLiveScore]:checked").val();
     this.scoremLivePosition = $("input:radio[name=scoremLivePosition]:checked").val();
     this.scoremLiveMultiplier = $("input:radio[name=scoremLiveMultiplier]:checked").val();
+    this.scoremYellBonus = ReadHelpers.toNum($("#scoremYellBonus").val(), 100);
     this.scoremTargetEventPoints = ReadHelpers.toNum($("#scoremTargetEventPoints").val());
     this.scoremCurrentEventPoints = ReadHelpers.toNum($("#scoremCurrentEventPoints").val());
     this.scoremCurrentRank = ReadHelpers.toNum($("#scoremCurrentRank").val());
@@ -111,6 +114,7 @@ ScoreMatchData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=scoremLiveScore]"), savedData.scoremLiveScore);
     SetHelpers.radioButtonHelper($("input:radio[name=scoremLivePosition]"), savedData.scoremLivePosition);
     SetHelpers.radioButtonHelper($("input:radio[name=scoremLiveMultiplier]"), savedData.scoremLiveMultiplier);
+    SetHelpers.inputHelper($("#scoremYellBonus"), savedData.scoremYellBonus);
     SetHelpers.inputHelper($("#scoremTargetEventPoints"), savedData.scoremTargetEventPoints);
     SetHelpers.inputHelper($("#scoremCurrentEventPoints"), savedData.scoremCurrentEventPoints);
     SetHelpers.inputHelper($("#scoremCurrentRank"), savedData.scoremCurrentRank);
@@ -134,6 +138,7 @@ ScoreMatchData.prototype.alert = function () {
           "scoremLiveScore: " + this.scoremLiveScore + "\n" +
           "scoremLivePosition: " + this.scoremLivePosition + "\n" +
           "scoremLiveMultiplier: " + this.scoremLiveMultiplier + "\n" +
+          "scoremYellBonus: " + this.scoremYellBonus + "\n" +
           "scoremTargetEventPoints: " + this.scoremTargetEventPoints + "\n" +
           "scoremCurrentEventPoints: " + this.scoremCurrentEventPoints + "\n" +
           "scoremCurrentRank: " + this.scoremCurrentRank + "\n" +
@@ -204,6 +209,16 @@ ScoreMatchData.prototype.getLiveMultiplier = function () {
 };
 
 /**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+ScoreMatchData.prototype.getYellBonus = function () {
+    var yellBonus = this.scoremYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
  * Creates a {@link ScoreMatchLiveInfo} object using the live input values, representing one play.
  * @returns {?ScoreMatchLiveInfo} A new object with all properties set, or null if the live inputs are invalid.
  */
@@ -211,14 +226,15 @@ ScoreMatchData.prototype.createLiveInfo = function () {
     var diffId = this.getLiveDifficulty(),
         scoreRate = this.getLiveScoreRate(),
         posRate = this.getLivePositionRate(),
-        multiplier = this.getLiveMultiplier();
+        multiplier = this.getLiveMultiplier(),
+        yellBonus = this.getYellBonus();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || scoreRate == SCOREM_SCORE_RATE.ERROR
-        || posRate == SCOREM_POSITION_RATE.ERROR || multiplier === 0) {
+        || posRate == SCOREM_POSITION_RATE.ERROR || multiplier === 0 || yellBonus === 0) {
         return null;
     }
 
     return new ScoreMatchLiveInfo(COMMON_LP_COST[diffId] * multiplier,
-        Math.round(SCOREM_BASE_EVENT_POINTS[diffId] * scoreRate * posRate) * multiplier,
+        Math.round(SCOREM_BASE_EVENT_POINTS[diffId] * scoreRate * posRate * yellBonus) * multiplier,
         COMMON_EXP_REWARD[diffId] * multiplier);
 };
 
@@ -405,3 +421,4 @@ SCOREM_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EASY] = 42;
 SCOREM_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.NORMAL] = 100;
 SCOREM_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.HARD] = 177;
 SCOREM_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.EX] = 357;
+SCOREM_BASE_EVENT_POINTS[COMMON_DIFFICULTY_IDS.MASTER] = 464;
