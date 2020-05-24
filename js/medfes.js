@@ -301,7 +301,7 @@ MedFesData.prototype.getLiveExpReward = function () {
         return 0;
     }
     var arrangeBoost = this.medfesArrangeExpUp ? MEDFES_ARRANGE_EXP_UP_RATE : 1;
-    return Math.round(COMMON_EXP_REWARD[diffId] * arrangeBoost * songCount * ((this.medfesRegion == "en") ? 10 : 1) /* TODO: remove after EN event */);
+    return Math.round(COMMON_EXP_REWARD[diffId] * arrangeBoost * songCount);
 };
 
 /**
