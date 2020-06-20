@@ -9,7 +9,7 @@
  * @property {region} chafesRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} chafesTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} chafesManualRestTimeInHours - The time left in hours, entered for Manual Input.
- * @property {difficulty} chafesLiveDifficulty - The difficulty challenges are played on.
+ * @property {difficultyCf} chafesLiveDifficulty - The difficulty challenges are played on.
  * @property {number} chafesLiveSongs - The amount of songs the player plays per challenge.
  * @property {rank} chafesLiveScore - Which score rank the player clears challenges with.
  * @property {rank} chafesLiveCombo - Which combo rank the player clears challenges with.
@@ -39,6 +39,7 @@ function ChaFesData() {
     this.chafesLiveCombo = "N";
     this.chafesLiveMultiplier = 1;
     this.chafesLiveMultiplierUse = "ALL";
+    this.chafesYellBonus = 100;
     this.chafesArrangeRewardsUp = false;
     this.chafesArrangePerfectSupport = false;
     this.chafesArrangeExpUp = false;
@@ -108,6 +109,7 @@ ChaFesData.prototype.readFromUi = function () {
     this.chafesLiveCombo = $("input:radio[name=chafesLiveCombo]:checked").val();
     this.chafesLiveMultiplier = $("input:radio[name=chafesLiveMultiplier]:checked").val();
     this.chafesLiveMultiplierUse = $("input:radio[name=chafesLiveMultiplierUse]:checked").val();
+    this.chafesYellBonus = ReadHelpers.toNum($("#chafesYellBonus").val(), 100);
     this.chafesArrangeRewardsUp = $("#chafesArrangeRewardsUp").prop("checked");
     this.chafesArrangePerfectSupport = $("#chafesArrangePerfectSupport").prop("checked");
     this.chafesArrangeExpUp = $("#chafesArrangeExpUp").prop("checked");
@@ -143,6 +145,7 @@ ChaFesData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=chafesLiveCombo]"), savedData.chafesLiveCombo);
     SetHelpers.radioButtonHelper($("input:radio[name=chafesLiveMultiplier]"), savedData.chafesLiveMultiplier);
     SetHelpers.radioButtonHelper($("input:radio[name=chafesLiveMultiplierUse]"), savedData.chafesLiveMultiplierUse);
+    SetHelpers.inputHelper($("#chafesYellBonus"), savedData.chafesYellBonus);
     SetHelpers.checkBoxHelper($("#chafesArrangeRewardsUp"), savedData.chafesArrangeRewardsUp);
     SetHelpers.checkBoxHelper($("#chafesArrangePerfectSupport"), savedData.chafesArrangePerfectSupport);
     SetHelpers.checkBoxHelper($("#chafesArrangeExpUp"), savedData.chafesArrangeExpUp);
@@ -166,26 +169,27 @@ ChaFesData.setToUi = function (savedData) {
  */
 ChaFesData.prototype.alert = function () {
     alert("chafesTimerMethodAuto: " + this.chafesTimerMethodAuto + "\n" +
-          "chafesRegion: " + this.chafesRegion + "\n" +
-          "chafesTimerMethodManual: " + this.chafesTimerMethodManual + "\n" +
-          "chafesManualRestTimeInHours: " + this.chafesManualRestTimeInHours + "\n" +
-          "chafesLiveDifficulty: " + this.chafesLiveDifficulty + "\n" +
-          "chafesLiveSongs: " + this.chafesLiveSongs + "\n" +
-          "chafesLiveScore: " + this.chafesLiveScore + "\n" +
-          "chafesLiveCombo: " + this.chafesLiveCombo + "\n" +
-          "chafesLiveMultiplier: " + this.chafesLiveMultiplier + "\n" +
-          "chafesLiveMultiplierUse: " + this.chafesLiveMultiplierUse + "\n" +
-          "chafesArrangeRewardsUp: " + this.chafesArrangeRewardsUp + "\n" +
-          "chafesArrangePerfectSupport: " + this.chafesArrangePerfectSupport + "\n" +
-          "chafesArrangeExpUp: " + this.chafesArrangeExpUp + "\n" +
-          "chafesArrangeScoreUp: " + this.chafesArrangeScoreUp + "\n" +
-          "chafesArrangeSkillRateUp: " + this.chafesArrangeSkillRateUp + "\n" +
-          "chafesArrangeEventPointUp: " + this.chafesArrangeEventPointUp + "\n" +
-          "chafesTargetEventPoints: " + this.chafesTargetEventPoints + "\n" +
-          "chafesCurrentEventPoints: " + this.chafesCurrentEventPoints + "\n" +
-          "chafesCurrentRank: " + this.chafesCurrentRank + "\n" +
-          "chafesCurrentLP: " + this.chafesCurrentLP + "\n" +
-          "chafesCurrentEXP: " + this.chafesCurrentEXP);
+        "chafesRegion: " + this.chafesRegion + "\n" +
+        "chafesTimerMethodManual: " + this.chafesTimerMethodManual + "\n" +
+        "chafesManualRestTimeInHours: " + this.chafesManualRestTimeInHours + "\n" +
+        "chafesLiveDifficulty: " + this.chafesLiveDifficulty + "\n" +
+        "chafesLiveSongs: " + this.chafesLiveSongs + "\n" +
+        "chafesLiveScore: " + this.chafesLiveScore + "\n" +
+        "chafesLiveCombo: " + this.chafesLiveCombo + "\n" +
+        "chafesLiveMultiplier: " + this.chafesLiveMultiplier + "\n" +
+        "chafesLiveMultiplierUse: " + this.chafesLiveMultiplierUse + "\n" +
+        "chafesYellBonus: " + this.chafesYellBonus + "\n" +
+        "chafesArrangeRewardsUp: " + this.chafesArrangeRewardsUp + "\n" +
+        "chafesArrangePerfectSupport: " + this.chafesArrangePerfectSupport + "\n" +
+        "chafesArrangeExpUp: " + this.chafesArrangeExpUp + "\n" +
+        "chafesArrangeScoreUp: " + this.chafesArrangeScoreUp + "\n" +
+        "chafesArrangeSkillRateUp: " + this.chafesArrangeSkillRateUp + "\n" +
+        "chafesArrangeEventPointUp: " + this.chafesArrangeEventPointUp + "\n" +
+        "chafesTargetEventPoints: " + this.chafesTargetEventPoints + "\n" +
+        "chafesCurrentEventPoints: " + this.chafesCurrentEventPoints + "\n" +
+        "chafesCurrentRank: " + this.chafesCurrentRank + "\n" +
+        "chafesCurrentLP: " + this.chafesCurrentLP + "\n" +
+        "chafesCurrentEXP: " + this.chafesCurrentEXP);
 };
 
 /**
@@ -212,12 +216,12 @@ ChaFesData.prototype.getEventPointsLeft = function () {
 
 /**
  * Get an index associated with the inputted live difficulty for lookup in the cost/reward arrays.
- * @returns {number} An index for array lookup, or {@link COMMON_DIFFICULTY_IDS}.ERROR if the input is invalid.
+ * @returns {number} An index for array lookup, or {@link CHAFES_DIFFICULTY_IDS}.ERROR if the input is invalid.
  */
 ChaFesData.prototype.getLiveDifficulty = function () {
-    var diffId = COMMON_DIFFICULTY_IDS[this.chafesLiveDifficulty];
+    var diffId = CHAFES_DIFFICULTY_IDS[this.chafesLiveDifficulty];
     if (undefined !== diffId) return diffId;
-    return COMMON_DIFFICULTY_IDS.ERROR;
+    return CHAFES_DIFFICULTY_IDS.ERROR;
 };
 
 /**
@@ -261,6 +265,16 @@ ChaFesData.prototype.getLiveMultiplier = function () {
 };
 
 /**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+ChaFesData.prototype.getYellBonus = function () {
+    var yellBonus = this.chafesYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
  * Get the base points for the inputted live difficulty and the given song number.
  * @param {number} songNum Which song to get base points for.
  * @returns {number} The base points for the given difficulty and the song in position songNum, or 0 if the input is
@@ -268,7 +282,7 @@ ChaFesData.prototype.getLiveMultiplier = function () {
  */
 ChaFesData.prototype.getSingleLiveBasePoints = function (songNum) {
     var diffId = this.getLiveDifficulty();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || songNum === 0) {
+    if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songNum === 0) {
         return 0;
     }
     return CHAFES_BASE_EVENT_POINTS[diffId][songNum];
@@ -282,11 +296,12 @@ ChaFesData.prototype.getSingleLiveBasePoints = function (songNum) {
 ChaFesData.prototype.getSingleLiveTotalPoints = function (songNum) {
     var scoreRate = this.getLiveScoreRate(),
         comboRate = this.getLiveComboRate(),
-        arrangeBoost = this.chafesArrangeEventPointUp ? CHAFES_ARRANGE_EVENT_POINT_UP_RATE : 1;
-    if (scoreRate == CHAFES_SCORE_RATE.ERROR || comboRate == CHAFES_COMBO_RATE.ERROR || songNum === 0) {
+        arrangeBoost = this.chafesArrangeEventPointUp ? CHAFES_ARRANGE_EVENT_POINT_UP_RATE : 1,
+        yellBonus = this.getYellBonus();
+    if (scoreRate == CHAFES_SCORE_RATE.ERROR || comboRate == CHAFES_COMBO_RATE.ERROR || songNum === 0 || yellBonus === 0) {
         return 0;
     }
-    return Math.round(this.getSingleLiveBasePoints(songNum) * scoreRate * comboRate * arrangeBoost);
+    return Math.round(this.getSingleLiveBasePoints(songNum) * scoreRate * comboRate * arrangeBoost * yellBonus);
 };
 
 /**
@@ -313,7 +328,7 @@ ChaFesData.prototype.getLiveTotalPoints = function () {
  */
 ChaFesData.prototype.getSingleLiveExpReward = function (songNum) {
     var diffId = this.getLiveDifficulty();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || songNum === 0) {
+    if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songNum === 0) {
         return 0;
     }
     var arrangeBoost = this.chafesArrangeExpUp ? CHAFES_ARRANGE_EXP_UP_RATE : 1;
@@ -343,10 +358,10 @@ ChaFesData.prototype.getLiveExpReward = function () {
 ChaFesData.prototype.getLiveLpCost = function () {
     var diffId = this.getLiveDifficulty(),
         songCount = this.getLiveSongAmount();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || songCount === 0) {
+    if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songCount === 0) {
         return 0;
     }
-    return COMMON_LP_COST[diffId] * songCount;
+    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * songCount;
 };
 
 /**
@@ -355,10 +370,10 @@ ChaFesData.prototype.getLiveLpCost = function () {
  */
 ChaFesData.prototype.getSingleLiveLpCost = function () {
     var diffId = this.getLiveDifficulty();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR) {
+    if (diffId == CHAFES_DIFFICULTY_IDS.ERROR) {
         return 0;
     }
-    return COMMON_LP_COST[diffId];
+    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]];
 };
 
 /**
@@ -440,7 +455,7 @@ ChaFesEstimator.estimate = function (liveInfo, eventPointsLeft, timeLeft, player
         return new ChaFesEstimationInfo(liveCount, songAmount, totalGoldCost, null, timeLeft);
     }
     var recoveryInfo = Common.calculateLpRecoveryInfo(playerRank, liveInfo.exp * liveCount, playerExp, liveInfo.lp *
-                                                                                                       liveCount,
+        liveCount,
         playerLp, timeLeft);
     return new ChaFesEstimationInfo(liveCount, songAmount, totalGoldCost, recoveryInfo, timeLeft);
 };
@@ -475,7 +490,7 @@ ChaFesEstimationInfo.prototype.showResult = function () {
         Results.setBigResult($("#chafesResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#chafesResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
-                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
+            Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#chafesResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#chafesResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#chafesResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -507,10 +522,10 @@ ChaFesData.prototype.validate = function () {
     if (null === this.createLiveInfo()) {
         errors.push("Live parameters have not been set");
     } else {
-        var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[this.getLiveDifficulty()];
+        var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[this.getLiveDifficulty()]];
         if (maxLPCostOfSingleLive > Common.getMaxLp(this.chafesCurrentRank)) {
             errors.push("The chosen live parameters result in an LP cost (" + maxLPCostOfSingleLive +
-                        ") that's higher than your max LP (" + Common.getMaxLp(this.chafesCurrentRank) + ")");
+                ") that's higher than your max LP (" + Common.getMaxLp(this.chafesCurrentRank) + ")");
         }
     }
 
@@ -518,7 +533,7 @@ ChaFesData.prototype.validate = function () {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-                    "Please change the event point target in order to calculate again");
+            "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.chafesCurrentEventPoints) {
@@ -562,6 +577,30 @@ ChaFesData.prototype.validate = function () {
  */
 
 /**
+ * Difficulty names of the Challenge Festival courses.
+ * @constant
+ * @type {Object.<difficultyCf, number>}
+ */
+var CHAFES_DIFFICULTY_IDS = {
+    "EASY": 0,
+    "NORMAL": 1,
+    "HARD": 2,
+    "EX": 3,
+    "TECH": 4,
+    "MASTER": 5,
+    "ERROR": 6
+};
+
+/**
+ * Array for converting Challenge Festival difficulty IDs to the common difficulty IDs for lookup in common data.
+ * @constant
+ * @type {Object.<number, number>}
+ */
+var CHAFES_TO_COMMON_DIFFICULTY_ID = {
+    0: 0, 1: 1, 2: 2, 3: 3, 4: 3, 5: 4, 6: 5
+};
+
+/**
  * Event point reward multiplier for each possible score rank in a song.
  * @constant
  * @type {Object.<string, number>}
@@ -598,7 +637,9 @@ var CHAFES_BASE_EVENT_POINTS = [
     [0, 39, 40, 41, 42, 43],
     [0, 91, 94, 97, 100, 103],
     [0, 158, 164, 170, 176, 182],
-    [0, 301, 320, 339, 358, 377]
+    [0, 301, 320, 339, 358, 377],
+    [0, 391, 420, 449, 478, 507],
+    [0, 301, 391, 481, 661, 931]
 ];
 
 /**
@@ -610,6 +651,8 @@ var CHAFES_BASE_EXP = [
     [0, 12, 13, 14, 15, 16],
     [0, 26, 29, 32, 35, 38],
     [0, 46, 51, 56, 61, 66],
+    [0, 83, 93, 103, 113, 123],
+    [0, 83, 93, 103, 113, 123],
     [0, 83, 93, 103, 113, 123]
 ];
 
@@ -628,3 +671,8 @@ var CHAFES_ARRANGE_EVENT_POINT_UP_RATE = 1.1;
  * @default
  */
 var CHAFES_ARRANGE_EXP_UP_RATE = 1.1;
+
+/**
+ * A string, representing a course difficulty in Challenge Festival.
+ * @typedef {('EASY'|'NORMAL'|'HARD'|'EX'|'TECH'|'MASTER')} difficultyCf
+ */

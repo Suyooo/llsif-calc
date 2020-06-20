@@ -341,9 +341,9 @@ Common.hoursBetween = function (datea, dateb) {
  */
 
 /**
- * Difficulty names used across all events. Technical and Master are handled as EX.
+ * Difficulty names used across all events.
  * @constant
- * @type {Object.<difficulty, number>}
+ * @type {Object.<difficulty|difficultyWithM, number>}
  */
 var COMMON_DIFFICULTY_IDS = {
     "EASY": 0,

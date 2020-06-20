@@ -1170,7 +1170,7 @@
                         <div class="collapsible-header"><i class="material-icons">music_note</i>Live Settings
                         </div>
                         <div class="collapsible-body">
-                            <span class="form-label">Challenge Difficulty</span>
+                            <span class="form-label">Challenge Course Difficulty</span>
                             <div class="radio-row">
                                 <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyEasy"
                                        value="EASY"/>
@@ -1184,6 +1184,12 @@
                                 <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyEx"
                                        value="EX"/>
                                 <label for="chafesLiveDifficultyEx">EX</label>
+                                <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyTech"
+                                       value="TECH"/>
+                                <label for="chafesLiveDifficultyTech">Tech</label>
+                                <input name="chafesLiveDifficulty" type="radio" id="chafesLiveDifficultyMaster"
+                                       value="MASTER"/>
+                                <label for="chafesLiveDifficultyMaster">MASTER</label>
                             </div>
                             <span class="form-label">Songs per Challenge</span>
                             <div class="radio-row">
@@ -1247,6 +1253,13 @@
                                 <input name="chafesLiveMultiplierUse" type="radio" id="chafesLiveMultiplierUseLast"
                                        value="LAST"/>
                                 <label for="chafesLiveMultiplierUseLast">Last Song Only</label>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="chafesYellBonus" type="number" min="100" class="validate"
+                                       placeholder="100">
+                                <label for="chafesYellBonus">
+                                    Yell Unit Multiplier in Percent</label>
+                                <span class="helper-text" data-error="Must be an integer equal to or greater than 100!"></span>
                             </div>
                             <ul id="chafesArrange" class="collapsible small-collapsible with-margin z-depth-0"
                                 data-collapsible="expandable">
