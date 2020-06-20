@@ -3,8 +3,8 @@ var enDateOverride = [new Date(Date.UTC(2020, 5, 7, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "Master Difficulty and Yell Unit Bonus have been added to Nakayoshi Match (thank you to Squall on SIFcord!). Stay healthy, wash your hands and grind responsibly ❤",
-    id: 15,
+    message: "The two new difficulties and the Yell bonus have been added to the Challenge Festival calc (thank you to Merci on SIFcord)! Stay healthy, wash your hands and grind responsibly ❤",
+    id: 16,
     allowDismiss: true
 };
 
