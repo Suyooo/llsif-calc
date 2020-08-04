@@ -131,19 +131,19 @@ ScoreMatchData.setToUi = function (savedData) {
  */
 ScoreMatchData.prototype.alert = function () {
     alert("scoremTimerMethodAuto: " + this.scoremTimerMethodAuto + "\n" +
-          "scoremRegion: " + this.scoremRegion + "\n" +
-          "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
-          "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
-          "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +
-          "scoremLiveScore: " + this.scoremLiveScore + "\n" +
-          "scoremLivePosition: " + this.scoremLivePosition + "\n" +
-          "scoremLiveMultiplier: " + this.scoremLiveMultiplier + "\n" +
-          "scoremYellBonus: " + this.scoremYellBonus + "\n" +
-          "scoremTargetEventPoints: " + this.scoremTargetEventPoints + "\n" +
-          "scoremCurrentEventPoints: " + this.scoremCurrentEventPoints + "\n" +
-          "scoremCurrentRank: " + this.scoremCurrentRank + "\n" +
-          "scoremCurrentLP: " + this.scoremCurrentLP + "\n" +
-          "scoremCurrentEXP: " + this.scoremCurrentEXP);
+        "scoremRegion: " + this.scoremRegion + "\n" +
+        "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
+        "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
+        "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +
+        "scoremLiveScore: " + this.scoremLiveScore + "\n" +
+        "scoremLivePosition: " + this.scoremLivePosition + "\n" +
+        "scoremLiveMultiplier: " + this.scoremLiveMultiplier + "\n" +
+        "scoremYellBonus: " + this.scoremYellBonus + "\n" +
+        "scoremTargetEventPoints: " + this.scoremTargetEventPoints + "\n" +
+        "scoremCurrentEventPoints: " + this.scoremCurrentEventPoints + "\n" +
+        "scoremCurrentRank: " + this.scoremCurrentRank + "\n" +
+        "scoremCurrentLP: " + this.scoremCurrentLP + "\n" +
+        "scoremCurrentEXP: " + this.scoremCurrentEXP);
 };
 
 /**
@@ -304,7 +304,7 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
         Results.setBigResult($("#scoremResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#scoremResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
-                                         Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
+            Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#scoremResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#scoremResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#scoremResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -333,19 +333,23 @@ ScoreMatchData.prototype.validate = function () {
         return errors;
     }
 
-    var liveInfo = this.createLiveInfo();
-    if (null === liveInfo) {
-        errors.push("Live parameters have not been set");
-    } else if (liveInfo.lp > Common.getMaxLp(this.scoremCurrentRank)) {
-        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                    ") that's higher than your max LP (" + Common.getMaxLp(this.scoremCurrentRank) + ")");
+    if (this.scoremRegion == "en" && this.scoremLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+        errors.push("Master Difficulty is not available on the Worldwide server yet");
+    } else {
+        var liveInfo = this.createLiveInfo();
+        if (null === liveInfo) {
+            errors.push("Live parameters have not been set");
+        } else if (liveInfo.lp > Common.getMaxLp(this.scoremCurrentRank)) {
+            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                ") that's higher than your max LP (" + Common.getMaxLp(this.scoremCurrentRank) + ")");
+        }
     }
 
     if (0 >= this.scoremTargetEventPoints) {
         errors.push("Enter event point target");
     } else if (this.getEventPointsLeft() <= 0) {
         errors.push("The given event point target has been reached! " +
-                    "Please change the event point target in order to calculate again");
+            "Please change the event point target in order to calculate again");
     }
 
     if (0 > this.scoremCurrentEventPoints) {

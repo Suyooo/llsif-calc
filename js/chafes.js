@@ -519,7 +519,9 @@ ChaFesData.prototype.validate = function () {
         return errors;
     }
 
-    if (null === this.createLiveInfo()) {
+    if (this.chafesRegion == "en" && this.chafesLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+        errors.push("Master Difficulty is not available on the Worldwide server yet");
+    } else if (null === this.createLiveInfo()) {
         errors.push("Live parameters have not been set");
     } else {
         var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[this.getLiveDifficulty()]];

@@ -500,7 +500,9 @@ TokenData.prototype.validate = function () {
         return errors;
     }
 
-    if (null === this.createEventLiveInfo()) {
+    if (this.tokenRegion == "en" && this.tokenEventLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+        errors.push("Master Difficulty for Event Lives is not available on the Worldwide server yet");
+    } else if (null === this.createEventLiveInfo()) {
         errors.push("Event live parameters have not been set");
     }
 
@@ -510,8 +512,6 @@ TokenData.prototype.validate = function () {
     } else if (liveInfo.lp > Common.getMaxLp(this.tokenCurrentRank)) {
         errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
             ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
-    } else if (this.tokenRegion == "en" && this.tokenEventLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-        errors.push("Master difficulty for event lives is not available in the Worldwide server.");
     }
 
     if (0 >= this.tokenTargetEventPoints) {
