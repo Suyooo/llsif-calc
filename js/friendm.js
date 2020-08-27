@@ -21,6 +21,7 @@
  * @property {number} friendmCurrentRank - The player's current rank.
  * @property {number} friendmCurrentLP - The player's current LP.
  * @property {number} friendmCurrentEXP - The player's current EXP in the current rank.
+ * @property {number} friendmEXPMulti - An EXP multiplier from ongoing campaigns.
  * @constructor
  */
 function FriendlyMatchData() {
@@ -40,6 +41,7 @@ function FriendlyMatchData() {
     this.friendmCurrentRank = 0;
     this.friendmCurrentLP = 0;
     this.friendmCurrentEXP = 0;
+    this.friendmEXPMulti = 1;
 }
 
 /**
@@ -98,6 +100,7 @@ FriendlyMatchData.prototype.readFromUi = function () {
     this.friendmCurrentRank = ReadHelpers.toNum($("#friendmCurrentRank").val());
     this.friendmCurrentLP = ReadHelpers.toNum($("#friendmCurrentLP").val(), 0);
     this.friendmCurrentEXP = ReadHelpers.toNum($("#friendmCurrentEXP").val(), 0);
+    this.friendmEXPMulti = ReadHelpers.toNum($("#friendmEXPMulti").val(), 1);
 };
 
 /**
@@ -128,7 +131,8 @@ FriendlyMatchData.setToUi = function (savedData) {
     SetHelpers.inputHelper($("#friendmCurrentRank"), savedData.friendmCurrentRank);
     SetHelpers.inputHelper($("#friendmCurrentLP"), savedData.friendmCurrentLP);
     SetHelpers.inputHelper($("#friendmCurrentEXP"), savedData.friendmCurrentEXP);
-    if (savedData.friendmCurrentLP > 0 || savedData.friendmCurrentEXP > 0) {
+    SetHelpers.inputHelper($("#friendmEXPMulti"), savedData.friendmEXPMulti);
+    if (savedData.friendmCurrentLP > 0 || savedData.friendmCurrentEXP > 0 || savedData.friendmEXPMulti > 1) {
         $("#friendmCurrentExtra").collapsible('open', 0);
     }
 };
@@ -153,7 +157,8 @@ FriendlyMatchData.prototype.alert = function () {
         "friendmCurrentEventPoints: " + this.friendmCurrentEventPoints + "\n" +
         "friendmCurrentRank: " + this.friendmCurrentRank + "\n" +
         "friendmCurrentLP: " + this.friendmCurrentLP + "\n" +
-        "friendmCurrentEXP: " + this.friendmCurrentEXP);
+        "friendmCurrentEXP: " + this.friendmCurrentEXP + "\n" +
+        "friendmEXPMulti: " + this.friendmEXPMulti);
 };
 
 /**
@@ -176,6 +181,26 @@ FriendlyMatchData.prototype.getRestTimeInMinutes = function () {
  */
 FriendlyMatchData.prototype.getEventPointsLeft = function () {
     return this.friendmTargetEventPoints - this.friendmCurrentEventPoints;
+};
+
+/**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+FriendlyMatchData.prototype.getYellBonus = function () {
+    var yellBonus = this.friendmYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
+ * Gets the inputted EXP multiplier
+ * @returns {number} An EXP multiplier, or 0 if the input is invalid.
+ */
+FriendlyMatchData.prototype.getEXPMultiplier = function () {
+    var expMulti = this.friendmEXPMulti;
+    if (expMulti >= 1) return expMulti;
+    return 0;
 };
 
 /**
@@ -242,16 +267,6 @@ FriendlyMatchData.prototype.getLiveMultiplier = function () {
 };
 
 /**
- * Gets the inputted yell bonus multiplier
- * @returns {number} A reward multiplier, or 0 if the input is invalid.
- */
-FriendlyMatchData.prototype.getYellBonus = function () {
-    var yellBonus = this.friendmYellBonus;
-    if (yellBonus >= 100) return yellBonus / 100;
-    return 0;
-};
-
-/**
  * Creates a {@link FriendlyMatchLiveInfo} object using the live input values, representing one play.
  * @returns {?FriendlyMatchLiveInfo} A new object with all properties set, or null if the live inputs are invalid.
  */
@@ -261,17 +276,19 @@ FriendlyMatchData.prototype.createLiveInfo = function () {
         comboRate = this.getLiveOwnComboRate(),
         posRate = this.getLiveOwnPositionRate(),
         missionRate = this.getLiveGroupMissionRate(),
-        multiplier = this.getLiveMultiplier(),
+        expMultiplier = this.getEXPMultiplier(),
+        liveMultiplier = this.getLiveMultiplier(),
         yellBonus = this.getYellBonus();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || scoreRate == FRIENDLY_MATCH_OWN_SCORE_RATE.ERROR
         || comboRate == FRIENDLY_MATCH_OWN_COMBO_RATE.ERROR || posRate == FRIENDLY_MATCH_OWN_POSITION_RATE.ERROR
-        || missionRate == FRIENDLY_MATCH_GROUP_MISSION_RATE.ERROR || multiplier === 0 || yellBonus === 0) {
+        || missionRate == FRIENDLY_MATCH_GROUP_MISSION_RATE.ERROR
+        || expMultiplier === 0 || liveMultiplier === 0 || yellBonus === 0) {
         return null;
     }
-    return new FriendlyMatchLiveInfo(COMMON_LP_COST[diffId] * multiplier,
+    return new FriendlyMatchLiveInfo(COMMON_LP_COST[diffId] * liveMultiplier,
         Math.round(FRIENDLY_MATCH_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate * missionRate * posRate
-            * yellBonus) * multiplier,
-        COMMON_EXP_REWARD[diffId] * multiplier);
+            * yellBonus) * liveMultiplier,
+        Math.round(COMMON_EXP_REWARD[diffId] * expMultiplier) * liveMultiplier);
 };
 
 /**
@@ -368,15 +385,19 @@ FriendlyMatchData.prototype.validate = function () {
         return errors;
     }
 
-    if (this.friendmRegion == "en" && this.friendmLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-        errors.push("Master Difficulty is not available on the Worldwide server yet");
+    if (this.getEXPMultiplier() === 0) {
+        errors.push("The given EXP multiplier is invalid.");
     } else {
-        var liveInfo = this.createLiveInfo();
-        if (null === liveInfo) {
-            errors.push("Live parameters have not been set");
-        } else if (liveInfo.lp > Common.getMaxLp(this.friendmCurrentRank)) {
-            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                ") that's higher than your max LP (" + Common.getMaxLp(this.friendmCurrentRank) + ")");
+        if (this.friendmRegion == "en" && this.friendmLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+            errors.push("Master Difficulty is not available on the Worldwide server yet");
+        } else {
+            var liveInfo = this.createLiveInfo();
+            if (null === liveInfo) {
+                errors.push("Live parameters have not been set");
+            } else if (liveInfo.lp > Common.getMaxLp(this.friendmCurrentRank)) {
+                errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                    ") that's higher than your max LP (" + Common.getMaxLp(this.friendmCurrentRank) + ")");
+            }
         }
     }
 

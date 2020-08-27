@@ -27,6 +27,7 @@
  * @property {number} medfesCurrentRank - The player's current rank.
  * @property {number} medfesCurrentLP - The player's current LP.
  * @property {number} medfesCurrentEXP - The player's current EXP in the current rank.
+ * @property {number} medfesEXPMulti - An EXP multiplier from ongoing campaigns.
  * @constructor
  */
 function MedFesData() {
@@ -52,6 +53,7 @@ function MedFesData() {
     this.medfesCurrentRank = 0;
     this.medfesCurrentLP = 0;
     this.medfesCurrentEXP = 0;
+    this.medfesEXPMulti = 1;
 }
 
 /**
@@ -122,6 +124,7 @@ MedFesData.prototype.readFromUi = function () {
     this.medfesCurrentRank = ReadHelpers.toNum($("#medfesCurrentRank").val());
     this.medfesCurrentLP = ReadHelpers.toNum($("#medfesCurrentLP").val(), 0);
     this.medfesCurrentEXP = ReadHelpers.toNum($("#medfesCurrentEXP").val(), 0);
+    this.medfesEXPMulti = ReadHelpers.toNum($("#medfesEXPMulti").val(), 1);
 };
 
 /**
@@ -159,7 +162,8 @@ MedFesData.setToUi = function (savedData) {
     SetHelpers.inputHelper($("#medfesCurrentRank"), savedData.medfesCurrentRank);
     SetHelpers.inputHelper($("#medfesCurrentLP"), savedData.medfesCurrentLP);
     SetHelpers.inputHelper($("#medfesCurrentEXP"), savedData.medfesCurrentEXP);
-    if (savedData.medfesCurrentLP > 0 || savedData.medfesCurrentEXP > 0) {
+    SetHelpers.inputHelper($("#medfesEXPMulti"), savedData.medfesEXPMulti);
+    if (savedData.medfesCurrentLP > 0 || savedData.medfesCurrentEXP > 0 || savedData.medfesEXPMulti > 1) {
         $("#medfesCurrentExtra").collapsible('open', 0);
     }
 };
@@ -190,7 +194,8 @@ MedFesData.prototype.alert = function () {
         "medfesCurrentEventPoints: " + this.medfesCurrentEventPoints + "\n" +
         "medfesCurrentRank: " + this.medfesCurrentRank + "\n" +
         "medfesCurrentLP: " + this.medfesCurrentLP + "\n" +
-        "medfesCurrentEXP: " + this.medfesCurrentEXP);
+        "medfesCurrentEXP: " + this.medfesCurrentEXP + "\n" +
+        "medfesEXPMulti: " + this.medfesEXPMulti);
 };
 
 /**
@@ -213,6 +218,16 @@ MedFesData.prototype.getRestTimeInMinutes = function () {
  */
 MedFesData.prototype.getEventPointsLeft = function () {
     return this.medfesTargetEventPoints - this.medfesCurrentEventPoints;
+};
+
+/**
+ * Gets the inputted EXP multiplier
+ * @returns {number} An EXP multiplier, or 0 if the input is invalid.
+ */
+MedFesData.prototype.getEXPMultiplier = function () {
+    var expMulti = this.medfesEXPMulti;
+    if (expMulti >= 1) return expMulti;
+    return 0;
 };
 
 /**
@@ -296,12 +311,13 @@ MedFesData.prototype.getLiveTotalPoints = function () {
  */
 MedFesData.prototype.getLiveExpReward = function () {
     var diffId = this.getLiveDifficulty(),
-        songCount = this.getLiveSongAmount();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || songCount === 0) {
+        songCount = this.getLiveSongAmount(),
+        expMultiplier = this.getEXPMultiplier();
+    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || songCount === 0 || expMultiplier === 0) {
         return 0;
     }
     var arrangeBoost = this.medfesArrangeExpUp ? MEDFES_ARRANGE_EXP_UP_RATE : 1;
-    return Math.round(COMMON_EXP_REWARD[diffId] * arrangeBoost * songCount);
+    return Math.round(Math.round(COMMON_EXP_REWARD[diffId] * arrangeBoost) * songCount * expMultiplier);
 };
 
 /**
@@ -343,11 +359,11 @@ MedFesData.prototype.createLiveInfo = function () {
         eventPoints = this.getLiveTotalPoints(),
         expReward = this.getLiveExpReward(),
         goldCost = this.getLiveGoldCost(),
-        multiplier = this.getLiveMultiplier();
-    if (0 === lpCost || 0 === eventPoints || 0 === expReward || 0 === multiplier) {
+        liveMultiplier = this.getLiveMultiplier();
+    if (0 === lpCost || 0 === eventPoints || 0 === expReward || 0 === liveMultiplier) {
         return null;
     }
-    return new MedFesLiveInfo(lpCost * multiplier, eventPoints * multiplier, expReward * multiplier, goldCost);
+    return new MedFesLiveInfo(lpCost * liveMultiplier, eventPoints * liveMultiplier, expReward * liveMultiplier, goldCost);
 };
 
 /**
@@ -447,13 +463,16 @@ MedFesData.prototype.validate = function () {
         errors.push("Choose a region");
         return errors;
     }
-
-    var liveInfo = this.createLiveInfo();
-    if (null === liveInfo) {
-        errors.push("Live parameters have not been set");
-    } else if (liveInfo.lp > Common.getMaxLp(this.medfesCurrentRank)) {
-        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-            ") that's higher than your max LP (" + Common.getMaxLp(this.medfesCurrentRank) + ")");
+    if (this.getEXPMultiplier() === 0) {
+        errors.push("The given EXP multiplier is invalid.");
+    } else {
+        var liveInfo = this.createLiveInfo();
+        if (null === liveInfo) {
+            errors.push("Live parameters have not been set");
+        } else if (liveInfo.lp > Common.getMaxLp(this.medfesCurrentRank)) {
+            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                ") that's higher than your max LP (" + Common.getMaxLp(this.medfesCurrentRank) + ")");
+        }
     }
 
     if (0 === this.medfesTargetEventPoints) {

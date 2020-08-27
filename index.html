@@ -173,13 +173,13 @@
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
                             </div>
-                            <div class="input-field below-radio">
+                            <!--<div class="input-field below-radio">
                                 <input id="tokenMinimumSleepHours" type="number" min="0" step="any" class="validate"
                                        placeholder="8">
                                 <label for="tokenMinimumSleepHours">
                                     Minimum Hours Of Sleep</label>
                                 <span class="helper-text" data-error="Must be a positive number!"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -289,6 +289,16 @@
                                 <label for="tokenNormalLiveLPReduction80">80% LP</label>
                             </div>
                             <div class="input-field below-radio">
+                                <input id="tokenEXPMulti" type="number" min="1" step="0.5" class="validate"
+                                       placeholder="1">
+                                <label for="tokenEXPMulti">
+                                    EXP Multiplier <div class="explain-button bigger"><a class="tooltipped" data-position="top" data-delay="0"
+                                               data-tooltip="This multiplier is used for the rest of the event period. Be careful if the EXP campaign ends in the middle of the event.">
+                                                <i class="material-icons">help</i>
+                                            </a></div></label>
+                                <span class="helper-text" data-error="Must be an integer greater than or equal to 1!"></span>
+                            </div>
+                            <div class="input-field">
                                 <input id="tokenYellBonus" type="number" min="100" class="validate"
                                        placeholder="100">
                                 <label for="tokenYellBonus">
@@ -516,13 +526,13 @@
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
                             </div>
-                            <div class="input-field below-radio">
+                            <!--<div class="input-field below-radio">
                                 <input id="scoremMinimumSleepHours" type="number" min="0" step="any" class="validate"
                                        placeholder="8">
                                 <label for="scoremMinimumSleepHours">
                                     Minimum Hours Of Sleep</label>
                                 <span class="helper-text" data-error="Must be a positive number!"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -594,6 +604,16 @@
                                 <label for="scoremLiveMultiplier4">x4</label>
                             </div>
                             <div class="input-field below-radio">
+                                <input id="scoremEXPMulti" type="number" min="1" step="0.5" class="validate"
+                                       placeholder="1">
+                                <label for="scoremEXPMulti">
+                                    EXP Multiplier <div class="explain-button bigger"><a class="tooltipped" data-position="top" data-delay="0"
+                                               data-tooltip="This multiplier is used for the rest of the event period. Be careful if the EXP campaign ends in the middle of the event.">
+                                                <i class="material-icons">help</i>
+                                            </a></div></label>
+                                <span class="helper-text" data-error="Must be an integer greater than or equal to 1!"></span>
+                            </div>
+                            <div class="input-field">
                                 <input id="scoremYellBonus" type="number" min="100" class="validate"
                                        placeholder="100">
                                 <label for="scoremYellBonus">
@@ -809,13 +829,13 @@
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
                             </div>
-                            <div class="input-field below-radio">
+                            <!--<div class="input-field below-radio">
                                 <input id="medfesMinimumSleepHours" type="number" min="0" step="any" class="validate"
                                        placeholder="8">
                                 <label for="medfesMinimumSleepHours">
                                     Minimum Hours Of Sleep</label>
                                 <span class="helper-text" data-error="Must be a positive number!"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -891,7 +911,17 @@
                                        value="4"/>
                                 <label for="medfesLiveMultiplier4">x4</label>
                             </div>
-                            <ul id="medfesArrange" class="collapsible small-collapsible with-margin z-depth-0"
+                            <div class="input-field below-radio">
+                                <input id="medfesEXPMulti" type="number" min="1" step="0.5" class="validate"
+                                       placeholder="1">
+                                <label for="medfesEXPMulti">
+                                    EXP Multiplier <div class="explain-button bigger"><a class="tooltipped" data-position="top" data-delay="0"
+                                               data-tooltip="This multiplier is used for the rest of the event period. Be careful if the EXP campaign ends in the middle of the event.">
+                                                <i class="material-icons">help</i>
+                                            </a></div></label>
+                                <span class="helper-text" data-error="Must be an integer greater than or equal to 1!"></span>
+                            </div>
+                            <ul id="medfesArrange" class="collapsible small-collapsible z-depth-0"
                                 data-collapsible="expandable">
                                 <li>
                                     <div class="collapsible-header">Arrangement Bonuses (<span
@@ -1153,13 +1183,13 @@
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
                             </div>
-                            <div class="input-field below-radio">
+                            <!--<div class="input-field below-radio">
                                 <input id="chafesMinimumSleepHours" type="number" min="0" step="any" class="validate"
                                        placeholder="8">
                                 <label for="chafesMinimumSleepHours">
                                     Minimum Hours Of Sleep</label>
                                 <span class="helper-text" data-error="Must be a positive number!"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -1255,6 +1285,16 @@
                                 <label for="chafesLiveMultiplierUseLast">Last Song Only</label>
                             </div>
                             <div class="input-field below-radio">
+                                <input id="chafesEXPMulti" type="number" min="1" step="0.5" class="validate"
+                                       placeholder="1">
+                                <label for="chafesEXPMulti">
+                                    EXP Multiplier <div class="explain-button bigger"><a class="tooltipped" data-position="top" data-delay="0"
+                                               data-tooltip="This multiplier is used for the rest of the event period. Be careful if the EXP campaign ends in the middle of the event.">
+                                                <i class="material-icons">help</i>
+                                            </a></div></label>
+                                <span class="helper-text" data-error="Must be an integer greater than or equal to 1!"></span>
+                            </div>
+                            <div class="input-field">
                                 <input id="chafesYellBonus" type="number" min="100" class="validate"
                                        placeholder="100">
                                 <label for="chafesYellBonus">
@@ -1515,13 +1555,13 @@
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
                             </div>
-                            <div class="input-field below-radio">
+                            <!--<div class="input-field below-radio">
                                 <input id="rallyMinimumSleepHours" type="number" min="0" step="any" class="validate"
                                        placeholder="8">
                                 <label for="rallyMinimumSleepHours">
                                     Minimum Hours Of Sleep</label>
                                 <span class="helper-text" data-error="Must be a positive number!"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -1587,6 +1627,16 @@
                                 <input name="rallyLiveMultiplier" type="radio" id="rallyLiveMultiplier4"
                                        value="4"/>
                                 <label for="rallyLiveMultiplier4">x4</label>
+                            </div>
+                            <div class="input-field below-radio">
+                                <input id="rallyEXPMulti" type="number" min="1" step="0.5" class="validate"
+                                       placeholder="1">
+                                <label for="rallyEXPMulti">
+                                    EXP Multiplier <div class="explain-button bigger"><a class="tooltipped" data-position="top" data-delay="0"
+                                               data-tooltip="This multiplier is used for the rest of the event period. Be careful if the EXP campaign ends in the middle of the event.">
+                                                <i class="material-icons">help</i>
+                                            </a></div></label>
+                                <span class="helper-text" data-error="Must be an integer greater than or equal to 1!"></span>
                             </div>
                         </div>
                     </li>
@@ -1797,13 +1847,13 @@
                                     <span class="helper-text" data-error="Must be a positive number!"></span>
                                 </div>
                             </div>
-                            <div class="input-field below-radio">
+                            <!--<div class="input-field below-radio">
                                 <input id="friendmMinimumSleepHours" type="number" min="0" step="any" class="validate"
                                        placeholder="8">
                                 <label for="friendmMinimumSleepHours">
                                     Minimum Hours Of Sleep</label>
                                 <span class="helper-text" data-error="Must be a positive number!"></span>
-                            </div>
+                            </div>-->
                         </div>
                     </li>
                 </ul>
@@ -1905,6 +1955,16 @@
                                 <label for="friendmLiveMultiplier4">x4</label>
                             </div>
                             <div class="input-field below-radio">
+                                <input id="friendmEXPMulti" type="number" min="1" step="0.5" class="validate"
+                                       placeholder="1">
+                                <label for="friendmEXPMulti">
+                                    EXP Multiplier <div class="explain-button bigger"><a class="tooltipped" data-position="top" data-delay="0"
+                                               data-tooltip="This multiplier is used for the rest of the event period. Be careful if the EXP campaign ends in the middle of the event.">
+                                                <i class="material-icons">help</i>
+                                            </a></div></label>
+                                <span class="helper-text" data-error="Must be an integer greater than or equal to 1!"></span>
+                            </div>
+                            <div class="input-field">
                                 <input id="friendmYellBonus" type="number" min="100" class="validate"
                                        placeholder="100">
                                 <label for="friendmYellBonus">

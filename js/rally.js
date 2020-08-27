@@ -18,6 +18,7 @@
  * @property {number} rallyCurrentRank - The player's current rank.
  * @property {number} rallyCurrentLP - The player's current LP.
  * @property {number} rallyCurrentEXP - The player's current EXP in the current rank.
+ * @property {number} rallyEXPMulti - An EXP multiplier from ongoing campaigns.
  * @constructor
  */
 function RallyData() {
@@ -34,6 +35,7 @@ function RallyData() {
     this.rallyCurrentRank = 0;
     this.rallyCurrentLP = 0;
     this.rallyCurrentEXP = 0;
+    this.rallyEXPMulti = 1;
 }
 
 /**
@@ -89,6 +91,7 @@ RallyData.prototype.readFromUi = function () {
     this.rallyCurrentRank = ReadHelpers.toNum($("#rallyCurrentRank").val());
     this.rallyCurrentLP = ReadHelpers.toNum($("#rallyCurrentLP").val(), 0);
     this.rallyCurrentEXP = ReadHelpers.toNum($("#rallyCurrentEXP").val(), 0);
+    this.rallyEXPMulti = ReadHelpers.toNum($("#rallyEXPMulti").val(), 1);
 };
 
 /**
@@ -116,7 +119,8 @@ RallyData.setToUi = function (savedData) {
     SetHelpers.inputHelper($("#rallyCurrentRank"), savedData.rallyCurrentRank);
     SetHelpers.inputHelper($("#rallyCurrentLP"), savedData.rallyCurrentLP);
     SetHelpers.inputHelper($("#rallyCurrentEXP"), savedData.rallyCurrentEXP);
-    if (savedData.rallyCurrentLP > 0 || savedData.rallyCurrentEXP > 0) {
+    SetHelpers.inputHelper($("#rallyEXPMulti"), savedData.rallyEXPMulti);
+    if (savedData.rallyCurrentLP > 0 || savedData.rallyCurrentEXP > 0 || savedData.rallyEXPMulti > 1) {
         $("#rallyCurrentExtra").collapsible('open', 0);
     }
 };
@@ -127,18 +131,19 @@ RallyData.setToUi = function (savedData) {
  */
 RallyData.prototype.alert = function () {
     alert("rallyTimerMethodAuto: " + this.rallyTimerMethodAuto + "\n" +
-          "rallyRegion: " + this.rallyRegion + "\n" +
-          "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
-          "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
-          "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +
-          "rallyLiveScore: " + this.rallyLiveScore + "\n" +
-          "rallyLiveCombo: " + this.rallyLiveCombo + "\n" +
-          "rallyLiveMultiplier: " + this.rallyLiveMultiplier + "\n" +
-          "rallyTargetEventPoints: " + this.rallyTargetEventPoints + "\n" +
-          "rallyCurrentEventPoints: " + this.rallyCurrentEventPoints + "\n" +
-          "rallyCurrentRank: " + this.rallyCurrentRank + "\n" +
-          "rallyCurrentLP: " + this.rallyCurrentLP + "\n" +
-          "rallyCurrentEXP: " + this.rallyCurrentEXP);
+        "rallyRegion: " + this.rallyRegion + "\n" +
+        "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
+        "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
+        "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +
+        "rallyLiveScore: " + this.rallyLiveScore + "\n" +
+        "rallyLiveCombo: " + this.rallyLiveCombo + "\n" +
+        "rallyLiveMultiplier: " + this.rallyLiveMultiplier + "\n" +
+        "rallyTargetEventPoints: " + this.rallyTargetEventPoints + "\n" +
+        "rallyCurrentEventPoints: " + this.rallyCurrentEventPoints + "\n" +
+        "rallyCurrentRank: " + this.rallyCurrentRank + "\n" +
+        "rallyCurrentLP: " + this.rallyCurrentLP + "\n" +
+        "rallyCurrentEXP: " + this.rallyCurrentEXP + "\n" +
+        "rallyEXPMulti: " + this.rallyEXPMulti);
 };
 
 /**
@@ -181,6 +186,16 @@ RallyData.prototype.getEventPointsLeft = function (enableStoryPointCalculation) 
         restPoints -= this.getStoryPoints();
     }
     return restPoints;
+};
+
+/**
+ * Gets the inputted EXP multiplier
+ * @returns {number} An EXP multiplier, or 0 if the input is invalid.
+ */
+RallyData.prototype.getEXPMultiplier = function () {
+    var expMulti = this.rallyEXPMulti;
+    if (expMulti >= 1) return expMulti;
+    return 0;
 };
 
 /**
@@ -231,15 +246,16 @@ RallyData.prototype.createLiveInfo = function () {
     var diffId = this.getLiveDifficulty(),
         scoreRate = this.getLiveScoreRate(),
         comboRate = this.getLiveComboRate(),
-        multiplier = this.getLiveMultiplier();
+        expMultiplier = this.getEXPMultiplier(),
+        liveMultiplier = this.getLiveMultiplier();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || scoreRate == RALLY_SCORE_RATE.ERROR
-        || comboRate == RALLY_COMBO_RATE.ERROR || multiplier === 0) {
+        || comboRate == RALLY_COMBO_RATE.ERROR || expMultiplier === 0 || liveMultiplier === 0) {
         return null;
     }
 
-    return new RallyLiveInfo(COMMON_LP_COST[diffId] * multiplier,
-        Math.round(RALLY_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate) * multiplier,
-        COMMON_EXP_REWARD[diffId] * multiplier);
+    return new RallyLiveInfo(COMMON_LP_COST[diffId] * liveMultiplier,
+        Math.round(RALLY_BASE_EVENT_POINTS[diffId] * scoreRate * comboRate) * liveMultiplier,
+        Math.round(COMMON_EXP_REWARD[diffId] * expMultiplier) * liveMultiplier);
 };
 
 /**
@@ -306,7 +322,7 @@ RallyEstimationInfo.prototype.showResult = function () {
         Results.setBigResult($("#rallyResultRefills"), this.lpRecoveryInfo.lovecaUses);
         showSleepWarning = this.lpRecoveryInfo.sleepWarning;
         $("#rallyResultFinalRank").text(this.lpRecoveryInfo.finalRank + " (" + this.lpRecoveryInfo.finalRankExp + "/" +
-                                        Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
+            Common.getNextRankUpExp(this.lpRecoveryInfo.finalRank) + " EXP)");
         $("#rallyResultLoveca").text(this.lpRecoveryInfo.lovecaUses);
         $("#rallyResultSugarPots50").text(this.lpRecoveryInfo.lovecaUses * 2);
         $("#rallyResultSugarPots100").text(this.lpRecoveryInfo.lovecaUses);
@@ -334,13 +350,16 @@ RallyData.prototype.validate = function () {
         errors.push("Choose a region");
         return errors;
     }
-
-    var liveInfo = this.createLiveInfo();
-    if (null === liveInfo) {
-        errors.push("Live parameters have not been set");
-    } else if (liveInfo.lp > Common.getMaxLp(this.rallyCurrentRank)) {
-        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                    ") that's higher than your max LP (" + Common.getMaxLp(this.rallyCurrentRank) + ")");
+    if (this.getEXPMultiplier() === 0) {
+        errors.push("The given EXP multiplier is invalid.");
+    } else {
+        var liveInfo = this.createLiveInfo();
+        if (null === liveInfo) {
+            errors.push("Live parameters have not been set");
+        } else if (liveInfo.lp > Common.getMaxLp(this.rallyCurrentRank)) {
+            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                ") that's higher than your max LP (" + Common.getMaxLp(this.rallyCurrentRank) + ")");
+        }
     }
 
     if (0 >= this.rallyTargetEventPoints) {
@@ -348,10 +367,10 @@ RallyData.prototype.validate = function () {
     } else if (this.getEventPointsLeft(true) <= 0) {
         if (this.getEventPointsLeft(false) <= 0) {
             errors.push("The given event point target has been reached! " +
-                        "Please change the event point target in order to calculate again");
+                "Please change the event point target in order to calculate again");
         } else {
             errors.push("In order to reach the given event point target, " +
-                        "you only need to clear the rest of the stories. No lives need to be played");
+                "you only need to clear the rest of the stories. No lives need to be played");
         }
     }
 

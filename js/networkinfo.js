@@ -1,10 +1,10 @@
-var enDateOverride = [new Date(Date.UTC(2020, 6, 27, 9)),
-    new Date(Date.UTC(2020, 7, 5, 8))];
+var enDateOverride = [new Date(Date.UTC(2020, 7, 14, 9)),
+    new Date(Date.UTC(2020, 7, 24, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "The two new difficulties and the Yell bonus have been added to the Challenge Festival calc (thank you to Merci on SIFcord)! Stay healthy, wash your hands and grind responsibly ❤",
-    id: 16,
+    message: "<b>August 9 Update:</b> New and long overdue - EXP multiplier input. Stay healthy, wash your hands and grind responsibly ❤",
+    id: 17,
     allowDismiss: true
 };
 

@@ -23,6 +23,7 @@
  * @property {number} tokenCurrentRank - The player's current rank.
  * @property {number} tokenCurrentLP - The player's current LP.
  * @property {number} tokenCurrentEXP - The player's current EXP in the current rank.
+ * @property {number} tokenEXPMulti - An EXP multiplier from ongoing campaigns.
  * @constructor
  */
 function TokenData() {
@@ -44,6 +45,7 @@ function TokenData() {
     this.tokenCurrentRank = 0;
     this.tokenCurrentLP = 0;
     this.tokenCurrentEXP = 0;
+    this.tokenEXPMulti = 1;
 }
 
 /**
@@ -137,6 +139,7 @@ TokenData.prototype.readFromUi = function () {
     this.tokenCurrentRank = ReadHelpers.toNum($("#tokenCurrentRank").val());
     this.tokenCurrentLP = ReadHelpers.toNum($("#tokenCurrentLP").val(), 0);
     this.tokenCurrentEXP = ReadHelpers.toNum($("#tokenCurrentEXP").val(), 0);
+    this.tokenEXPMulti = ReadHelpers.toNum($("#tokenEXPMulti").val(), 1);
 };
 
 /**
@@ -170,7 +173,8 @@ TokenData.setToUi = function (savedData) {
     SetHelpers.inputHelper($("#tokenCurrentRank"), savedData.tokenCurrentRank);
     SetHelpers.inputHelper($("#tokenCurrentLP"), savedData.tokenCurrentLP);
     SetHelpers.inputHelper($("#tokenCurrentEXP"), savedData.tokenCurrentEXP);
-    if (savedData.tokenCurrentLP > 0 || savedData.tokenCurrentEXP > 0) {
+    SetHelpers.inputHelper($("#tokenEXPMulti"), savedData.tokenEXPMulti);
+    if (savedData.tokenCurrentLP > 0 || savedData.tokenCurrentEXP > 0 || savedData.tokenEXPMulti > 1) {
         $("#tokenCurrentExtra").collapsible('open', 0);
     }
 };
@@ -197,7 +201,8 @@ TokenData.prototype.alert = function () {
         "tokenCurrentEventToken: " + this.tokenCurrentEventToken + "\n" +
         "tokenCurrentEventPoints: " + this.tokenCurrentEventPoints + "\n" +
         "tokenCurrentLP: " + this.tokenCurrentLP + "\n" +
-        "tokenCurrentEXP: " + this.tokenCurrentEXP);
+        "tokenCurrentEXP: " + this.tokenCurrentEXP + "\n" +
+        "tokenEXPMulti: " + this.tokenEXPMulti);
 };
 
 /**
@@ -220,6 +225,26 @@ TokenData.prototype.getRestTimeInMinutes = function () {
  */
 TokenData.prototype.getEventPointsLeft = function () {
     return this.tokenTargetEventPoints - this.tokenCurrentEventPoints;
+};
+
+/**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+TokenData.prototype.getYellBonus = function () {
+    var yellBonus = this.tokenYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
+ * Gets the inputted EXP multiplier
+ * @returns {number} An EXP multiplier, or 0 if the input is invalid.
+ */
+TokenData.prototype.getEXPMultiplier = function () {
+    var expMulti = this.tokenEXPMulti;
+    if (expMulti >= 1) return expMulti;
+    return 0;
 };
 
 /**
@@ -263,16 +288,6 @@ TokenData.prototype.getEventLiveMultiplier = function () {
 };
 
 /**
- * Gets the inputted yell bonus multiplier
- * @returns {number} A reward multiplier, or 0 if the input is invalid.
- */
-TokenData.prototype.getYellBonus = function () {
-    var yellBonus = this.tokenYellBonus;
-    if (yellBonus >= 100) return yellBonus / 100;
-    return 0;
-};
-
-/**
  * Creates a {@link TokenEventLiveInfo} object using the event live input values, representing one play.
  * @returns {?TokenEventLiveInfo} A new object with all properties set, or null if the event live inputs are invalid.
  */
@@ -280,10 +295,11 @@ TokenData.prototype.createEventLiveInfo = function () {
     var diffId = this.getEventLiveDifficulty(),
         rankId = this.getEventLiveScore(),
         comboId = this.getEventLiveCombo(),
-        multiplier = this.getEventLiveMultiplier(),
+        expMultiplier = this.getEXPMultiplier(),
+        liveMultiplier = this.getEventLiveMultiplier(),
         yellBonus = this.getYellBonus();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || rankId == TOKEN_RANK.ERROR
-        || comboId == TOKEN_RANK.ERROR || multiplier === 0 || yellBonus === 0) {
+        || comboId == TOKEN_RANK.ERROR || expMultiplier === 0 || liveMultiplier === 0 || yellBonus === 0) {
         return null;
     }
 
@@ -292,7 +308,8 @@ TokenData.prototype.createEventLiveInfo = function () {
         pointReward = this.tokenRegion == "en" ? TOKEN_EVENT_POINTS_WW[diffId][rankId][comboId] :
             TOKEN_EVENT_POINTS_BASE[diffId] * TOKEN_EVENT_POINTS_SCORE_MULTI[diffId][rankId] * TOKEN_EVENT_POINTS_COMBO_MULTI[diffId][comboId];
     if (undefined === pointReward) return null;
-    return new TokenEventLiveInfo(tokenCost * multiplier, Math.round(pointReward * yellBonus) * multiplier, expReward * multiplier);
+    return new TokenEventLiveInfo(tokenCost * liveMultiplier,
+        Math.round(pointReward * yellBonus) * liveMultiplier, expReward * expMultiplier * liveMultiplier);
 };
 
 /**
@@ -331,16 +348,19 @@ TokenData.prototype.getNormalLiveLPReduction = function () {
  */
 TokenData.prototype.createNormalLiveInfo = function () {
     var diffId = this.getNormalLiveDifficulty(),
-        multiplier = this.getNormalLiveMultiplier(),
+        expMultiplier = this.getEXPMultiplier(),
+        liveMultiplier = this.getNormalLiveMultiplier(),
         reduction = this.getNormalLiveLPReduction(),
         yellBonus = this.getYellBonus();
-    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || multiplier === 0 || reduction === 0 || yellBonus === 0) {
+    if (diffId == COMMON_DIFFICULTY_IDS.ERROR || liveMultiplier === 0 ||
+        expMultiplier === 0 || reduction === 0 || yellBonus === 0) {
         return null;
     }
     var lpCost = COMMON_LP_COST[diffId] * reduction,
         tokenReward = TOKEN_NORMAL_TOKEN[diffId],
         expReward = COMMON_EXP_REWARD[diffId];
-    return new TokenNormalLiveInfo(lpCost * multiplier, tokenReward * multiplier, Math.round(tokenReward * multiplier * yellBonus), expReward * multiplier);
+    return new TokenNormalLiveInfo(lpCost * liveMultiplier, tokenReward * liveMultiplier,
+        Math.round(tokenReward * liveMultiplier * yellBonus), Math.round(expReward * expMultiplier) * liveMultiplier);
 };
 
 /**
@@ -500,18 +520,22 @@ TokenData.prototype.validate = function () {
         return errors;
     }
 
-    if (this.tokenRegion == "en" && this.tokenEventLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-        errors.push("Master Difficulty for Event Lives is not available on the Worldwide server yet");
-    } else if (null === this.createEventLiveInfo()) {
-        errors.push("Event live parameters have not been set");
-    }
+    if (this.getEXPMultiplier() === 0) {
+        errors.push("The given EXP multiplier is invalid.");
+    } else {
+        if (this.tokenRegion == "en" && this.tokenEventLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+            errors.push("Master Difficulty for Event Lives is not available on the Worldwide server yet");
+        } else if (null === this.createEventLiveInfo()) {
+            errors.push("Event live parameters have not been set");
+        }
 
-    var liveInfo = this.createNormalLiveInfo();
-    if (null === liveInfo) {
-        errors.push("Normal live parameters have not been set");
-    } else if (liveInfo.lp > Common.getMaxLp(this.tokenCurrentRank)) {
-        errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-            ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
+        var liveInfo = this.createNormalLiveInfo();
+        if (null === liveInfo) {
+            errors.push("Normal live parameters have not been set");
+        } else if (liveInfo.lp > Common.getMaxLp(this.tokenCurrentRank)) {
+            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                ") that's higher than your max LP (" + Common.getMaxLp(this.tokenCurrentRank) + ")");
+        }
     }
 
     if (0 >= this.tokenTargetEventPoints) {

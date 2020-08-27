@@ -19,6 +19,7 @@
  * @property {number} scoremCurrentRank - The player's current rank.
  * @property {number} scoremCurrentLP - The player's current LP.
  * @property {number} scoremCurrentEXP - The player's current EXP in the current rank.
+ * @property {number} scoremEXPMulti - An EXP multiplier from ongoing campaigns.
  * @constructor
  */
 function ScoreMatchData() {
@@ -36,6 +37,7 @@ function ScoreMatchData() {
     this.scoremCurrentRank = 0;
     this.scoremCurrentLP = 0;
     this.scoremCurrentEXP = 0;
+    this.scoremEXPMulti = 1;
 }
 
 /**
@@ -92,6 +94,7 @@ ScoreMatchData.prototype.readFromUi = function () {
     this.scoremCurrentRank = ReadHelpers.toNum($("#scoremCurrentRank").val());
     this.scoremCurrentLP = ReadHelpers.toNum($("#scoremCurrentLP").val(), 0);
     this.scoremCurrentEXP = ReadHelpers.toNum($("#scoremCurrentEXP").val(), 0);
+    this.scoremEXPMulti = ReadHelpers.toNum($("#scoremEXPMulti").val(), 1);
 };
 
 /**
@@ -120,7 +123,8 @@ ScoreMatchData.setToUi = function (savedData) {
     SetHelpers.inputHelper($("#scoremCurrentRank"), savedData.scoremCurrentRank);
     SetHelpers.inputHelper($("#scoremCurrentLP"), savedData.scoremCurrentLP);
     SetHelpers.inputHelper($("#scoremCurrentEXP"), savedData.scoremCurrentEXP);
-    if (savedData.scoremCurrentLP > 0 || savedData.scoremCurrentEXP > 0) {
+    SetHelpers.inputHelper($("#scoremEXPMulti"), savedData.scoremEXPMulti);
+    if (savedData.scoremCurrentLP > 0 || savedData.scoremCurrentEXP > 0 || savedData.scoremEXPMulti > 1) {
         $("#scoremCurrentExtra").collapsible('open', 0);
     }
 };
@@ -143,7 +147,8 @@ ScoreMatchData.prototype.alert = function () {
         "scoremCurrentEventPoints: " + this.scoremCurrentEventPoints + "\n" +
         "scoremCurrentRank: " + this.scoremCurrentRank + "\n" +
         "scoremCurrentLP: " + this.scoremCurrentLP + "\n" +
-        "scoremCurrentEXP: " + this.scoremCurrentEXP);
+        "scoremCurrentEXP: " + this.scoremCurrentEXP + "\n" +
+        "scoremEXPMulti: " + this.scoremEXPMulti);
 };
 
 /**
@@ -166,6 +171,26 @@ ScoreMatchData.prototype.getRestTimeInMinutes = function () {
  */
 ScoreMatchData.prototype.getEventPointsLeft = function () {
     return this.scoremTargetEventPoints - this.scoremCurrentEventPoints;
+};
+
+/**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+ScoreMatchData.prototype.getYellBonus = function () {
+    var yellBonus = this.scoremYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
+ * Gets the inputted EXP multiplier
+ * @returns {number} An EXP multiplier, or 0 if the input is invalid.
+ */
+ScoreMatchData.prototype.getEXPMultiplier = function () {
+    var expMulti = this.scoremEXPMulti;
+    if (expMulti >= 1) return expMulti;
+    return 0;
 };
 
 /**
@@ -209,16 +234,6 @@ ScoreMatchData.prototype.getLiveMultiplier = function () {
 };
 
 /**
- * Gets the inputted yell bonus multiplier
- * @returns {number} A reward multiplier, or 0 if the input is invalid.
- */
-ScoreMatchData.prototype.getYellBonus = function () {
-    var yellBonus = this.scoremYellBonus;
-    if (yellBonus >= 100) return yellBonus / 100;
-    return 0;
-};
-
-/**
  * Creates a {@link ScoreMatchLiveInfo} object using the live input values, representing one play.
  * @returns {?ScoreMatchLiveInfo} A new object with all properties set, or null if the live inputs are invalid.
  */
@@ -226,16 +241,17 @@ ScoreMatchData.prototype.createLiveInfo = function () {
     var diffId = this.getLiveDifficulty(),
         scoreRate = this.getLiveScoreRate(),
         posRate = this.getLivePositionRate(),
-        multiplier = this.getLiveMultiplier(),
+        expMultiplier = this.getEXPMultiplier(),
+        liveMultiplier = this.getLiveMultiplier(),
         yellBonus = this.getYellBonus();
     if (diffId == COMMON_DIFFICULTY_IDS.ERROR || scoreRate == SCOREM_SCORE_RATE.ERROR
-        || posRate == SCOREM_POSITION_RATE.ERROR || multiplier === 0 || yellBonus === 0) {
+        || posRate == SCOREM_POSITION_RATE.ERROR || liveMultiplier === 0 || yellBonus === 0 || expMultiplier === 0) {
         return null;
     }
 
-    return new ScoreMatchLiveInfo(COMMON_LP_COST[diffId] * multiplier,
-        Math.round(SCOREM_BASE_EVENT_POINTS[diffId] * scoreRate * posRate * yellBonus) * multiplier,
-        COMMON_EXP_REWARD[diffId] * multiplier);
+    return new ScoreMatchLiveInfo(COMMON_LP_COST[diffId] * liveMultiplier,
+        Math.round(SCOREM_BASE_EVENT_POINTS[diffId] * scoreRate * posRate * yellBonus) * liveMultiplier,
+        Math.round(COMMON_EXP_REWARD[diffId] * expMultiplier) * liveMultiplier);
 };
 
 /**
@@ -332,16 +348,19 @@ ScoreMatchData.prototype.validate = function () {
         errors.push("Choose a region");
         return errors;
     }
-
-    if (this.scoremRegion == "en" && this.scoremLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-        errors.push("Master Difficulty is not available on the Worldwide server yet");
+    if (this.getEXPMultiplier() === 0) {
+        errors.push("The given EXP multiplier is invalid.");
     } else {
-        var liveInfo = this.createLiveInfo();
-        if (null === liveInfo) {
-            errors.push("Live parameters have not been set");
-        } else if (liveInfo.lp > Common.getMaxLp(this.scoremCurrentRank)) {
-            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                ") that's higher than your max LP (" + Common.getMaxLp(this.scoremCurrentRank) + ")");
+        if (this.scoremRegion == "en" && this.scoremLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+            errors.push("Master Difficulty is not available on the Worldwide server yet");
+        } else {
+            var liveInfo = this.createLiveInfo();
+            if (null === liveInfo) {
+                errors.push("Live parameters have not been set");
+            } else if (liveInfo.lp > Common.getMaxLp(this.scoremCurrentRank)) {
+                errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                    ") that's higher than your max LP (" + Common.getMaxLp(this.scoremCurrentRank) + ")");
+            }
         }
     }
 

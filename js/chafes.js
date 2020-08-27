@@ -26,6 +26,7 @@
  * @property {number} chafesCurrentRank - The player's current rank.
  * @property {number} chafesCurrentLP - The player's current LP.
  * @property {number} chafesCurrentEXP - The player's current EXP in the current rank.
+ * @property {number} chafesEXPMulti - An EXP multiplier from ongoing campaigns.
  * @constructor
  */
 function ChaFesData() {
@@ -51,6 +52,7 @@ function ChaFesData() {
     this.chafesCurrentRank = 0;
     this.chafesCurrentLP = 0;
     this.chafesCurrentEXP = 0;
+    this.chafesEXPMulti = 1;
 }
 
 /**
@@ -121,6 +123,7 @@ ChaFesData.prototype.readFromUi = function () {
     this.chafesCurrentRank = ReadHelpers.toNum($("#chafesCurrentRank").val());
     this.chafesCurrentLP = ReadHelpers.toNum($("#chafesCurrentLP").val(), 0);
     this.chafesCurrentEXP = ReadHelpers.toNum($("#chafesCurrentEXP").val(), 0);
+    this.chafesEXPMulti = ReadHelpers.toNum($("#chafesEXPMulti").val(), 1);
 };
 
 /**
@@ -158,7 +161,8 @@ ChaFesData.setToUi = function (savedData) {
     SetHelpers.inputHelper($("#chafesCurrentRank"), savedData.chafesCurrentRank);
     SetHelpers.inputHelper($("#chafesCurrentLP"), savedData.chafesCurrentLP);
     SetHelpers.inputHelper($("#chafesCurrentEXP"), savedData.chafesCurrentEXP);
-    if (savedData.chafesCurrentLP > 0 || savedData.chafesCurrentEXP > 0) {
+    SetHelpers.inputHelper($("#chafesEXPMulti"), savedData.chafesEXPMulti);
+    if (savedData.chafesCurrentLP > 0 || savedData.chafesCurrentEXP > 0 || savedData.chafesEXPMulti > 1) {
         $("#chafesCurrentExtra").collapsible('open', 0);
     }
 };
@@ -189,7 +193,8 @@ ChaFesData.prototype.alert = function () {
         "chafesCurrentEventPoints: " + this.chafesCurrentEventPoints + "\n" +
         "chafesCurrentRank: " + this.chafesCurrentRank + "\n" +
         "chafesCurrentLP: " + this.chafesCurrentLP + "\n" +
-        "chafesCurrentEXP: " + this.chafesCurrentEXP);
+        "chafesCurrentEXP: " + this.chafesCurrentEXP + "\n" +
+        "chafesEXPMulti: " + this.chafesEXPMulti);
 };
 
 /**
@@ -212,6 +217,26 @@ ChaFesData.prototype.getRestTimeInMinutes = function () {
  */
 ChaFesData.prototype.getEventPointsLeft = function () {
     return this.chafesTargetEventPoints - this.chafesCurrentEventPoints;
+};
+
+/**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+ChaFesData.prototype.getYellBonus = function () {
+    var yellBonus = this.chafesYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
+};
+
+/**
+ * Gets the inputted EXP multiplier
+ * @returns {number} An EXP multiplier, or 0 if the input is invalid.
+ */
+ChaFesData.prototype.getEXPMultiplier = function () {
+    var expMulti = this.chafesEXPMulti;
+    if (expMulti >= 1) return expMulti;
+    return 0;
 };
 
 /**
@@ -261,16 +286,6 @@ ChaFesData.prototype.getLiveSongAmount = function () {
 ChaFesData.prototype.getLiveMultiplier = function () {
     var multiplier = this.chafesLiveMultiplier;
     if (multiplier >= 1) return multiplier;
-    return 0;
-};
-
-/**
- * Gets the inputted yell bonus multiplier
- * @returns {number} A reward multiplier, or 0 if the input is invalid.
- */
-ChaFesData.prototype.getYellBonus = function () {
-    var yellBonus = this.chafesYellBonus;
-    if (yellBonus >= 100) return yellBonus / 100;
     return 0;
 };
 
@@ -327,12 +342,13 @@ ChaFesData.prototype.getLiveTotalPoints = function () {
  * @returns {number} The EXP gained from the song in position songNum, or 0 if the input is invalid.
  */
 ChaFesData.prototype.getSingleLiveExpReward = function (songNum) {
-    var diffId = this.getLiveDifficulty();
-    if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songNum === 0) {
+    var diffId = this.getLiveDifficulty(),
+        expMultiplier = this.getEXPMultiplier();
+    if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songNum === 0 || expMultiplier === 0) {
         return 0;
     }
     var arrangeBoost = this.chafesArrangeExpUp ? CHAFES_ARRANGE_EXP_UP_RATE : 1;
-    return Math.round(CHAFES_BASE_EXP[diffId][songNum] * arrangeBoost);
+    return Math.round(Math.round(CHAFES_BASE_EXP[diffId][songNum] * arrangeBoost) * expMultiplier);
 };
 
 /**
@@ -400,19 +416,19 @@ ChaFesData.prototype.createLiveInfo = function () {
         eventPoints = this.getLiveTotalPoints(),
         expReward = this.getLiveExpReward(),
         goldCost = this.getLiveGoldCost(),
-        multiplier = this.getLiveMultiplier(),
+        liveMultiplier = this.getLiveMultiplier(),
         multUse = this.chafesLiveMultiplierUse,
         songCount = this.getLiveSongAmount();
-    if (0 === lpCost || 0 === eventPoints || 0 === expReward || 0 === multiplier || undefined === multUse) {
+    if (0 === lpCost || 0 === eventPoints || 0 === expReward || 0 === liveMultiplier || undefined === multUse) {
         return null;
     }
-    if (multiplier > 1) {
+    if (liveMultiplier > 1) {
         if (multUse === "ALL") {
-            lpCost *= multiplier;
-            eventPoints *= multiplier;
-            expReward *= multiplier;
+            lpCost *= liveMultiplier;
+            eventPoints *= liveMultiplier;
+            expReward *= liveMultiplier;
         } else if (multUse === "LAST") {
-            var multBonus = multiplier - 1;
+            var multBonus = liveMultiplier - 1;
             lpCost += multBonus * this.getSingleLiveLpCost();
             eventPoints += multBonus * this.getSingleLiveTotalPoints(songCount);
             expReward += multBonus * this.getSingleLiveExpReward(songCount);
@@ -518,16 +534,19 @@ ChaFesData.prototype.validate = function () {
         errors.push("Choose a region");
         return errors;
     }
-
-    if (this.chafesRegion == "en" && this.chafesLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-        errors.push("Master Difficulty is not available on the Worldwide server yet");
-    } else if (null === this.createLiveInfo()) {
-        errors.push("Live parameters have not been set");
+    if (this.getEXPMultiplier() === 0) {
+        errors.push("The given EXP multiplier is invalid.");
     } else {
-        var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[this.getLiveDifficulty()]];
-        if (maxLPCostOfSingleLive > Common.getMaxLp(this.chafesCurrentRank)) {
-            errors.push("The chosen live parameters result in an LP cost (" + maxLPCostOfSingleLive +
-                ") that's higher than your max LP (" + Common.getMaxLp(this.chafesCurrentRank) + ")");
+        if (this.chafesRegion == "en" && this.chafesLiveDifficulty == "MASTER") { // TODO: remove when WW changes
+            errors.push("Master Difficulty is not available on the Worldwide server yet");
+        } else if (null === this.createLiveInfo()) {
+            errors.push("Live parameters have not been set");
+        } else {
+            var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[this.getLiveDifficulty()]];
+            if (maxLPCostOfSingleLive > Common.getMaxLp(this.chafesCurrentRank)) {
+                errors.push("The chosen live parameters result in an LP cost (" + maxLPCostOfSingleLive +
+                    ") that's higher than your max LP (" + Common.getMaxLp(this.chafesCurrentRank) + ")");
+            }
         }
     }
 

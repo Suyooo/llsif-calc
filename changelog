@@ -1,6 +1,12 @@
+August 9, 2020 - Edition Edition Edition Edition Edition Edition Edition Edition Edition Edition
+----------------------------
+- 10x EXP campaign on JP, yikes. Time to add an EXP multiplier input. Long overdue, I guess.
+- Removed the "Minimum Hours of Sleep" inputs for now... apparently I added those but never made them functional?
+- Let's file these under "I'll get around to it at some point in the future, right?"
+
 August 4, 2020 - WW Is Not Granted The Rank Of Master Edition
 ----------------------------
-- Fixed the error for selecting Master Difficulty on EN
+- Fixed an error when selecting Master Difficulty on EN
 - Added the error message to the other calcs that have Master so far
 
 June 20, 2020 - Twenty Editon Part II
