@@ -3,9 +3,9 @@ var enDateOverride = [new Date(Date.UTC(2020, 7, 31, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>August 9 Update:</b> New and long overdue - EXP multiplier input. Stay healthy, wash your hands and grind responsibly ❤",
-    id: 17,
-    allowDismiss: true
+    message: "<b>Warning for Global Players:</b> The Master rewards are messed up on the Global version. Your score and combo ranks are not counted, instead you will always receive the reward for a no rank run. Keep this in mind if you want to play Master - set both \"Score Rank\" and \"Combo Rank\" to \"None\", and compare your result to what you could get on Expert (an A rank/A rank Expert run gives the same amount of points as a bugged Master run).",
+    id: 19,
+    allowDismiss: false
 };
 
 // Little prompt for appcache -> service worker migration, will be removed at some point
