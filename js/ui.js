@@ -521,7 +521,7 @@ Results.setBigResult = function (element, text) {
 function Cookie() {
 }
 
-const COOKIE_POLICY = "<h5>Cookie Policy</h5>LLSIF Calc uses cookies to store your preferences and inputs for later " +
+var COOKIE_POLICY = "<h5>Cookie Policy</h5>LLSIF Calc uses cookies to store your preferences and inputs for later " +
     "use. It will only do so if you agree to this message.<br>The page is still functional without if you do " +
     "not allow storage, however, you will be unable to:<ul><li>Save configurations for later</li>" +
     "<li>Dismiss notifications permanently</li><li>Save your setting for dark mode</li></ul>No other data is " +

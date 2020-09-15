@@ -388,16 +388,12 @@ FriendlyMatchData.prototype.validate = function () {
     if (this.getEXPMultiplier() === 0) {
         errors.push("The given EXP multiplier is invalid.");
     } else {
-        if (this.friendmRegion == "en" && this.friendmLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-            errors.push("Master Difficulty is not available on the Worldwide server yet");
-        } else {
-            var liveInfo = this.createLiveInfo();
-            if (null === liveInfo) {
-                errors.push("Live parameters have not been set");
-            } else if (liveInfo.lp > Common.getMaxLp(this.friendmCurrentRank)) {
-                errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
-                    ") that's higher than your max LP (" + Common.getMaxLp(this.friendmCurrentRank) + ")");
-            }
+        var liveInfo = this.createLiveInfo();
+        if (null === liveInfo) {
+            errors.push("Live parameters have not been set");
+        } else if (liveInfo.lp > Common.getMaxLp(this.friendmCurrentRank)) {
+            errors.push("The chosen live parameters result in an LP cost (" + liveInfo.lp +
+                ") that's higher than your max LP (" + Common.getMaxLp(this.friendmCurrentRank) + ")");
         }
     }
 
