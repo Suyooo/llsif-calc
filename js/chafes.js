@@ -377,7 +377,7 @@ ChaFesData.prototype.getLiveLpCost = function () {
     if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songCount === 0) {
         return 0;
     }
-    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * songCount;
+    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * (this.chafesRegion === "en" ? 0.8 : 1) * songCount;
 };
 
 /**
@@ -389,7 +389,7 @@ ChaFesData.prototype.getSingleLiveLpCost = function () {
     if (diffId == CHAFES_DIFFICULTY_IDS.ERROR) {
         return 0;
     }
-    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]];
+    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * (this.chafesRegion === "en" ? 0.8 : 1);
 };
 
 /**
@@ -537,9 +537,7 @@ ChaFesData.prototype.validate = function () {
     if (this.getEXPMultiplier() === 0) {
         errors.push("The given EXP multiplier is invalid.");
     } else {
-        if (this.chafesRegion == "en" && this.chafesLiveDifficulty == "MASTER") { // TODO: remove when WW changes
-            errors.push("Master Difficulty is not available on the Worldwide server yet");
-        } else if (null === this.createLiveInfo()) {
+        if (null === this.createLiveInfo()) {
             errors.push("Live parameters have not been set");
         } else {
             var maxLPCostOfSingleLive = this.getLiveMultiplier() * COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[this.getLiveDifficulty()]];

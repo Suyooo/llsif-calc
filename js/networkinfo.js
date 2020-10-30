@@ -1,11 +1,11 @@
-var enDateOverride = [new Date(Date.UTC(2020, 8, 16, 9)),
-    new Date(Date.UTC(2020, 8, 24, 8))];
+var enDateOverride = [new Date(Date.UTC(2020, 9, 30, 9)),
+    new Date(Date.UTC(2020, 10, 9, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>Warning for Global Players:</b> The Master rewards are messed up on the Global version. Your score and combo ranks are not counted, instead you will always receive the reward for a no rank run. Keep this in mind if you want to play Master - set both \"Score Rank\" and \"Combo Rank\" to \"None\", and compare your result to what you could get on Expert (an A rank/A rank Expert run gives the same amount of points as a bugged Master run).",
-    id: 19,
-    allowDismiss: false
+    message: "<b>Warning</b>: The song pool for the current WW event is extremely messed up. If you play on Ultimate, you'll randomly get a different song than announced, and it uses Easy note speeds while still having the Master map, and some reports saying it's not even the right note map??? Ramp up the Easy speed in your settings if you're planning to play that course.",
+    id: 21,
+    allowDismiss: true
 };
 
 // Little prompt for appcache -> service worker migration, will be removed at some point
