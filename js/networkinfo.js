@@ -1,9 +1,9 @@
-var enDateOverride = [new Date(Date.UTC(2020, 9, 30, 9)),
-    new Date(Date.UTC(2020, 10, 9, 8))];
+var enDateOverride = [new Date(Date.UTC(2020, 11, 18, 9)),
+    new Date(Date.UTC(2020, 11, 28, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>Warning</b>: The song pool for the current WW event is extremely messed up. If you play on Ultimate, you'll randomly get a different song than announced, and it uses Easy note speeds while still having the Master map, and some reports saying it's not even the right note map??? Ramp up the Easy speed in your settings if you're planning to play that course.",
+    message: "Dates for the resumed WW event are now set for the Automatic timer. Good luck, and let's hope it's not broken again.",
     id: 21,
     allowDismiss: true
 };

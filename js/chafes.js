@@ -377,7 +377,7 @@ ChaFesData.prototype.getLiveLpCost = function () {
     if (diffId == CHAFES_DIFFICULTY_IDS.ERROR || songCount === 0) {
         return 0;
     }
-    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * (this.chafesRegion === "en" ? 0.8 : 1) * songCount;
+    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * songCount;
 };
 
 /**
@@ -389,7 +389,7 @@ ChaFesData.prototype.getSingleLiveLpCost = function () {
     if (diffId == CHAFES_DIFFICULTY_IDS.ERROR) {
         return 0;
     }
-    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]] * (this.chafesRegion === "en" ? 0.8 : 1);
+    return COMMON_LP_COST[CHAFES_TO_COMMON_DIFFICULTY_ID[diffId]];
 };
 
 /**
