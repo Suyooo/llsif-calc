@@ -1,10 +1,10 @@
-var enDateOverride = [new Date(Date.UTC(2020, 11, 18, 9)),
-    new Date(Date.UTC(2020, 11, 28, 8))];
+var enDateOverride = [new Date(Date.UTC(2021, 3, 30, 9)),
+    new Date(Date.UTC(2021, 4, 10, 8))];
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "Dates for the resumed WW event are now set for the Automatic timer. Good luck, and let's hope it's not broken again.",
-    id: 21,
+    message: "<b>HEADS UP:</b> WW didn't add Master difficulty to MedFes. Watch out for that when using estimations.",
+    id: 22,
     allowDismiss: true
 };
 

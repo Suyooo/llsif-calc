@@ -9,7 +9,7 @@
  * @property {region} medfesRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} medfesTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} medfesManualRestTimeInHours - The time left in hours, entered for Manual Input.
- * @property {difficulty} medfesLiveDifficulty - The difficulty medleys are played on.
+ * @property {difficultyWithM} medfesLiveDifficulty - The difficulty medleys are played on.
  * @property {number} medfesLiveSongs - The amount of songs the player plays per medley.
  * @property {rank} medfesLiveScore - Which score rank the player clears medleys with.
  * @property {rank} medfesLiveCombo - Which combo rank the player clears medleys with.
@@ -554,7 +554,8 @@ var MEDFES_BASE_EVENT_POINTS = [
     [0, 31, 64, 99],
     [0, 72, 150, 234],
     [0, 126, 262, 408],
-    [0, 241, 500, 777]
+    [0, 241, 500, 777],
+    [0, 382, 782, 1200]
 ];
 
 /**
