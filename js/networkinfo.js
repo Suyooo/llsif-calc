@@ -3,7 +3,7 @@ var enDateOverride = [new Date(Date.UTC(2021, 3, 30, 9)),
 var jpDateOverride = null;
 
 var notificationInfo = {
-    message: "<b>HEADS UP:</b> WW didn't add Master difficulty to MedFes. Watch out for that when using estimations.",
+    message: "<b>HEADS UP:</b> WW didn't add Master difficulty to MedFes. Watch out for that when using estimations - and also watch out for the Cheer Bonus <b>RESETTING EVERY TIME YOU PLAY A MEDLEY OR LEAVE THE EVENT SCREEN SO YOU HAVE TO SET IT AGAIN BEFORE EVERY LIVE</b>. Have fun!",
     id: 22,
     allowDismiss: true
 };

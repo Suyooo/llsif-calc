@@ -14,6 +14,7 @@
  * @property {rank} medfesLiveScore - Which score rank the player clears medleys with.
  * @property {rank} medfesLiveCombo - Which combo rank the player clears medleys with.
  * @property {number} medfesLiveMultiplier - Which multiplier the player plays lives on.
+ * @property {number} medfesYellBonus - The yell unit bonus in percent.
  * @property {boolean} medfesArrangeRewardsUp - Whether medleys are played with the Gold/Silver Reward Boost.
  * @property {boolean} medfesArrangePerfectSupport - Whether medleys are played with Perfect Support.
  * @property {boolean} medfesArrangeExpUp - Whether medleys are played with the EXP Boost.
@@ -40,6 +41,7 @@ function MedFesData() {
     this.medfesLiveScore = "N";
     this.medfesLiveCombo = "N";
     this.medfesLiveMultiplier = 0;
+    this.medfesYellBonus = 100;
     this.medfesArrangeRewardsUp = false;
     this.medfesArrangePerfectSupport = false;
     this.medfesArrangeExpUp = false;
@@ -111,6 +113,7 @@ MedFesData.prototype.readFromUi = function () {
     this.medfesLiveScore = $("input:radio[name=medfesLiveScore]:checked").val();
     this.medfesLiveCombo = $("input:radio[name=medfesLiveCombo]:checked").val();
     this.medfesLiveMultiplier = $("input:radio[name=medfesLiveMultiplier]:checked").val();
+    this.medfesYellBonus = ReadHelpers.toNum($("#medfesYellBonus").val(), 100);
     this.medfesArrangeRewardsUp = $("#medfesArrangeRewardsUp").prop("checked");
     this.medfesArrangePerfectSupport = $("#medfesArrangePerfectSupport").prop("checked");
     this.medfesArrangeExpUp = $("#medfesArrangeExpUp").prop("checked");
@@ -148,6 +151,7 @@ MedFesData.setToUi = function (savedData) {
     SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveScore]"), savedData.medfesLiveScore);
     SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveCombo]"), savedData.medfesLiveCombo);
     SetHelpers.radioButtonHelper($("input:radio[name=medfesLiveMultiplier]"), savedData.medfesLiveMultiplier);
+    SetHelpers.inputHelper($("#medfesYellBonus"), savedData.medfesYellBonus);
     SetHelpers.checkBoxHelper($("#medfesArrangeRewardsUp"), savedData.medfesArrangeRewardsUp);
     SetHelpers.checkBoxHelper($("#medfesArrangePerfectSupport"), savedData.medfesArrangePerfectSupport);
     SetHelpers.checkBoxHelper($("#medfesArrangeExpUp"), savedData.medfesArrangeExpUp);
@@ -182,6 +186,7 @@ MedFesData.prototype.alert = function () {
         "medfesLiveScore: " + this.medfesLiveScore + "\n" +
         "medfesLiveCombo: " + this.medfesLiveCombo + "\n" +
         "medfesLiveMultiplier: " + this.medfesLiveMultiplier + "\n" +
+        "medfesYellBonus: " + this.medfesYellBonus + "\n" +
         "medfesArrangeRewardsUp: " + this.medfesArrangeRewardsUp + "\n" +
         "medfesArrangePerfectSupport: " + this.medfesArrangePerfectSupport + "\n" +
         "medfesArrangeExpUp: " + this.medfesArrangeExpUp + "\n" +
@@ -218,6 +223,16 @@ MedFesData.prototype.getRestTimeInMinutes = function () {
  */
 MedFesData.prototype.getEventPointsLeft = function () {
     return this.medfesTargetEventPoints - this.medfesCurrentEventPoints;
+};
+
+/**
+ * Gets the inputted yell bonus multiplier
+ * @returns {number} A reward multiplier, or 0 if the input is invalid.
+ */
+MedFesData.prototype.getYellBonus = function () {
+    var yellBonus = this.medfesYellBonus;
+    if (yellBonus >= 100) return yellBonus / 100;
+    return 0;
 };
 
 /**
@@ -301,8 +316,9 @@ MedFesData.prototype.getLiveTotalPoints = function () {
     var basePoints = this.getLiveBasePoints(),
         scoreRate = this.getLiveScoreRate(),
         comboRate = this.getLiveComboRate(),
-        arrangeBoost = this.medfesArrangeEventPointUp ? MEDFES_ARRANGE_EVENT_POINT_UP_RATE : 1;
-    return Math.round(basePoints * scoreRate * comboRate * arrangeBoost);
+        arrangeBoost = this.medfesArrangeEventPointUp ? MEDFES_ARRANGE_EVENT_POINT_UP_RATE : 1,
+        yellBonus = this.getYellBonus();
+    return Math.round(basePoints * scoreRate * comboRate * arrangeBoost * yellBonus);
 };
 
 /**
