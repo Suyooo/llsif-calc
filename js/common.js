@@ -42,53 +42,50 @@ function LpRecoveryInfo(initialRank) {
  * JP Events always run each month from the 5th to the 15th, and from the 20th to the last day of the month.
  * EN Events used to have a similar schedule before Klab EN decided that was boring.
  * Instead, we can define a date override in networkinfo.js.
- * @param  {region} timerRegion The event region, either "en" or "jp".
  * @returns {Date[]} An array containing start and end date of the current event, index 0 and 1 respectively
  */
-Common.getEventBeginEndTime = function (timerRegion) {
+Common.getEventBeginEndTime = function () {
     // Handle overrides define in networkinfo.js
-    if (timerRegion == "en" && enDateOverride !== null) return enDateOverride;
-    if (timerRegion == "jp" && jpDateOverride !== null) return jpDateOverride;
+    if (dateOverride !== null) return dateOverride;
 
     var currentTime = new Date();
 
     // Dates when the automatic timer will switch to the next event
     // Set to one day before start, so it matches with the new announcement
     var switchDateFirst = new Date(Date.UTC(currentTime.getUTCFullYear(),
-        currentTime.getUTCMonth(), 4, (timerRegion == "jp") ? 6 : 8));
+        currentTime.getUTCMonth(), 4, 6));
     var switchDateSecond = new Date(Date.UTC(currentTime.getUTCFullYear(),
-        currentTime.getUTCMonth(), 19, (timerRegion == "jp") ? 6 : 8));
+        currentTime.getUTCMonth(), 19, 6));
 
     // Fun little hack: Settting a date to the 0th day of a month makes it the last day of the previous month
     if (currentTime < switchDateFirst) {
         // 1st to 4th of a month - show last months second event
         return [new Date(Date.UTC(currentTime.getUTCFullYear(),
-            currentTime.getUTCMonth() - 1, 20, (timerRegion == "jp") ? 7 : 9)),
+            currentTime.getUTCMonth() - 1, 20, 7)),
             new Date(Date.UTC(currentTime.getUTCFullYear(),
-                currentTime.getUTCMonth(), 0, (timerRegion == "jp") ? 6 : 8))];
+                currentTime.getUTCMonth(), 0, 6))];
     } else if (currentTime < switchDateSecond) {
         // 4th to 19th of a month - show this months first event
         return [new Date(Date.UTC(currentTime.getUTCFullYear(),
-            currentTime.getUTCMonth(), 5, (timerRegion == "jp") ? 7 : 9)),
+            currentTime.getUTCMonth(), 5, 7)),
             new Date(Date.UTC(currentTime.getUTCFullYear(),
-                currentTime.getUTCMonth(), 15, (timerRegion == "jp") ? 6 : 8))];
+                currentTime.getUTCMonth(), 15, 6))];
     } else {
         // 19th to end of month - show this months second event
         return [new Date(Date.UTC(currentTime.getUTCFullYear(),
-            currentTime.getUTCMonth(), 20, (timerRegion == "jp") ? 7 : 9)),
+            currentTime.getUTCMonth(), 20, 7)),
             new Date(Date.UTC(currentTime.getUTCFullYear(),
-                currentTime.getUTCMonth() + 1, 0, (timerRegion == "jp") ? 6 : 8))];
+                currentTime.getUTCMonth() + 1, 0, 6))];
     }
 };
 
 /**
  * Calculate the amount of minutes left in an event.
- * @param {region} timerRegion The event region, either "en" or "jp".
  * @returns {number} The amount of minutes left in the event, using the dates from getEventBeginEndTime
  * @see getEventBeginEndTime
  */
-Common.getAutoRestTimeInMinutes = function (timerRegion) {
-    var eventDates = this.getEventBeginEndTime(timerRegion);
+Common.getAutoRestTimeInMinutes = function () {
+    var eventDates = this.getEventBeginEndTime();
     var currentTime = new Date();
     if (currentTime < eventDates[0]) {
         return this.minsBetween(eventDates[1], eventDates[0]);
@@ -308,12 +305,6 @@ Common.minsBetween = function (datea, dateb) {
 Common.hoursBetween = function (datea, dateb) {
     return Math.floor(this.minsBetween(datea, dateb) / 60);
 };
-
-/**
- * A string, representing which server a method should assume.
- * Allowed values are 'en' for the Worldwide server, and 'jp' for the Japanese server.
- * @typedef {('en'|'jp')} region
- */
 
 /**
  * A string, representing a live difficulty, if Technical/Master are handled as EX.
