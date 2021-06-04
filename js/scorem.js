@@ -6,7 +6,6 @@
  * An object used to store input values for the Score Match calculator.
  * @class ScoreMatchData
  * @property {boolean} scoremTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} scoremRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} scoremTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} scoremManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficultyWithM} scoremLiveDifficulty - The difficulty lives are played on.
@@ -24,7 +23,6 @@
  */
 function ScoreMatchData() {
     this.scoremTimerMethodAuto = false;
-    this.scoremRegion = "en";
     this.scoremTimerMethodManual = false;
     this.scoremManualRestTimeInHours = 0;
     this.scoremLiveDifficulty = "EASY";
@@ -81,7 +79,6 @@ function ScoreMatchEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 ScoreMatchData.prototype.readFromUi = function () {
     this.scoremTimerMethodAuto = $("#scoremTimerMethodAuto").prop("checked");
-    this.scoremRegion = $("input:radio[name=scoremRegion]:checked").val();
     this.scoremTimerMethodManual = $("#scoremTimerMethodManual").prop("checked");
     this.scoremManualRestTimeInHours = ReadHelpers.toNum($("#scoremManualRestTime").val());
     this.scoremLiveDifficulty = $("input:radio[name=scoremLiveDifficulty]:checked").val();
@@ -103,10 +100,6 @@ ScoreMatchData.prototype.readFromUi = function () {
  */
 ScoreMatchData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#scoremTimerMethodAuto"), savedData.scoremTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=scoremRegion]"), savedData.scoremRegion);
-    if (savedData.scoremRegion !== undefined) {
-        updateTimerSection("scorem");
-    }
     var manualButton = $("#scoremTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.scoremTimerMethodManual);
     if (savedData.scoremTimerMethodManual) {
@@ -135,7 +128,6 @@ ScoreMatchData.setToUi = function (savedData) {
  */
 ScoreMatchData.prototype.alert = function () {
     alert("scoremTimerMethodAuto: " + this.scoremTimerMethodAuto + "\n" +
-        "scoremRegion: " + this.scoremRegion + "\n" +
         "scoremTimerMethodManual: " + this.scoremTimerMethodManual + "\n" +
         "scoremManualRestTimeInHours: " + this.scoremManualRestTimeInHours + "\n" +
         "scoremLiveDifficulty: " + this.scoremLiveDifficulty + "\n" +
@@ -157,7 +149,7 @@ ScoreMatchData.prototype.alert = function () {
  */
 ScoreMatchData.prototype.getRestTimeInMinutes = function () {
     if (this.scoremTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.scoremRegion);
+        return Common.getAutoRestTimeInMinutes();
     }
     if (this.scoremTimerMethodManual) {
         return 60 * this.scoremManualRestTimeInHours;
@@ -344,10 +336,6 @@ ScoreMatchEstimationInfo.prototype.showResult = function () {
 ScoreMatchData.prototype.validate = function () {
     var errors = [];
 
-    if (this.scoremRegion != "en" && this.scoremRegion != "jp") {
-        errors.push("Choose a region");
-        return errors;
-    }
     if (this.getEXPMultiplier() === 0) {
         errors.push("The given EXP multiplier is invalid.");
     } else {
