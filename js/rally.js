@@ -6,7 +6,6 @@
  * An object used to store input values for the Token Event calculator.
  * @class RallyData
  * @property {boolean} rallyTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} rallyRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} rallyTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} rallyManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficulty} rallyLiveDifficulty - The difficulty lives are played on.
@@ -23,7 +22,6 @@
  */
 function RallyData() {
     this.rallyTimerMethodAuto = false;
-    this.rallyRegion = "en";
     this.rallyTimerMethodManual = false;
     this.rallyManualRestTimeInHours = 0;
     this.rallyLiveDifficulty = "EASY";
@@ -79,7 +77,6 @@ function RallyEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 RallyData.prototype.readFromUi = function () {
     this.rallyTimerMethodAuto = $("#rallyTimerMethodAuto").prop("checked");
-    this.rallyRegion = $("input:radio[name=rallyRegion]:checked").val();
     this.rallyTimerMethodManual = $("#rallyTimerMethodManual").prop("checked");
     this.rallyManualRestTimeInHours = ReadHelpers.toNum($("#rallyManualRestTime").val());
     this.rallyLiveDifficulty = $("input:radio[name=rallyLiveDifficulty]:checked").val();
@@ -100,10 +97,6 @@ RallyData.prototype.readFromUi = function () {
  */
 RallyData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#rallyTimerMethodAuto"), savedData.rallyTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=rallyRegion]"), savedData.rallyRegion);
-    if (savedData.rallyRegion !== undefined) {
-        updateTimerSection("rally");
-    }
     var manualButton = $("#rallyTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.rallyTimerMethodManual);
     if (savedData.rallyTimerMethodManual) {
@@ -131,7 +124,6 @@ RallyData.setToUi = function (savedData) {
  */
 RallyData.prototype.alert = function () {
     alert("rallyTimerMethodAuto: " + this.rallyTimerMethodAuto + "\n" +
-        "rallyRegion: " + this.rallyRegion + "\n" +
         "rallyTimerMethodManual: " + this.rallyTimerMethodManual + "\n" +
         "rallyManualRestTimeInHours: " + this.rallyManualRestTimeInHours + "\n" +
         "rallyLiveDifficulty: " + this.rallyLiveDifficulty + "\n" +
@@ -152,7 +144,7 @@ RallyData.prototype.alert = function () {
  */
 RallyData.prototype.getRestTimeInMinutes = function () {
     if (this.rallyTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.rallyRegion);
+        return Common.getAutoRestTimeInMinutes();
     }
     if (this.rallyTimerMethodManual) {
         return 60 * this.rallyManualRestTimeInHours;
@@ -346,10 +338,6 @@ RallyEstimationInfo.prototype.showResult = function () {
 RallyData.prototype.validate = function () {
     var errors = [];
 
-    if (this.rallyRegion != "en" && this.rallyRegion != "jp") {
-        errors.push("Choose a region");
-        return errors;
-    }
     if (this.getEXPMultiplier() === 0) {
         errors.push("The given EXP multiplier is invalid.");
     } else {
