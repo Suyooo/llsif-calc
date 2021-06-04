@@ -6,7 +6,6 @@
  * An object used to store input values for the Token Event calculator.
  * @class TokenData
  * @property {boolean} tokenTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} tokenRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} tokenTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} tokenManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficultyWithM} tokenEventLiveDifficulty - The difficulty event lives are played on.
@@ -28,7 +27,6 @@
  */
 function TokenData() {
     this.tokenTimerMethodAuto = false;
-    this.tokenRegion = "en";
     this.tokenTimerMethodManual = false;
     this.tokenManualRestTimeInHours = 0;
     this.tokenEventLiveDifficulty = "EASY";
@@ -121,7 +119,6 @@ function TokenEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 TokenData.prototype.readFromUi = function () {
     this.tokenTimerMethodAuto = $("#tokenTimerMethodAuto").prop("checked");
-    this.tokenRegion = $("input:radio[name=tokenRegion]:checked").val();
     this.tokenTimerMethodManual = $("#tokenTimerMethodManual").prop("checked");
     this.tokenManualRestTimeInHours = ReadHelpers.toNum($("#tokenManualRestTime").val());
     this.tokenEventLiveDifficulty = $("input:radio[name=tokenEventLiveDifficulty]:checked").val();
@@ -148,10 +145,6 @@ TokenData.prototype.readFromUi = function () {
  */
 TokenData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#tokenTimerMethodAuto"), savedData.tokenTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=tokenRegion]"), savedData.tokenRegion);
-    if (savedData.tokenRegion !== undefined) {
-        updateTimerSection("token");
-    }
     var manualButton = $("#tokenTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.tokenTimerMethodManual);
     if (savedData.tokenTimerMethodManual) {
@@ -185,7 +178,6 @@ TokenData.setToUi = function (savedData) {
  */
 TokenData.prototype.alert = function () {
     alert("tokenTimerMethodAuto: " + this.tokenTimerMethodAuto + "\n" +
-        "tokenRegion: " + this.tokenRegion + "\n" +
         "tokenTimerMethodManual: " + this.tokenTimerMethodManual + "\n" +
         "tokenManualRestTimeInHours: " + this.tokenManualRestTimeInHours + "\n" +
         "tokenEventLiveDifficulty: " + this.tokenEventLiveDifficulty + "\n" +
@@ -211,7 +203,7 @@ TokenData.prototype.alert = function () {
  */
 TokenData.prototype.getRestTimeInMinutes = function () {
     if (this.tokenTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.tokenRegion);
+        return Common.getAutoRestTimeInMinutes();
     }
     if (this.tokenTimerMethodManual) {
         return 60 * this.tokenManualRestTimeInHours;
@@ -514,11 +506,6 @@ TokenEstimationInfo.prototype.showResult = function () {
  */
 TokenData.prototype.validate = function () {
     var errors = [];
-
-    if (this.tokenRegion != "en" && this.tokenRegion != "jp") {
-        errors.push("Choose a region");
-        return errors;
-    }
 
     if (this.getEXPMultiplier() === 0) {
         errors.push("The given EXP multiplier is invalid.");
