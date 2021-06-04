@@ -37,11 +37,9 @@ function LpRecoveryInfo(initialRank) {
 }
 
 /**
- * Attempt to automatically generate event time.
- * EN Events begin at 9:00 UTC and end at 8:00 UTC, JP Events begin at 7:00 UTC and end at 6:00 UTC.
- * JP Events always run each month from the 5th to the 15th, and from the 20th to the last day of the month.
- * EN Events used to have a similar schedule before Klab EN decided that was boring.
- * Instead, we can define a date override in networkinfo.js.
+ * Automatically generate event time. Events begin at 7:00 UTC and end at 6:00 UTC.
+ * Each month, events run from the 5th to the 15th, and from the 20th to the last day of the month.
+ * We can define a date override in networkinfo.js if the server ever deviates from that schedule.
  * @returns {Date[]} An array containing start and end date of the current event, index 0 and 1 respectively
  */
 Common.getEventBeginEndTime = function () {

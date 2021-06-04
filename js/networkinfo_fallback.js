@@ -1,8 +1,7 @@
-var enDateOverride = null;
-var jpDateOverride = null;
+var dateOverride = null;
 
 $(".event-banner-container").remove();
-$(".event-info-note").html("<b class='red-text'>You are currently offline. Automatic Timer might be incorrect.</b> Please carefully check the remaining time. If it is incorrect, either use Manual Input, or reconnect to the internet and refresh the page.");
+$(".event-info-note").html("<b class='red-text'>You are currently offline.</b> Unless the event schedule has changed, the Automatic Timer should still be correct - please double-check though. If it is incorrect, either use Manual Input, or reconnect to the internet and refresh the page.");
 
 var notificationInfo = {
     message: "",
