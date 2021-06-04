@@ -6,7 +6,6 @@
  * An object used to store input values for the Score Match calculator.
  * @class FriendlyMatchData
  * @property {boolean} friendmTimerMethodAuto - Whether Automatic Timer is selected on the UI.
- * @property {region} friendmRegion - Which server to use for the Automatic Timer and event rewards.
  * @property {boolean} friendmTimerMethodManual - Whether Manual Input is selected on the UI.
  * @property {number} friendmManualRestTimeInHours - The time left in hours, entered for Manual Input.
  * @property {difficultyWithM} friendmLiveDifficulty - The difficulty lives are played on.
@@ -26,7 +25,6 @@
  */
 function FriendlyMatchData() {
     this.friendmTimerMethodAuto = false;
-    this.friendmRegion = "en";
     this.friendmTimerMethodManual = false;
     this.friendmManualRestTimeInHours = 0;
     this.friendmLiveDifficulty = "EASY";
@@ -85,7 +83,6 @@ function FriendlyMatchEstimationInfo(liveCount, lpRecoveryInfo, restTime) {
  */
 FriendlyMatchData.prototype.readFromUi = function () {
     this.friendmTimerMethodAuto = $("#friendmTimerMethodAuto").prop("checked");
-    this.friendmRegion = $("input:radio[name=friendmRegion]:checked").val();
     this.friendmTimerMethodManual = $("#friendmTimerMethodManual").prop("checked");
     this.friendmManualRestTimeInHours = ReadHelpers.toNum($("#friendmManualRestTime").val());
     this.friendmLiveDifficulty = $("input:radio[name=friendmLiveDifficulty]:checked").val();
@@ -109,10 +106,6 @@ FriendlyMatchData.prototype.readFromUi = function () {
  */
 FriendlyMatchData.setToUi = function (savedData) {
     SetHelpers.checkBoxHelper($("#friendmTimerMethodAuto"), savedData.friendmTimerMethodAuto);
-    SetHelpers.radioButtonHelper($("input:radio[name=friendmRegion]"), savedData.friendmRegion);
-    if (savedData.friendmRegion !== undefined) {
-        updateTimerSection("friendm");
-    }
     var manualButton = $("#friendmTimerMethodManual");
     SetHelpers.checkBoxHelper(manualButton, savedData.friendmTimerMethodManual);
     if (savedData.friendmTimerMethodManual) {
@@ -143,7 +136,6 @@ FriendlyMatchData.setToUi = function (savedData) {
  */
 FriendlyMatchData.prototype.alert = function () {
     alert("friendmTimerMethodAuto: " + this.friendmTimerMethodAuto + "\n" +
-        "friendmRegion: " + this.friendmRegion + "\n" +
         "friendmTimerMethodManual: " + this.friendmTimerMethodManual + "\n" +
         "friendmManualRestTimeInHours: " + this.friendmManualRestTimeInHours + "\n" +
         "friendmLiveDifficulty: " + this.friendmLiveDifficulty + "\n" +
@@ -167,7 +159,7 @@ FriendlyMatchData.prototype.alert = function () {
  */
 FriendlyMatchData.prototype.getRestTimeInMinutes = function () {
     if (this.friendmTimerMethodAuto) {
-        return Common.getAutoRestTimeInMinutes(this.friendmRegion);
+        return Common.getAutoRestTimeInMinutes();
     }
     if (this.friendmTimerMethodManual) {
         return 60 * this.friendmManualRestTimeInHours;
@@ -379,11 +371,6 @@ FriendlyMatchEstimationInfo.prototype.showResult = function () {
  */
 FriendlyMatchData.prototype.validate = function () {
     var errors = [];
-
-    if (this.friendmRegion != "en" && this.friendmRegion != "jp") {
-        errors.push("Choose a region");
-        return errors;
-    }
 
     if (this.getEXPMultiplier() === 0) {
         errors.push("The given EXP multiplier is invalid.");
