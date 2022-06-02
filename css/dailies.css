@@ -1,0 +1,23 @@
+td,th {
+    text-align: center;
+}
+td {
+    width: 22%;
+}
+tr.highlight td {
+    background-color: var(--key-accented);
+}
+th {
+    width: 12%;
+    background-color: var(--key-normal);
+}
+#date {
+    width: 15em;
+}
+.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--background);
+}

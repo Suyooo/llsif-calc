@@ -31,7 +31,7 @@ echo "Minify CSS..."
 mkdir build/css
 for F in css/*.css; do
     echo "    ${F}"
-    purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/otasuke.js js/proedit.js vendor/materialize.js -m -o build/${F}
+    purifycss ${F} index.html otasuke.html proedit.html js/ui.js js/common.js js/dailies.js js/otasuke.js js/proedit.js vendor/materialize.min.js -m -o build/${F}
 done
 
 echo "Copy JPG images..."
