@@ -118,6 +118,6 @@ $(window).on("scroll",function() {
     }
 });
 
-var today = new Date();
+var today = new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Tokyo"}));
 today.setHours(0,0,0,0);
 search(today);
