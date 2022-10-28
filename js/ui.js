@@ -261,7 +261,7 @@ function registerCalculatorButtons() {
         $("#" + page + "SaveConfig").click(function () {
             var data = new newDataObject();
             data.readFromUi($);
-            localStorage.setItem("sifcalc-" + page + "-data", btoa(JSON.stringify(data)));
+            localStorage.setItem("sifcalc-" + page + "-data", JSON.stringify(data));
             M.toast({html: "Data saved!"});
         });
         $("input[type=number]", "#" + page).keypress(function (keypressEvent) {
@@ -312,7 +312,7 @@ function loadStoredData() {
         for (const page of Object.keys(loadFunctions)) {
             const data = Cookie.get(page + "Data");
             if (data === undefined || data.trim() === "") continue;
-            localStorage.setItem("sifcalc-" + page + "-data", data);
+            localStorage.setItem("sifcalc-" + page + "-data", atob(data));
             document.cookie = page + "Data=; Max-Age=-99999999; path=/llsif";
         }
     }
@@ -321,7 +321,7 @@ function loadStoredData() {
         var stored = localStorage.getItem("sifcalc-" + page + "-data");
         if (stored !== null) {
             try {
-                var data = JSON.parse(atob(stored));
+                var data = JSON.parse(stored);
                 loadFunction(data);
             } catch (e) {
                 console.error("Couldn't load saved data for " + page + ": " + e);
