@@ -306,15 +306,19 @@ function loadStoredData() {
     };
 
     // Move cookies to localStorage - to be removed in a month or so
-    if (Cookie.get("dark-mode") || Object.keys(loadFunctions).some(page => Cookie.get(page + "Data") !== undefined)) {
+    if (Cookie.get("dark-mode") || Cookie.get("cookieConsent") || Cookie.get("notificationRead") ||
+        Object.keys(loadFunctions).some(page => Cookie.get(page + "Data") !== undefined)) {
         localStorage.setItem("dark-mode", Cookie.get("dark-mode"));
         document.cookie = "dark-mode=; Max-Age=-99999999; path=/llsif";
+        localStorage.setItem("sifcalc-notification-read", Cookie.get("sifcalc-notification-read"));
+        document.cookie = "notificationRead=; Max-Age=-99999999; path=/llsif";
         for (const page of Object.keys(loadFunctions)) {
             const data = Cookie.get(page + "Data");
             if (data === undefined || data.trim() === "") continue;
             localStorage.setItem("sifcalc-" + page + "-data", atob(data));
             document.cookie = page + "Data=; Max-Age=-99999999; path=/llsif";
         }
+        document.cookie = "cookieConsent=; Max-Age=-99999999; path=/llsif";
     }
 
     $.each(loadFunctions, function (page, loadFunction) {
