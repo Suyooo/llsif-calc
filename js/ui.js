@@ -1,5 +1,5 @@
 /**
- * @file Functions related to the UI, such as DOM manipulation, notifications and cookies.
+ * @file Functions related to the UI, such as DOM manipulation, notifications and storage.
  */
 
 $(function () {
@@ -24,8 +24,8 @@ $(function () {
  * Checks whether a new notification is available, and displays it if one exists.
  */
 function notificationLoad() {
-    var curId = Cookie.get("notificationRead");
-    if (curId === undefined) {
+    var curId = parseInt(localStorage.getItem("sifcalc-notification-read"));
+    if (isNaN(curId)) {
         curId = -1;
     }
 
@@ -40,7 +40,7 @@ function notificationLoad() {
  * Dismisses the current notification, and makes sure it doesn't appear on the next visit.
  */
 function notificationDismiss() {
-    Cookie.set("notificationRead", notificationInfo.id, 365);
+    localStorage.setItem("sifcalc-notification-read", notificationInfo.id.toString());
     $("#notification").slideUp();
 }
 
@@ -68,8 +68,7 @@ function registerTabBarButtonsAndScroll() {
             if (left < containerScrollLeft) {
                 // noinspection JSValidateTypes
                 tabbar.animate({scrollLeft: left - paddingPx}, 200);
-            }
-            else if (left + width > containerScrollLeft + containerWidth) {
+            } else if (left + width > containerScrollLeft + containerWidth) {
                 // noinspection JSValidateTypes
                 tabbar.animate({scrollLeft: left + width - containerWidth + paddingPx}, 200);
             }
@@ -132,12 +131,12 @@ function registerSideNavButtons() {
 
 /**
  * Handles functions releated to dark mode. This includes the switch in the menu, setting the transition disabler class
- * on the body during toggling and saving the dark mode preference as a cookie.
+ * on the body during toggling and saving the dark mode preference in local storage.
  */
 function registerDarkMode() {
     var dmli = $(".dark-mode-switch");
     var dms = $("#darkModeSwitch");
-    var setting = Cookie.get("dark-mode");
+    var setting = localStorage.getItem("dark-mode");
 
     dmli.click(function () {
         dms.prop("checked", !dms.prop("checked")).change();
@@ -148,10 +147,10 @@ function registerDarkMode() {
         body.addClass("dark-mode-transition-disabler");
         if (dms.prop("checked") === true) {
             body.addClass("dark-mode");
-            Cookie.set("dark-mode", "yes", 30);
+            localStorage.setItem("dark-mode", "yes");
         } else {
             body.removeClass("dark-mode");
-            Cookie.set("dark-mode", "no", 30);
+            localStorage.setItem("dark-mode", "no");
         }
         setTimeout(function () {
             body.removeClass("dark-mode-transition-disabler")
@@ -198,7 +197,7 @@ function registerPopUpButtons() {
  * buttons, and the automatic calculation if a value is changed.
  */
 function registerCalculatorButtons() {
-    loadCookieData();
+    loadStoredData();
 
     var newDataObjectFunctions = {
         "token": function () {
@@ -260,15 +259,10 @@ function registerCalculatorButtons() {
             doCalc(true);
         });
         $("#" + page + "SaveConfig").click(function () {
-            if (!navigator.cookieEnabled) {
-                showPopUp("Cookies are disabled in your browser. Please enable them to save your configuration data.");
-            }
-
             var data = new newDataObject();
             data.readFromUi($);
-            if (Cookie.set(page + "Data", btoa(JSON.stringify(data)), 30)) {
-                M.toast({html: "Data saved!"});
-            }
+            localStorage.setItem("sifcalc-" + page + "-data", btoa(JSON.stringify(data)));
+            M.toast({html: "Data saved!"});
         });
         $("input[type=number]", "#" + page).keypress(function (keypressEvent) {
             if (keypressEvent.which == 13) {
@@ -301,7 +295,7 @@ function registerCalculatorButtons() {
 /**
  * Loads saved configurations for each of the calculators if available.
  */
-function loadCookieData() {
+function loadStoredData() {
     var loadFunctions = {
         "token": TokenData.setToUi,
         "scorem": ScoreMatchData.setToUi,
@@ -310,11 +304,24 @@ function loadCookieData() {
         "rally": RallyData.setToUi,
         "friendm": FriendlyMatchData.setToUi
     };
+
+    // Move cookies to localStorage - to be removed in a month or so
+    if (Cookie.get("dark-mode") || Object.keys(loadFunctions).some(page => Cookie.get(page + "Data") !== undefined)) {
+        localStorage.setItem("dark-mode", Cookie.get("dark-mode"));
+        document.cookie = "dark-mode=; Max-Age=-99999999; path=/llsif";
+        for (const page of Object.keys(loadFunctions)) {
+            const data = Cookie.get(page + "Data");
+            if (data === undefined || data.trim() === "") continue;
+            localStorage.setItem("sifcalc-" + page + "-data", data);
+            document.cookie = page + "Data=; Max-Age=-99999999; path=/llsif";
+        }
+    }
+
     $.each(loadFunctions, function (page, loadFunction) {
-        var cookie = Cookie.get(page + "Data");
-        if (cookie !== undefined) {
+        var stored = localStorage.getItem("sifcalc-" + page + "-data");
+        if (stored !== null) {
             try {
-                var data = JSON.parse(atob(cookie));
+                var data = JSON.parse(atob(stored));
                 loadFunction(data);
             } catch (e) {
                 console.error("Couldn't load saved data for " + page + ": " + e);
@@ -507,44 +514,6 @@ Results.setBigResult = function (element, text) {
 function Cookie() {
 }
 
-var COOKIE_POLICY = "<h5>Cookie Policy</h5>LLSIF Calc uses cookies to store your preferences and inputs for later " +
-    "use. It will only do so if you agree to this message.<br>The page is still functional without if you do " +
-    "not allow storage, however, you will be unable to:<ul><li>Save configurations for later</li>" +
-    "<li>Dismiss notifications permanently</li><li>Save your setting for dark mode</li></ul>No other data is " +
-    "stored, and this information is not saved on the server or used to identify you.<br>You can revoke your consent at " +
-    "any time by removing all cookies saved on your device by this site.";
-
-/**
- * Sets a cookie. If no cookies exists, first ask for consent using a dialog showing the cookie policy.
- * @param key Cookie name.
- * @param value Cookie value.
- * @param days After how many days the cookie will expire.
- * @returns {boolean} True if the cookie was stored, false if we need to ask for cookie consent.
- */
-Cookie.set = function (key, value, days) {
-    if (document.cookie === "") {
-        showDialog(COOKIE_POLICY + "<br><br>Do you agree with the cookie policy and " +
-            "allow this site to store cookies on your device?",
-            function () {
-                var expiryDate = new Date();
-                expiryDate.setTime(expiryDate.getTime() + (5 * 60 * 1000));
-                document.cookie = "cookieConsent=1; expires=" + expiryDate.toUTCString() + "; path=/llsif; SameSite=Lax";
-                if (Cookie.get("cookieConsent") === undefined) {
-                    showPopUp("Unable to store cookies. Your browser might be blocking cookie " +
-                            "storage. Please check your browser's privacy and storage settings, then try again.");
-                    return false;
-                }
-                Cookie.set(key, value, days);
-            });
-        return false;
-    } else {
-        var expiryDate = new Date();
-        expiryDate.setTime(expiryDate.getTime() + (days * 24 * 60 * 60 * 1000));
-        document.cookie = key + "=" + value + "; expires=" + expiryDate.toUTCString() + "; path=/llsif; SameSite=Lax";
-        return true;
-    }
-};
-
 /**
  * Retrieves the value of a cookie.
  * @param key Cookie name.
@@ -561,20 +530,6 @@ Cookie.get = function (key) {
         }
     }
     return undefined;
-};
-
-/**
- * Removes all cookies. (Used for debugging. Based on a snippet from https://stackoverflow.com/a/179514/1381397)
- */
-Cookie.removeAll = function () {
-    var cookies = document.cookie.split(";");
-
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/llsif";
-    }
 };
 
 /**
