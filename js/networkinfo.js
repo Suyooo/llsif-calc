@@ -1,7 +1,7 @@
-var dateOverride = null;
+var dateOverride = [new Date(1366005600000), new Date(1680242400000)];
 
 var notificationInfo = {
-    message: "<b>June 8 Update: 🦀🦀🦀 WW IS GONE 🦀🦀🦀</b><br>Of course, with an update like removing all region-based code, new bugs might crop up. Please let me know if you find any problems (contacts are in the side menu)!",
-    id: 24,
+    message: "<b>March 31 Update: 🦀🦀🦀 LLSIF IS GONE 🦀🦀🦀</b><br>But as you can see, the site will remain online for now - so feel free to still play with the numbers or the tools :)",
+    id: 25,
     allowDismiss: true
 };
